@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const connectionString = process.env.ATLAS_URI || ''
-
+console.log("connectionString:", process.env.ATLAS_URI)
 export const connectMongoDB = () => {
     mongoose
   .connect(connectionString, {

@@ -1,14 +1,13 @@
 import express from "express";
-import { connectMongoDB } from "./db/connection.mjs"
 import dotenv from "dotenv";
 import ViteExpress from "vite-express";
 
 import HttpError from "./http-error.js";
 import usersRoutes from "./routes/users-routes.js";
-
+import { connectMongoDB } from "./db/connection.mjs"
 
 const app = express();
-dotenv.config(); // initialize env-vars
+dotenv.config();
 
 app.use(express.json());
 
@@ -23,7 +22,7 @@ app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
 	next();
 });
-
+console.log("process.env.API_VERSION: ", process.env.API_VERSION)
 app.use(`/api/${process.env.API_VERSION}/users`, usersRoutes);
 
 //handle error
