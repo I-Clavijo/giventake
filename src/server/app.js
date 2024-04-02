@@ -10,16 +10,20 @@ export default function createApp() {
 
 	// Setting CORS Headers to every response of the server
 	app.use((req, res, next) => {
-		// Security note: need to change before deployment the wildcard sign
-		res.setHeader('Access-Control-Allow-Origin', '*'); // * => this is the domain
+		res.setHeader(
+			"Access-Control-Allow-Origin","*"
+		); // * => this is the domain
 		res.setHeader(
 			"Access-Control-Allow-Headers",
 			"Origin, X-Requested-With, Content-Type, Accept, Authorization"
 		);
-		res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+		res.setHeader(
+			"Access-Control-Allow-Methods",
+			"GET, POST, PATCH, DELETE, OPTIONS"
+		);
 		next();
 	});
-	console.log("process.env.API_VERSION: ", config.API_VERSION)
+
 	app.use(`/api/${config.API_VERSION}/users`, usersRoutes);
 
 	//handle error

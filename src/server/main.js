@@ -12,9 +12,13 @@ try {
 		throw new Error("Database connection failed.")
 	}
 
-	ViteExpress.listen(app, 3000, () =>
-		console.log("Server is listening on port 3000..."),
-	);
+	const { PORT = 3000 } = process.env;
+	ViteExpress.listen(app, PORT, () =>{
+		if (process.env.NODE_ENV === 'development'){
+			console.log(`  > Local: \x1b[36mhttp://localhost:\x1b[1m${PORT}/\x1b[0m`);
+		}
+	  console.log("🫡 Server is listening...");
+	});
 } catch (error) {
     console.error('Error starting server:', error);
     process.exit(1); // Exit the process if unable to start the server
