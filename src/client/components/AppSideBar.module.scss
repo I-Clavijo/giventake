@@ -1,0 +1,132 @@
+
+.baseCols{
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	flex-direction: row;
+	@media screen and (max-width: 767px){ // Mobile
+		flex-direction: column-reverse;
+	}
+
+	.appSideBarWrap{
+		background: #eee;
+		height: 100%;
+		padding: 20px;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		
+		@media screen and (min-width: 1264px){ // Large - Desktop
+			width: 200px;
+            .logo{
+                font-size: 30px;
+                font-weight: bold;
+            }
+		}
+		@media screen and (min-width: 768px) and (max-width: 1263px){ // Laptop
+			width: 80px;
+            .logo{
+                display: none;
+            }
+		}
+		@media screen and (max-width: 767px){ // Mobile
+			width: 100%;
+			height: 50px;
+			padding: 0;
+			display: flex;
+    		justify-content: center;
+            .logo{
+                display: none;
+            }
+		}
+        
+        .navWrap {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0 0 0;
+            gap: .8em;
+        
+            @media screen and (min-width: 768px) and (max-width: 1263px){ // Laptop
+                gap: 1.2em;
+            }
+            @media screen and (max-width: 767px){ // Mobile
+                padding: 0;
+                flex-direction: row;
+                justify-content: space-evenly;
+            }
+            
+            
+
+            .linkWrap{
+                display: flex;
+                flex-direction: row;
+                color: black;
+                gap: .5em;
+                font-weight: bold;
+
+                .icon{
+                    display: block;
+                }
+                
+                @media screen and (min-width: 768px) and (max-width: 1263px){ // Laptop
+                    justify-content: center;
+            
+                    .title{
+                        display: none;
+                    }
+                }
+                @media screen and (max-width: 767px){ // Mobile
+                    justify-content: center;
+            
+                    .title{
+                        display: none;
+                    }
+                }
+            
+            }
+
+            @media screen and (max-width: 767px){ // Mobile
+                .showOnTop{
+                    display: none;
+                }
+            }
+        }
+	}
+	
+	.pageWrap{
+		background: #ddd;
+		height: 100%;
+		padding: 20px;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+    .topBar{
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 0 20px;
+
+        .logo{
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .topNavButtons{
+            display: flex;
+            flex-direction: row-reverse;
+            .linkWrap{
+                padding: 0 5px;
+            }
+            
+        }
+    }
+    @media screen and (min-width: 768px){ // *NOT* Mobile
+		.topBar{
+            display: none;
+        }
+	}
+}
