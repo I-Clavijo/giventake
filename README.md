@@ -12,5 +12,6 @@ npm run dev
 ```
 
 **how to develop a feature**
+
 create a new branch from *staging* branch and then start working.
 when you are ready make a pull request for a code review.
