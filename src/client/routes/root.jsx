@@ -1,26 +1,20 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
-import AppBar from '../containers/AppBar';
+import AppSideBar from '../containers/AppSideBar';
 import styles from "./root.module.scss";
-import ReactLogo from "../assets/images/leadhive-icon.svg";
 
 
 export default function Root() {
     return (
-        <>
-            <AppBar />
-            <div id="detail">
-                <Outlet />
-            </div>
-            <div>          
-                <img src={ReactLogo} className="logo react" alt="React logo" />
-                {/* <ReactLogo /> */}
-            </div>
-            
-
-            <footer className={styles.footer}>
-                footer
-            </footer>
+        <>  
+            <div className={styles.baseCols}>
+                <div className={styles.appSideBarWrap}>
+                    <AppSideBar />
+                </div>
+                <div className={styles.pageWrap}>
+                    <Outlet />
+                </div>
+            </div>            
         </>
     );
 }
