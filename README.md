@@ -8,9 +8,10 @@ Pre-installed Node v.20 on your computer
 ```
 git clone https://github.com/oribenez/giventake.git
 ```
-Open project folder using VScode
+Open project folder using VScode.
+Create .env file.
 
-and then run:
+And then run:
 ```
 cd path/to/giventake
 npm install
