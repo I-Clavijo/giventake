@@ -9,6 +9,7 @@ Pre-installed Node v.20 on your computer
 git clone https://github.com/oribenez/giventake.git
 ```
 Open project folder using VScode.
+
 Create .env file.
 
 And then run:
@@ -16,6 +17,12 @@ And then run:
 cd path/to/giventake
 npm install
 npm run dev
+```
+
+**create new branch**
+```
+git checkout staging
+
 ```
 
 **how to develop a feature**
