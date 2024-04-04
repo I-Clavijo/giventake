@@ -22,7 +22,8 @@ npm run dev
 **create new branch**
 ```
 git checkout staging
-
+git branch <new-name>
+git checkout <new-name>
 ```
 
 **how to develop a feature**
