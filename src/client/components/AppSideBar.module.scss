@@ -1,23 +1,29 @@
 
+:root{
+    --nav-wide-width: 200px;
+    --nav-medium-width: 80px;
+    --nav-narrow-height: 50px;
+    --nav-bg-color: #eee;
+}
+
 .baseCols{
-	height: 100vh;
+	height: 100%;
 	width: 100vw;
 	display: flex;
 	flex-direction: row;
-	@media screen and (max-width: 767px){ // Mobile
-		flex-direction: column-reverse;
-	}
 
 	.appSideBarWrap{
-		background: #eee;
+		background: var(--nav-bg-color);
 		height: 100%;
 		padding: 20px;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
+        position: fixed;
+        bottom: 0;
 		
 		@media screen and (min-width: 1264px){ // Large - Desktop
-			width: 200px;
+			width: var(--nav-wide-width);
             .logo{
                 font-size: 30px;
                 font-weight: bold;
@@ -95,13 +101,26 @@
 	
 	.pageWrap{
 		background: #ddd;
-		height: 100%;
+		height: fit-content;
 		padding: 20px;
 		width: 100%;
 		box-sizing: border-box;
+
+        @media screen and (min-width: 1264px){ // Large - Desktop
+            width: calc(100% - var(--nav-wide-width));
+            margin-left: var(--nav-wide-width);
+		}
+		@media screen and (min-width: 768px) and (max-width: 1263px){ // Laptop
+            width: calc(100% - var(--nav-medium-width));
+            margin-left: var(--nav-medium-width);
+		}
+        @media screen and (max-width: 767px){ // Mobile
+            margin: var(--nav-narrow-height) 0;
+        }
 	}
 
     .topBar{
+        background: var(--nav-bg-color);
         height: 50px;
         display: flex;
         flex-direction: row;
@@ -109,6 +128,9 @@
         align-items: center;
         box-sizing: border-box;
         padding: 0 20px;
+        position: fixed;
+        top: 0;
+        width: 100vw;
 
         .logo{
             font-size: 20px;
