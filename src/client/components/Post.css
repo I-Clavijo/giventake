@@ -1,0 +1,101 @@
+.post {
+    max-width: 800px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .post-header, .post-footer {
+    padding: 10px;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+  }
+  
+  .post-body {
+    padding: 10px;
+    background-color: #fff;
+  }
+  
+  .profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .post-header div {
+    display: inline-block;
+    vertical-align: top;
+  }
+  
+  .post-header h2 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .post-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #888;
+  }
+  
+  .post-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .likes-amount {
+
+    font-family: "Roboto", sans-serif;
+    margin-left: 6px;
+  }
+
+  .like-button:hover{
+    cursor: pointer;
+  }
+
+  .likes{
+    display:flex;
+  }
+
+  .like-button2 {
+
+    fill:#ddd;
+  }
+  
+  .waving-hand {
+    margin-left: 6px;
+  }
+
+  .waving-hand:hover {
+    cursor: pointer;
+  }
+
+  .post .post-body {
+    overflow: hidden; /* Initially hide overflowing text */
+    text-overflow: ellipsis; /* Add ellipsis for truncated text */
+  }
+  
+  .post .post-body.show-more {
+    overflow: visible; /* Show all text when expanded */
+  }
+  
+  .post .read-more {
+    background-color: transparent; /* Makes the button less prominent */
+    color: #333; /* Darker color for better contrast */
+    border: 1px solid #ddd; /* Subtle border */
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: underline; /* Underline for emphasis on hover */
+  }
+  
+  .post .read-more:hover { /* Styles on hover */
+    background-color: #eee; /* Slightly lighter background on hover */
+  }
