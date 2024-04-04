@@ -61,9 +61,6 @@
                 flex-direction: row;
                 justify-content: space-evenly;
             }
-            
-            
-
             .linkWrap{
                 display: flex;
                 flex-direction: row;
@@ -72,6 +69,7 @@
                 font-weight: bold;
                 border-radius: 6px;
                 padding: 10px;
+                
                 &:hover {
                     transition: background-color .3s;
                     background-color: var(--nav-item-bg-hover-color);

@@ -2,17 +2,22 @@
 
 import styles from "./AppSideBar.module.scss";
 import { NavLink } from "react-router-dom";
-
+import { Tooltip } from "flowbite-react";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 export default function AppSideBar({ children, title, search, nav }) {
+
+	const isSmallDevice = useMediaQuery("only screen and (max-width : 767px)");
 
 	//sidebar/ bottom buttons
 	const navLinksMapped = nav.map((item,index) => {
 		const topClass = item.showOnTop ? styles.showOnTop : "";
-		return <NavLink to={item.link} className={`${styles.linkWrap} ${topClass}`} key={index}>
-			<img src={item.icon} className={styles.icon} />
-			<div className={styles.title}>{item.title}</div>
-		</NavLink>	
+		return <div className={topClass} key={index}><Tooltip content={item.title} style="light" placement={isSmallDevice? "top":"right"}>
+			<NavLink to={item.link} className={`${styles.linkWrap}`}>
+				<img src={item.icon} className={styles.icon} />
+				<div className={styles.title}>{item.title}</div>
+			</NavLink>
+		</Tooltip></div>;
 	});
 	
 	//top nav buttons
