@@ -10,9 +10,12 @@ import MessagesIcon from "../assets/images/messages-icon.svg";
 import LikedIcon from "../assets/images/liked-icon.svg";
 import CreateIcon from "../assets/images/create-icon.svg";
 import ProfileIcon from "../assets/images/profile-icon.svg";
+import { useState } from "react";
 
 
 export default function Root() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     const navlinks = [
         { icon: HomeIcon, title: "Home", link: "/"},
         { icon: SearchIcon, title: "Search", link: "/search"},
@@ -20,7 +23,7 @@ export default function Root() {
         { icon: MessagesIcon, title: "Messages", link: "/messages"},
         { icon: LikedIcon, title: "Liked", link: "/liked", showOnTop: true},
         { icon: CreateIcon, title: "Create", link: "/create", showOnTop: true},
-        { icon: ProfileIcon, title: "Profile", link: "/profile"}
+        { icon: ProfileIcon, title: (isLoggedIn ? "Profile" : "Sign in/up"), link: isLoggedIn ? "/profile" : "/login"}
     ];
 
     return (
