@@ -26,7 +26,7 @@ export default function AuthForm() {
             <div>
                 <h1>Join Us!</h1>
                 <p>
-                    Explore our community built on the principles of mutual aid, where giving and receiving help is at the heart of everything we do. Join us in creating a space where <b>kindness thrives and support is freely given</b>, making a positive impact in each other's lives.
+                    Explore our community built on the principles of mutual aid, where giving and receiving help is at the heart of everything we do. Join us in creating a space where <b>kindness thrives and support is freely given</b>, making a positive impact in each other's lives
                 </p>
             </div>
             <div className={styles.authWrap}>
