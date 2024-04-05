@@ -1,10 +1,10 @@
 import React from 'react';
 import Post from './Post';
-import './Feed.css';
+import styles from './Feed.module.css';
 
 const Feed = ({ posts }) => {
     return (
-        <div className="feed">
+        <div className={styles.feed}>
             {posts.map(( post, index ) => (
                 <Post
                     key={index}

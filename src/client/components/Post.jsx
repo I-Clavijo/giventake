@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import './Post.css';
-import WavingIcon from "../assets/images/waving-hand.svg";
+import styles from "./Post.module.css";
 import ProfilePic from "../assets/images/profile-picture-example.jpg";
 import PostPic from "../assets/images/example-post.jpg";
 import HeartIcon from  "../assets/images/heart.svg";
@@ -32,39 +31,39 @@ const Post = ({ name, profilePic, time, date, location, postPic, postText, likes
   };
 
     return (
-    <div className="post">
-      <div className="post-header">
-        <img src={ProfilePic} alt="Profile" className="profile-pic"/>
+    <div className={styles.post}>
+      <div className={styles.postHeader}>
+        <img src={ProfilePic} alt="Profile" className={styles.profilePic}/>
         <div>
           <h2>{name}</h2>
           <p>posted {time} ago (need to change so it says hours and days)</p>
           <p>{location}, {date}</p>
         </div>
       </div>
-      <div className="post-body">
+      <div className={styles.postBody}>
         <img src={PostPic} alt="Post"/>
         <p>
           {showMore ? postText : postText.substring(0, 150) + '...'}
           {!showMore && postText.length > 150 && (
-            <button className="read-more" onClick={toggleShowMore}>
+            <button className={styles.readMore} onClick={toggleShowMore}>
               Read More
             </button>
           )}
         </p>
       </div>
-      <div className="post-footer">
-        <div className="likes">
+      <div className={styles.postFooter}>
+        <div className={styles.likes}>
           <img
-            className={`like-button ${isLiked ? 'liked' : ''}`} // Add CSS class for styling
+            className={`${styles.likeButton} ${isLiked ? 'liked' : ''}`} // Add CSS class for styling
             src={isLiked ? FilledHeartIcon : HeartIcon}
             onClick={toggleLike}
             alt="Like"
           />
-          <span className="like-count">{likeCount}</span>
+          <span className={styles.likeCount}>{likeCount}</span>
         </div>
-          <div className="hands">
+          <div className={styles.hand}>
             <img 
-              className="waving-hand"
+              className={styles.wavingHand}
               src={wantToHelp ? FilledHandWaving : HandWaving}
               onClick={toggleHelp}
               alt="Like"
