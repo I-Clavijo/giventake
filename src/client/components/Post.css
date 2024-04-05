@@ -1,5 +1,5 @@
 .post {
-    max-width: 800px;
+    max-width: 600px;
     margin: 20px auto;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -49,14 +49,24 @@
     border-radius: 10px;
     margin-bottom: 10px;
   }
-  
-  .likes-amount {
 
+  .post-footer {
+    min-height:60px;
+    display: flex;
+  }
+  
+  .like-count {
     font-family: "Roboto", sans-serif;
-    margin-left: 6px;
+    margin-right: 20px;
+    margin-top: 4px;
   }
 
-  .like-button:hover{
+  .like-button {
+    height: 30px;
+    margin-right:4px;
+  }
+
+  .like-button:hover {
     cursor: pointer;
   }
 
@@ -64,13 +74,11 @@
     display:flex;
   }
 
-  .like-button2 {
-
-    fill:#ddd;
-  }
   
   .waving-hand {
     margin-left: 6px;
+    height: 26px;
+    margin-right: 6px;
   }
 
   .waving-hand:hover {

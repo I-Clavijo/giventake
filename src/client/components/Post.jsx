@@ -1,22 +1,30 @@
 import React from 'react';
 import { useState } from 'react';
 import './Post.css';
-import LikeIcon from "../assets/images/heart-icon2.svg";
 import WavingIcon from "../assets/images/waving-hand.svg";
-import ProfilePic from "../assets/images/profile-picture-example.jpg"
-import PostPic from "../assets/images/example-post.jpg"
+import ProfilePic from "../assets/images/profile-picture-example.jpg";
+import PostPic from "../assets/images/example-post.jpg";
+import HeartIcon from  "../assets/images/heart.svg";
+import FilledHeartIcon from "../assets/images/heart-f.svg";
+import FilledHandWaving from "../assets/images/hand_waving_icon_filled.svg";
+import HandWaving from "../assets/images/hand_waving_icon.svg";
 
 
 const Post = ({ name, profilePic, time, date, location, postPic, postText, likes }) => {
-
-  const [likesCount, setLikesCount] = useState(likes);
-  const [liked, setLiked] = useState(false); // Track whether the user has liked the post
+  
+  const [isLiked, setIsLiked] = useState(false); // Track like state
+  const [likeCount, setLikeCount] = useState(likes); // Manage like counter
 
   const toggleLike = () => {
-    setLiked(!liked); // Toggle the liked state
-    setLikesCount(liked ? likesCount + 1 : likesCount - 1); // Update likes count based on liked state
+      setIsLiked(!isLiked);
+      setLikeCount( isLiked ? likeCount -1 : likeCount -1 +2);
   };
-  
+
+  const [wantToHelp, setWantToHelp] = useState(false); 
+
+  const toggleHelp = () => {
+      setWantToHelp(!wantToHelp);
+  };
 
   const [showMore, setShowMore] = useState(false);
   const toggleShowMore = () => {
@@ -29,7 +37,7 @@ const Post = ({ name, profilePic, time, date, location, postPic, postText, likes
         <img src={ProfilePic} alt="Profile" className="profile-pic"/>
         <div>
           <h2>{name}</h2>
-          <p>posted {time} ago</p>
+          <p>posted {time} ago (need to change so it says hours and days)</p>
           <p>{location}, {date}</p>
         </div>
       </div>
@@ -45,16 +53,26 @@ const Post = ({ name, profilePic, time, date, location, postPic, postText, likes
         </p>
       </div>
       <div className="post-footer">
-         <div className="likes">
-         <img className="like-button2" src={liked ? LikeIconFilled : LikeIcon} // Adjust icon for visual feedback
-          onClick={toggleLike}/>
-          <div className="likes-amount">{likesCount}</div>
-        <div className="hands">
-          <img className="waving-hand" src={WavingIcon} />
+        <div className="likes">
+          <img
+            className={`like-button ${isLiked ? 'liked' : ''}`} // Add CSS class for styling
+            src={isLiked ? FilledHeartIcon : HeartIcon}
+            onClick={toggleLike}
+            alt="Like"
+          />
+          <span className="like-count">{likeCount}</span>
         </div>
+          <div className="hands">
+            <img 
+              className="waving-hand"
+              src={wantToHelp ? FilledHandWaving : HandWaving}
+              onClick={toggleHelp}
+              alt="Like"
+           />
+         </div>
+         <p>Press the hand to help</p>
         </div>
       </div>
-    </div>
   );
 };
 
