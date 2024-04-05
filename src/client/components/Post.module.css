@@ -74,11 +74,14 @@
     display:flex;
   }
 
-  
   .wavingHand {
     margin-left: 6px;
     height: 26px;
     margin-right: 6px;
+  }
+
+  .pressToHelp {
+    margin-top: 18px;
   }
 
   .wavingHand:hover {
