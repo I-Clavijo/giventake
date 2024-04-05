@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from "./Post.module.css";
 import ProfilePic from "../assets/images/profile-picture-example.jpg";
 import PostPic from "../assets/images/example-post.jpg";
@@ -9,8 +9,8 @@ import FilledHandWaving from "../assets/images/hand_waving_icon_filled.svg";
 import HandWaving from "../assets/images/hand_waving_icon.svg";
 
 
-const Post = ({ name, profilePic, time, date, location, postPic, postText, likes }) => {
-  
+const Post = ({ name, profilePic, date, location, postPic, postText, likes }) => {
+
   const [isLiked, setIsLiked] = useState(false); // Track like state
   const [likeCount, setLikeCount] = useState(likes); // Manage like counter
 
@@ -30,14 +30,52 @@ const Post = ({ name, profilePic, time, date, location, postPic, postText, likes
     setShowMore(!showMore);
   };
 
+  // sets how long ago the post was posted 
+
+  const displayDate = new Date(date);
+  const [timeAgo, setTimeAgo] = useState('');
+
+  useEffect(() => {
+    const calculateTimeAgo = () => {
+      const currentDate = new Date();
+      const postDateTime = new Date(date);
+
+      const timeDifference = currentDate.getTime() - postDateTime.getTime();
+      const seconds = Math.floor(timeDifference / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      let timeAgoString = '';
+      if (days > 0) {
+        timeAgoString = `${days} day${days > 1 ? 's' : ''} ago`;
+      } else if (hours > 0) {
+        timeAgoString = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+      } else if (minutes > 0) {
+        timeAgoString = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+      } else {
+        timeAgoString = `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+      }
+
+      setTimeAgo(timeAgoString);
+    };
+
+    calculateTimeAgo();
+
+    // Update the time every minute
+    const interval = setInterval(calculateTimeAgo, 60000);
+
+    return () => clearInterval(interval);
+  }, [date]);
+
     return (
     <div className={styles.post}>
       <div className={styles.postHeader}>
         <img src={ProfilePic} alt="Profile" className={styles.profilePic}/>
         <div>
           <h2>{name}</h2>
-          <p>posted {time} ago (need to change so it says hours and days)</p>
-          <p>{location}, {date}</p>
+          <p>posted {timeAgo}</p>
+          <p>{location}, {displayDate.toLocaleString()}</p>
         </div>
       </div>
       <div className={styles.postBody}>
@@ -74,6 +112,5 @@ const Post = ({ name, profilePic, time, date, location, postPic, postText, likes
       </div>
   );
 };
-
 
 export default Post;

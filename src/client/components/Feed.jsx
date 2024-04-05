@@ -10,7 +10,6 @@ const Feed = ({ posts }) => {
                     key={index}
                     name={post.name}
                     profilePic={post.profilePic}
-                    time={post.time}
                     date={post.date}
                     location={post.location}
                     postPic={post.postPic}
