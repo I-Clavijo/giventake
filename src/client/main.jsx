@@ -8,6 +8,7 @@ import Root from "./routes/root";
 import ErrorPage from "./error-page";
 import Home from "./routes/home";
 import Explore from "./routes/explore";
+import UserProfile from "./routes/UserProfile";
 
 const router = createBrowserRouter([
 	{
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
 		children: [
 			{ path: "/", element: <Home /> },
 			{ path: "/explore", element: <Explore /> },
+			{ path: "/userProfile", element: <UserProfile /> },
 		],
 	},
 ]);

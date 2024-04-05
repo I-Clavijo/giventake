@@ -9,6 +9,7 @@ import ExploreIcon from "../assets/images/explore-icon.svg";
 import MessagesIcon from "../assets/images/messages-icon.svg";
 import LikedIcon from "../assets/images/liked-icon.svg";
 import CreateIcon from "../assets/images/create-icon.svg";
+import ProfileIcon from "../assets/images/profile-icon.svg";
 
 const navlinks = [
 	{ icon: HomeIcon, title: "Home", link: "/"},
@@ -17,7 +18,7 @@ const navlinks = [
 	{ icon: MessagesIcon, title: "Messages", link: "/messages"},
 	{ icon: LikedIcon, title: "Liked", link: "/liked"},
 	{ icon: CreateIcon, title: "Create", link: "/create"},
-	{ icon: CreateIcon, title: "Profile", link: "/profile"}
+	{ icon: ProfileIcon, title: "Profile", link: "/UserProfile"}
 ];
 export default function AppSideBar() {
 
