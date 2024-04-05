@@ -7,17 +7,23 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 
 export default function AppSideBar({ children, title, search, nav }) {
 
-	const isSmallDevice = useMediaQuery("only screen and (max-width : 767px)");
+	const isSmallDevice = useMediaQuery("only screen and (max-width: 767px)");
+	const isWideDevice = useMediaQuery("only screen and (min-width: 1264px)");
 
 	//sidebar/ bottom buttons
 	const navLinksMapped = nav.map((item,index) => {
 		const topClass = item.showOnTop ? styles.showOnTop : "";
-		return <div className={topClass} key={index}><Tooltip content={item.title} style="light" placement={isSmallDevice? "top":"right"}>
-			<NavLink to={item.link} className={`${styles.linkWrap}`}>
-				<img src={item.icon} className={styles.icon} />
-				<div className={styles.title}>{item.title}</div>
-			</NavLink>
-		</Tooltip></div>;
+
+		const navlink = <NavLink to={item.link} className={`${styles.linkWrap}`}>
+			<img src={item.icon} className={styles.icon} />
+			<div className={styles.title}>{item.title}</div>
+		</NavLink>;
+		
+		return <div className={topClass} key={index}>
+			{isWideDevice ? 
+				navlink : 
+				<Tooltip content={item.title} style="light" placement={isSmallDevice? "top":"right"} className={styles.tooltipCard}> {navlink}</Tooltip>}
+		</div>;
 	});
 	
 	//top nav buttons
