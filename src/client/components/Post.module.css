@@ -1,0 +1,112 @@
+.post {
+    max-width: 600px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .postHeader, .postFooter {
+    padding: 10px;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+  }
+  
+  .postBody {
+    padding: 10px;
+    background-color: #fff;
+  }
+  
+  .profilePic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .postHeader div {
+    display: inline-block;
+    vertical-align: top;
+  }
+  
+  .postHeader h2 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .postHeader p {
+    margin: 0;
+    font-size: 14px;
+    color: #888;
+  }
+  
+  .postBody img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .postFooter {
+    min-height:60px;
+    display: flex;
+  }
+  
+  .likeCount {
+    font-family: "Roboto", sans-serif;
+    margin-right: 20px;
+    margin-top: 4px;
+  }
+
+  .likeButton {
+    height: 30px;
+    margin-right:4px;
+  }
+
+  .likeButton:hover {
+    cursor: pointer;
+  }
+
+  .likes{
+    display:flex;
+  }
+
+  .wavingHand {
+    margin-left: 6px;
+    height: 26px;
+    margin-right: 6px;
+  }
+
+  .pressToHelp {
+    margin-top: 18px;
+  }
+
+  .wavingHand:hover {
+    cursor: pointer;
+  }
+
+  .post .postBody {
+    overflow: hidden; /* Initially hide overflowing text */
+    text-overflow: ellipsis; /* Add ellipsis for truncated text */
+  }
+  
+  .post .postBody.showMore {
+    overflow: visible; /* Show all text when expanded */
+  }
+  
+  .post .readMore {
+    background-color: transparent; /* Makes the button less prominent */
+    color: #333; /* Darker color for better contrast */
+    border: 1px solid #ddd; /* Subtle border */
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: underline; /* Underline for emphasis on hover */
+  }
+  
+  .post .readMore:hover { /* Styles on hover */
+    background-color: #eee; /* Slightly lighter background on hover */
+  }
