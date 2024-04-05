@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 
 import AppSideBar from '../components/AppSideBar';
-import styles from "./root.module.scss";
 
 import HomeIcon from "../assets/images/home-icon.svg";
 import SearchIcon from "../assets/images/search-icon.svg";
@@ -23,7 +22,7 @@ export default function Root() {
         { icon: MessagesIcon, title: "Messages", link: "/messages"},
         { icon: LikedIcon, title: "Liked", link: "/liked", showOnTop: true},
         { icon: CreateIcon, title: "Create", link: "/create", showOnTop: true},
-        { icon: ProfileIcon, title: (isLoggedIn ? "Profile" : "Sign in/up"), link: isLoggedIn ? "/profile" : "/login"}
+        { icon: ProfileIcon, title: (isLoggedIn ? "Profile" : "Sign in/up"), link: isLoggedIn ? "/profile" : "/auth?mode=login"}
     ];
 
     return (

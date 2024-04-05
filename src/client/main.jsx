@@ -8,6 +8,8 @@ import Root from "./routes/root";
 import ErrorPage from "./error-page";
 import Home from "./routes/home";
 import Explore from "./routes/explore";
+import Auth, { action as authAction} from "./routes/auth";
+
 
 const router = createBrowserRouter([
 	{
@@ -17,6 +19,7 @@ const router = createBrowserRouter([
 		children: [
 			{ path: "/", element: <Home /> },
 			{ path: "/explore", element: <Explore /> },
+			{ path: "/auth", element: <Auth />, action: authAction }
 		],
 	},
 ]);
