@@ -70,7 +70,7 @@ const Post = ({ name, profilePic, time, date, location, postPic, postText, likes
               alt="Like"
            />
          </div>
-         <p>Press the hand to help</p>
+         <p>Press to help</p>
         </div>
       </div>
   );
