@@ -1,4 +1,4 @@
-import styles from "./home.module.scss";
+import styles from "./Home.module.scss";
 import Feed from "../components/Feed.jsx";
 
 const posts = [

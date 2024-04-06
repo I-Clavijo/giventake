@@ -1,4 +1,4 @@
-import styles from "./explore.module.scss";
+import styles from "./Explore.module.scss";
 
 
 export default function Explore() {
