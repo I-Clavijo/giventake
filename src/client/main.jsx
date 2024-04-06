@@ -8,7 +8,7 @@ import Root from "./routes/Root";
 import ErrorPage from "./routes/ErrorPage";
 import Home from "./routes/Home";
 import Explore from "./routes/Explore";
-import Auth, { action as authAction} from "./routes/Auth";
+import Auth, { action as authAction } from "./routes/Auth";
 import Profile from "./routes/Profile";
 import EditProfile from "./routes/EditProfile";
 

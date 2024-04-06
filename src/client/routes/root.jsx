@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { useState } from "react";
 
 import AppSideBar from '../components/AppSideBar';
 
@@ -9,7 +10,6 @@ import MessagesIcon from "../assets/images/messages-icon.svg";
 import LikedIcon from "../assets/images/liked-icon.svg";
 import CreateIcon from "../assets/images/create-icon.svg";
 import ProfileIcon from "../assets/images/profile-icon.svg";
-import { useState } from "react";
 
 
 export default function Root({children}) {
