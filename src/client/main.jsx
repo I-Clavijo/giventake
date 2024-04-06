@@ -9,6 +9,7 @@ import ErrorPage from "./error-page";
 import Home from "./routes/home";
 import Explore from "./routes/explore";
 import UserProfile from "./routes/UserProfile";
+import EditProfile from "./routes/editProfile";
 
 const router = createBrowserRouter([
 	{
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
 			{ path: "/", element: <Home /> },
 			{ path: "/explore", element: <Explore /> },
 			{ path: "/userProfile", element: <UserProfile /> },
+			{ path: "/editProfile", element: <EditProfile /> },
 		],
 	},
 ]);

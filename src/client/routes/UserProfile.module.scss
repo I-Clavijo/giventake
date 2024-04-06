@@ -1,22 +1,24 @@
-.profile-container {
+.profileContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
+  
 }
 
 .picture {
-  margin: auto; /* Center horizontally */
+  margin: auto;
   background-size: cover;
   width: 15%;
   height: 15%;
   border-radius: 50%;
 }
 
-.name {
-  text-align: center; /* Center text horizontally */
-  margin-top: 10px; /* Optional: add some margin to separate from picture */
+.username {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
 }
 
 .location,
@@ -32,31 +34,33 @@
 }
 
 .info {
-  text-align: right;
+  text-align: left;
+  padding: 8px;
+ 
+
 }
 
-.buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
 
-@mixin button-styles {
-  padding: 10px 20px;
-  border: 1px solid #000000;
-  border-radius: 15%;
+
+
+.editBtn {
   cursor: pointer;
-}
+  border-radius: 50%;
+  color: white;
+  background-color: #777; 
+  padding: 10px 10px; 
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-left: auto;
+  transition: all 0.2s ease-in-out;
 
-.follow-btn,
-.contact-btn {
-  @include button-styles;
-  background-color: #ddd;
-}
-
-.follow-btn,
-.contact-btn {
   &:hover {
-    background-color: #eee;
+    background-color: #333; 
   }
+}
+
+.editBtn svg {
+  width: 16px;
+  height: 16px;
 }
