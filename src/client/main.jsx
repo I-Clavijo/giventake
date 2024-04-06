@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 
-import Root from "./routes/Roots";
+import Root from "./routes/Root";
 import ErrorPage from "./routes/ErrorPage";
 import Home from "./routes/Home";
 import Explore from "./routes/Explore";
