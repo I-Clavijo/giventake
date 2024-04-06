@@ -82,9 +82,17 @@
 
   .pressToHelp {
     margin-top: 18px;
+    margin-right: 20px;
   }
 
   .wavingHand:hover {
+    cursor: pointer;
+  }
+
+  .report {
+    height: 22px;
+    width: 23px;
+    margin-top: 2px;
     cursor: pointer;
   }
 
