@@ -12,7 +12,7 @@ import ProfileIcon from "../assets/images/profile-icon.svg";
 import { useState } from "react";
 
 
-export default function Root() {
+export default function Root({children}) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const navlinks = [
@@ -28,6 +28,7 @@ export default function Root() {
     return (
         <>  
             <AppSideBar title="Given'take" nav={navlinks}>
+                {children}
                 <Outlet />
             </AppSideBar>
         </>
