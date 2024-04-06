@@ -1,8 +1,22 @@
+
+
 .profileContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   
+  .topActions{
+    display: flex;
+    justify-content: right;
+    .btnEdit{
+      width: fit-content;
+    }
+  }
+
+  .actions{
+    display: flex;
+    gap:.5rem;
+  }
 }
 
 .picture {

@@ -18,7 +18,7 @@ const navlinks = [
 	{ icon: MessagesIcon, title: "Messages", link: "/messages"},
 	{ icon: LikedIcon, title: "Liked", link: "/liked"},
 	{ icon: CreateIcon, title: "Create", link: "/create"},
-	{ icon: ProfileIcon, title: "Profile", link: "/UserProfile"}
+	{ icon: ProfileIcon, title: "Profile", link: "/profile"}
 ];
 export default function AppSideBar() {
 

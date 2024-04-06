@@ -8,19 +8,19 @@ import Root from "./routes/root";
 import ErrorPage from "./error-page";
 import Home from "./routes/home";
 import Explore from "./routes/explore";
-import UserProfile from "./routes/UserProfile";
-import EditProfile from "./routes/editProfile";
+import Profile from "./routes/Profile";
+import EditProfile from "./routes/EditProfile";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Root />,
-		errorElement: <ErrorPage />,
+		errorElement: <Root><ErrorPage /></Root>,
 		children: [
 			{ path: "/", element: <Home /> },
 			{ path: "/explore", element: <Explore /> },
-			{ path: "/userProfile", element: <UserProfile /> },
-			{ path: "/editProfile", element: <EditProfile /> },
+			{ path: "/profile", element: <Profile /> },
+			{ path: "/account/edit", element: <EditProfile /> },
 		],
 	},
 ]);

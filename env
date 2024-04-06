@@ -1,2 +1,0 @@
-DB_ATLAS_URI="mongodb+srv://general_user:9cNn6mCMmeuEiYpN@giventakecluster.jyqjh9k.mongodb.net/giventake?retryWrites=true&w=majority&appName=GiventakeCluster"
-API_VERSION="1"

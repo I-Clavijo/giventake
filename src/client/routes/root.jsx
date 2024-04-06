@@ -4,16 +4,7 @@ import AppSideBar from '../containers/AppSideBar';
 import styles from "./root.module.scss";
 
 
-export default function Root() {
-    const navlinks = [
-        { icon: HomeIcon, title: "Home", link: "/"},
-        { icon: SearchIcon, title: "Search", link: "/search"},
-        { icon: ExploreIcon, title: "Explore", link: "/explore"},
-        { icon: MessagesIcon, title: "Messages", link: "/messages"},
-        { icon: LikedIcon, title: "Liked", link: "/liked", showOnTop: true},
-        { icon: CreateIcon, title: "Create", link: "/create", showOnTop: true},
-        { icon: ProfileIcon, title: "Profile", link: "/userProfile"}
-    ];
+export default function Root({children}) {
 
     return (
         <>  
@@ -22,6 +13,7 @@ export default function Root() {
                     <AppSideBar />
                 </div>
                 <div className={styles.pageWrap}>
+                    {children}
                     <Outlet />
                 </div>
             </div>            
