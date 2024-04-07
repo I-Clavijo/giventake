@@ -1,0 +1,43 @@
+.chatContainer {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    background-color: #cbe1e6;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    width: 60%;
+}
+
+.profilePicture {
+    width: 50px; /* Adjust size of profile picture */
+    height: 50px;
+    border-radius: 50%; /* Make the profile picture round */
+    margin-right: 10px;
+}
+
+.chatBox {
+    flex-grow: 1; /* Expand to fill remaining space */
+    display: flex;
+    flex-direction: column;
+}
+
+.chatInfo {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.lastMessage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Center items horizontally */
+}
+
+.leftSpan {
+    flex-grow: 1; /* Expand to fill available space */
+    margin-right: 10px; /* Add spacing between lastMessage content */
+}
+
+.time {
+    font-size: 12px; /* Adjust font size for time */
+    color: gray; /* Apply color to time */
+}

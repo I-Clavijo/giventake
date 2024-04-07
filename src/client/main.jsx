@@ -1,22 +1,30 @@
-import "./index.css";
+import "./index.scss";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 
-import Root from "./routes/root";
-import ErrorPage from "./error-page";
-import Home from "./routes/home";
-import Explore from "./routes/explore";
+import Root from "./routes/Root";
+import ErrorPage from "./routes/ErrorPage";
+import Home from "./routes/Home";
+import Explore from "./routes/Explore";
+import Auth, { action as authAction } from "./routes/Auth";
+import Profile from "./routes/Profile";
+import EditProfile from "./routes/EditProfile";
+import Messages from "./routes/Messages";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Root />,
-		errorElement: <ErrorPage />,
+		errorElement: <Root><ErrorPage /></Root>,
 		children: [
 			{ path: "/", element: <Home /> },
 			{ path: "/explore", element: <Explore /> },
+			{ path: "/auth", element: <Auth />, action: authAction },
+			{ path: "/profile", element: <Profile /> },
+			{ path: "/account/edit", element: <EditProfile /> },
+			{ path: "/messages", element: <Messages /> },
 		],
 	},
 ]);
