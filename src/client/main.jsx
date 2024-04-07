@@ -11,6 +11,7 @@ import Explore from "./routes/Explore";
 import Auth, { action as authAction } from "./routes/Auth";
 import Profile from "./routes/Profile";
 import EditProfile from "./routes/EditProfile";
+import Messages from "./routes/Messages";
 
 const router = createBrowserRouter([
 	{
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
 			{ path: "/auth", element: <Auth />, action: authAction },
 			{ path: "/profile", element: <Profile /> },
 			{ path: "/account/edit", element: <EditProfile /> },
+			{ path: "/messages", element: <Messages /> },
 		],
 	},
 ]);
