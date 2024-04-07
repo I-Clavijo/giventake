@@ -8,7 +8,7 @@ const Create = () => {
   };
 
   return (
-    <div className="container">
+    <div className={styles.block}>
       <PostCreator onCreatePost={handlePostCreated} />
     </div>
   );
