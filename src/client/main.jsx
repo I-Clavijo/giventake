@@ -12,6 +12,7 @@ import Auth, { action as authAction } from "./routes/Auth";
 import Profile from "./routes/Profile";
 import EditProfile from "./routes/EditProfile";
 import LikedPosts from "./routes/LikedPosts";
+import Create from "./routes/Create";
 
 const router = createBrowserRouter([
 	{
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
 			{ path: "/profile", element: <Profile /> },
 			{ path: "/account/edit", element: <EditProfile /> },
 			{ path: "/liked", element: <LikedPosts />},
+			{ path: "/create", element: <Create />},
 		],
 	},
 ]);
