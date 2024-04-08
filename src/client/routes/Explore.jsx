@@ -1,5 +1,6 @@
 import styles from "./Explore.module.scss";
 import FeaturedCategories from "../components/FeaturedCategories.jsx";
+import FeaturedPosts from "../components/FeaturedPosts.jsx";
 
 
 export default function Explore() {
@@ -7,6 +8,7 @@ export default function Explore() {
 		<>	
 			<div className={styles.block}>
 				<FeaturedCategories />
+				<FeaturedPosts />
             </div>
 		</>
 	);

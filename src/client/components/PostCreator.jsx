@@ -66,10 +66,7 @@ const PostCreator = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="picture"
-            >
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="picture">
               Select a picture:
             </label>
             <div>
@@ -77,10 +74,7 @@ const PostCreator = () => {
              </div>
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="description"
-            >
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
               Write a description:
             </label>
             <textarea
@@ -92,11 +86,11 @@ const PostCreator = () => {
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary px-4 py-2 rounded shadow-sm text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-600">
-            Submit
-          </button>
+          <div className={styles.submitButton}>
+            <button type="submit" className="btn btn-primary px-4 py-2 rounded shadow-sm text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-600">
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>

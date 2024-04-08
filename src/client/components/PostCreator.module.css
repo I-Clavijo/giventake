@@ -21,7 +21,8 @@
   color: #333;
 }
 
-
-
-
+.submitButton {
+  display: flex;
+  justify-content: center;
+}
 

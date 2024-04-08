@@ -1,5 +1,5 @@
 import styles from "./Home.module.scss";
-import Feed from "../components/Feed.jsx";
+import LikedPostsFeed from "../components/LikedPostsFeed.jsx";
 
 const posts = [
     {
@@ -36,8 +36,8 @@ export default function LikedPosts() {
 	return (
 		<>
 			<div className={styles.block}>
-				<Feed posts={posts}/>
-            </div>			
+				<LikedPostsFeed posts={posts}/>
+      </div>			
 		</>
 	);
 }
