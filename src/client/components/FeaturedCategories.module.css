@@ -1,0 +1,76 @@
+
+.grid {
+    max-width: 1000px;
+    margin: 5px auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 3px;
+}
+
+.gridHeader{
+  padding: 10px;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.gridTitle {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 5px;
+
+}
+
+.categoryItem {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+}
+
+.categoryItem img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+
+}
+
+.categoryItem:hover img {
+  transform: scale(1.1);
+
+}
+
+.categoryOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  opacity: 0.6;
+  transition: opacity 0.3s ease-in-out;
+
+}
+
+.categoryItem:hover .category-overlay {
+  opacity: 1;
+
+}
+
+.categoryName {
+  font-size: 18px;
+  font-weight: bold;
+
+}

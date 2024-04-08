@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from "./PostCreator.module.css";
+import { FileInput, Label } from "flowbite-react";
 
 const interests = [
   'Technology',
@@ -47,7 +48,7 @@ const PostCreator = () => {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="interest"
             >
-                Select an interest:
+                Select a category:
             </label>
             <select
               id="interest"
@@ -56,7 +57,7 @@ const PostCreator = () => {
               value={selectedInterest}
               onChange={(e) => setSelectedInterest(e.target.value)}
             >
-              <option value="">Select an Interest</option>
+              <option value="">Select a category</option>
               {interests.map((interest) => (
                 <option key={interest} value={interest}>
                   {interest}
@@ -71,13 +72,9 @@ const PostCreator = () => {
             >
               Select a picture:
             </label>
-            <input
-              type="file"
-              id="picture"
-              name="picture"
-              className="form-control block w-full px-0.5 py-0.5 text-base font-normal text-gray-700 rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:disabled:opacity-40"
-              onChange={handlePictureChange}
-            />
+            <div>
+             <FileInput id="file-upload-helper-text" helperText="SVG, PNG, JPG or GIF (MAX. 800x400px)." />
+             </div>
           </div>
           <div className="mb-4">
             <label

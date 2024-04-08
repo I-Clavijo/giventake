@@ -1,12 +1,12 @@
 import styles from "./Explore.module.scss";
+import FeaturedCategories from "../components/FeaturedCategories.jsx";
 
 
 export default function Explore() {
 	return (
 		<>	
-			<h1>Explore</h1>
 			<div className={styles.block}>
-				Hi!!!
+				<FeaturedCategories />
             </div>
 		</>
 	);
