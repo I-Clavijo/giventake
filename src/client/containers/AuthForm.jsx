@@ -1,28 +1,63 @@
-import styles from "./AuthForm.module.scss";
+import { useCallback } from "react";
+import { useForm } from "react-hook-form";
 import {
-    Form,
     Link,
     useSearchParams,
-    useActionData,
-    useNavigation,
 } from 'react-router-dom';
 import { Button, Checkbox, Label, TextInput, Card } from 'flowbite-react';
+import { useLogin, useSignup } from '../services/auth'
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import styles from "./AuthForm.module.scss";
 import LoginImg from '../assets/images/login-photo.png';
 
-export default function AuthForm() {
-    const data = useActionData();
-    const navigation = useNavigation();
 
+export default function AuthForm() {
     const [searchParams] = useSearchParams();
     const isLogin = searchParams.get('mode') === 'login';
-    const isSubmitting = navigation.state === 'submitting';
+
+    const loginSchema = z
+        .object({
+            email: z.string().email(),
+            password: z.string().min(5).max(20),
+            rememberUser: z.boolean()
+        });
+
+    const signupSchema = z
+        .object({
+            firstName: z.string().min(2).max(30),
+            lastName: z.string().min(2).max(30),
+            email: z.string().email(),
+            password: z.string().min(5).max(20),
+            confirmPassword: z.string().min(5).max(20),
+            agreeTerms: z.boolean()
+        })
+        .refine(({ password, confirmPassword }) => password === confirmPassword, {
+            path: ['confirmPassword'],
+            message: 'Passwords does not match'
+        })
+        .refine(({ agreeTerms }) => agreeTerms, {
+            path: ['agreeTerms'],
+            message: 'Please read the terms and conditions'
+        });
+
+    const formSchema = isLogin ? loginSchema : signupSchema;
+    const {
+        register,
+        handleSubmit,
+        getValues,
+        formState: { errors, isSubmitting },
+    } = useForm({ resolver: zodResolver(formSchema) });
 
     let btnLoginLabel = isSubmitting ? 'Loging in...' : 'Login';
     if (!isLogin) btnLoginLabel = isSubmitting ? 'Signing Up...' : 'Sign Up';
 
+    const { mutateAsync: signupMutate } = useSignup();
+    const { mutateAsync: loginMutate } = useLogin();
+    const onSubmit = isLogin ? loginMutate : signupMutate;
+
     return (
         <div className={styles.pageInnerWrap}>
-
             <div>
                 <h1>Join Us!</h1>
                 <p>
@@ -37,33 +72,47 @@ export default function AuthForm() {
                     </Card>
                 </div>
 
-                <Form method="post" className={styles.form}>
+                <form method="post" className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                     <h2>{isLogin ? 'Login' : 'Create a new user'}</h2>
-
-                    {data && data.errors && (
+                    {/* TODO:  add errors and messages from server */}
+                    {/* {errors && (
                         <ul>
-                            {Object.values(data.errors).map((err) => (
+                            {Object.values(errors).map((err) => (
                                 <li key={err}>{err}</li>
                             ))}
                         </ul>
-                    )}
-                    {data && data.message && <p>{data.message}</p>}
+                    )} */}
+                    {/* {data && data.message && <p>{data.message}</p>} */}
+                    {!isLogin && <>
+                        <div>
+                            <div className="mb-1 block">
+                                <Label htmlFor="txtFirstName" value="First Name" />
+                            </div>
+                            <TextInput id="txtFirstName" type="text" {...register('firstName')} color={errors.firstName ? 'failure' : 'gray'} shadow helperText={errors.firstName ? errors.firstName.message : ''} />
+                        </div>
+                        <div>
+                            <div className="mb-1 block">
+                                <Label htmlFor="txtLastName" value="Last Name" />
+                            </div>
+                            <TextInput id="txtLastName" type="text" {...register('lastName')} color={errors.lastName ? 'failure' : 'gray'} helperText={errors.lastName ? errors.lastName.message : ''} shadow />
+                        </div>
+                    </>}
                     <div>
                         <div className="mb-1 block">
                             <Label htmlFor="txtEmail" value="Your email" />
                         </div>
-                        <TextInput id="txtEmail" type="email" placeholder="name@provider.com" required shadow />
+                        <TextInput id="txtEmail" type="email" {...register('email')} color={errors.email ? 'failure' : 'gray'} helperText={errors.email ? errors.email.message : ''} placeholder="name@provider.com" shadow />
                     </div>
                     <div>
                         <div className="mb-1 block">
                             <Label htmlFor="password1" value="Your password" />
                         </div>
-                        <TextInput id="password1" type="password" required shadow />
+                        <TextInput id="password1" type="password" {...register('password')} color={errors.password ? 'failure' : 'gray'} helperText={errors.password ? errors.password.message : ''} shadow />
                     </div>
 
                     {isLogin &&
                         <div className="flex items-center gap-2">
-                            <Checkbox id="remember" />
+                            <Checkbox id="remember" {...register('rememberUser')} />
                             <Label htmlFor="remember">Remember me</Label>
                         </div>}
 
@@ -72,10 +121,10 @@ export default function AuthForm() {
                             <div className="mb-1 block">
                                 <Label htmlFor="repeat-password" value="Repeat password" />
                             </div>
-                            <TextInput id="repeat-password" type="password" required shadow />
+                            <TextInput id="repeat-password" type="password" {...register('confirmPassword')} color={errors.confirmPassword ? 'failure' : 'gray'} helperText={errors.confirmPassword ? errors.confirmPassword.message : ''} shadow />
                         </div>
                         <div className="flex items-center gap-2">
-                            <Checkbox id="agree" />
+                            <Checkbox id="agree" {...register('agreeTerms')} />
                             <Label htmlFor="agree" className="flex">
                                 I agree with the&nbsp;
                                 <Link href="#" className="text-cyan-600 hover:underline dark:text-cyan-500">
@@ -83,6 +132,7 @@ export default function AuthForm() {
                                 </Link>
                             </Label>
                         </div>
+
                     </>
                     }
 
@@ -94,7 +144,7 @@ export default function AuthForm() {
                     <Button type="submit" disabled={isSubmitting}>
                         {btnLoginLabel}
                     </Button>
-                </Form>
+                </form>
             </div>
         </div>
     );
