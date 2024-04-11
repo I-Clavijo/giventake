@@ -1,6 +1,7 @@
 .accordionTitle {
   height:120px;
   background-color: #f5f5f5;
+  
 }
 
 
@@ -11,6 +12,7 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: 10px;
   }
   
   .postHeader, .postFooter {
@@ -24,6 +26,7 @@
   .postBody {
     padding: 10px;
     background-color: #fff;
+
   }
   
   .profilePic {
@@ -74,6 +77,7 @@
   .likeButton {
     height: 30px;
     margin-right:4px;
+    margin-left: 15px;
   }
 
   .likeButton:hover {

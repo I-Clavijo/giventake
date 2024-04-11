@@ -30,17 +30,17 @@ const FeaturedCategories = () => {
         <div className={styles.gridHeader}>
             <div className={styles.gridTitle}>Explore featured categories</div>
         </div>
-      <div className={styles.categoriesGrid}>
-        {categories.map((category) => (
-          <Link key={category.id} to={category.to} className={styles.categoryItem}>
-            <div className={styles.categoryContent}> 
-              <img className="h-auto max-w-full rounded-lg" src={category.obj} alt={category.name} />
-              <div className={styles.categoryOverlay}>
-                <h3 className={styles.categoryName}>{category.name}</h3>
+        <div className={styles.categoriesGrid}>
+          {categories.map((category) => (
+            <Link key={category.id} to={category.to} className={styles.categoryItem}>
+              <div className={styles.categoryContent}> 
+                <img className="h-auto max-w-full rounded-lg" src={category.obj} alt={category.name} />
+                <div className={styles.categoryOverlay}>
+                  <h3 className={styles.categoryName}>{category.name}</h3>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}     
+            </Link>
+          ))}     
       </div>
     </div>
 

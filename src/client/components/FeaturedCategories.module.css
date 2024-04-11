@@ -1,12 +1,10 @@
 
 .grid {
-    max-width: 1000px;
-    margin: 5px auto;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    padding: 3px;
+  margin: 5px auto;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 .gridHeader{
@@ -15,13 +13,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 15px;
+
 }
 
 .gridTitle {
-  font-size: 15px;
+  margin: 0;
+  font-size: 20px;
+  color: #333;
   font-weight: bold;
-  color: #333; /* Define a base color for the title */
   transition: color 0.3s ease-in-out;
 }
 
@@ -29,14 +28,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 5px;
-
+  padding: 10px;
 }
 
 .categoryItem {
   position: relative;
   width: 100%;
   overflow: hidden;
-
 }
 
 .categoryItem img {
@@ -55,13 +53,14 @@
 .categoryOverlay {
   position: absolute;
   bottom: 0;
+  top:0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.2);
   color: white;
   text-align: center;
   padding: 2px 0;
-  opacity: 0.6;
+  opacity: 0.8;
   transition: opacity 0.3s ease-in-out;
 }
 

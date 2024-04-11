@@ -1,10 +1,10 @@
 .post {
     max-width: 600px;
-    margin: 20px auto;
     border: 1px solid #ddd;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: auto;
   }
   
   .postHeader, .postFooter {
@@ -64,6 +64,7 @@
   .likeButton {
     height: 30px;
     margin-right:4px;
+    margin-left:10px;
   }
 
   .likeButton:hover {

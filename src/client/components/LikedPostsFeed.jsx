@@ -5,6 +5,9 @@ import styles from './LikedPostsFeed.module.css';
 const LikedPostsFeed = ({ posts }) => {
     return (
         <div className={styles.feed}>
+            <div className={styles.header}>
+                <h2 className={styles.title}>Liked Posts</h2>
+            </div>
             {posts.map(( post, index ) => (
                 <LikedPost
                     key={index}
