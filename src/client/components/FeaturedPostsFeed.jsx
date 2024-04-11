@@ -6,7 +6,7 @@ const FeaturedPostsFeed = ({ posts }) => {
     return (
         <div className={styles.feed}>
             <div className={styles.header}>
-                <h2 className={styles.title}>Featured Posts</h2>
+                <h2 className={styles.title}>Explore featured Posts</h2>
             </div>
             <div className={styles.postsGrid}>
                 {posts.map(( post, index ) => (

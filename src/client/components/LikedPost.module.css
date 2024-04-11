@@ -76,8 +76,7 @@
 
   .likeButton {
     height: 30px;
-    margin-right:4px;
-    margin-left: 15px;
+    margin-left: 10px;
   }
 
   .likeButton:hover {
@@ -89,14 +88,13 @@
   }
 
   .wavingHand {
-    margin-left: 6px;
     height: 26px;
     margin-right: 6px;
   }
 
   .pressToHelp {
     margin-top: 18px;
-    margin-right: 20px;
+    margin-right: 15px;
   }
 
   .wavingHand:hover {
@@ -108,6 +106,7 @@
     width: 23px;
     margin-top: 2px;
     cursor: pointer;
+    margin-right: 10px;
   }
 
   .post .postBody {
