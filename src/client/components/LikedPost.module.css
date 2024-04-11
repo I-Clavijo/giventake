@@ -26,9 +26,8 @@
   .postBody {
     padding: 10px;
     background-color: #fff;
-
   }
-  
+
   .profilePic {
     width: 50px;
     height: 50px;
@@ -51,6 +50,7 @@
     margin: 0;
     font-size: 14px;
     color: #888;
+    
   }
 
   
