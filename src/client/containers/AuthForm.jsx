@@ -1,15 +1,17 @@
-import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import {
     Link,
     useSearchParams,
+    useNavigate, 
+    useLocation
 } from 'react-router-dom';
 import { Button, Checkbox, Label, TextInput, Card } from 'flowbite-react';
-import { useLogin, useSignup } from '../services/auth'
+import { useSignUp } from '../hooks/useSignUp'
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import styles from "./AuthForm.module.scss";
 import LoginImg from '../assets/images/login-photo.png';
+import { useLogin } from "../hooks/useLogin";
 
 
 export default function AuthForm() {
@@ -45,16 +47,15 @@ export default function AuthForm() {
     const {
         register,
         handleSubmit,
-        getValues,
         formState: { errors, isSubmitting },
     } = useForm({ resolver: zodResolver(formSchema) });
 
     let btnLoginLabel = isSubmitting ? 'Loging in...' : 'Login';
     if (!isLogin) btnLoginLabel = isSubmitting ? 'Signing Up...' : 'Sign Up';
 
-    const { mutateAsync: signupMutate } = useSignup();
+    const { mutateAsync: signuUpMutate } = useSignUp();
     const { mutateAsync: loginMutate } = useLogin();
-    const onSubmit = isLogin ? loginMutate : signupMutate;
+    const onSubmit = isLogin ? loginMutate : signuUpMutate;
 
     return (
         <div className={styles.pageInnerWrap}>
@@ -113,7 +114,7 @@ export default function AuthForm() {
                     {isLogin &&
                         <div className="flex items-center gap-2">
                             <Checkbox id="remember" {...register('rememberUser')} />
-                            <Label htmlFor="remember">Remember me</Label>
+                            <Label htmlFor="remember">Trust this device?</Label>
                         </div>}
 
                     {!isLogin && <>

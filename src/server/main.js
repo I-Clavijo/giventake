@@ -1,4 +1,4 @@
-import { connectDB } from "./db/connection.js"
+import { connectDB } from "./utils/connection.js"
 import createApp from "./app.js"
 import ViteExpress from "vite-express";
 
@@ -7,10 +7,7 @@ try {
 
 	// Connect to the database
 	const isConnected = await connectDB();
-
-	if (!isConnected) {
-		throw new Error("Database connection failed.")
-	}
+	if (!isConnected) throw new Error("Database connection failed.")
 
 	const { PORT = 3000 } = process.env;
 	ViteExpress.listen(app, PORT, () =>{

@@ -1,44 +1,54 @@
 import express from 'express';
-import HttpError from "./http-error.js";
-import usersRoutes from "./routes/users-routes.js";
-import config from "./config.js";
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import corsOptions from './config/corsOptions.js';
+import { logger } from './middleware/logEvents.js';
+import credentials from './middleware/credentials.js';
+import errorHandler from './middleware/errorHandler.js';
+import authRoutes from "./routes/auth.js";
+import apiRoutes from './routes/api.js';
+// import rootRoutes from './routes/root.js';
+import { API_VERSION } from "./config.js";
+
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default function createApp() {
-    const app = express();
+	const app = express();
 
+	// custom middleware logger
+	app.use(logger);
+
+	// Handle options credentials check - before CORS!
+	// and fetch cookies credentials requirement
+	app.use(credentials);
+
+	// Cross Origin Resource Sharing
+	app.use(cors(corsOptions));
+
+	// built-in middleware to handle urlencoded form data
+	app.use(express.urlencoded({ extended: false }));
+
+	// parse to json format
 	app.use(express.json());
 
-	// Setting CORS Headers to every response of the server
-	app.use((req, res, next) => {
-		res.setHeader(
-			"Access-Control-Allow-Origin","*"
-		); // * => this is the domain
-		res.setHeader(
-			"Access-Control-Allow-Headers",
-			"Origin, X-Requested-With, Content-Type, Accept, Authorization"
-		);
-		res.setHeader(
-			"Access-Control-Allow-Methods",
-			"GET, POST, PATCH, DELETE, OPTIONS"
-		);
-		next();
-	});
+	//middleware for cookies
+	app.use(cookieParser());
 
-	app.use(`/api/${config.API_VERSION}/users`, usersRoutes);
+	//serve static files
+	// app.use('/', express.static(path.join(__dirname, '/public')));
 
-	//handle error
-	app.use((error, req, res, next) => {
-		if (res.headerSent) {
-			return next(error);
-		}
-		res.status(error.code || 500);
-		res.json({ message: error.message || "An unknown error occured!" });
-	});
+	//public routes
+	app.use("/auth", authRoutes);
 
-	// default error if route not handled
-	app.use((error, req, res, next) => {
-		throw new HttpError("Could not find this route.", 404);
-	});
+	// api routes
+	app.use(`/api/v${API_VERSION}`, apiRoutes);
 
-  return app;
+	// handle errors
+	app.use(errorHandler);
+
+	return app;
 }

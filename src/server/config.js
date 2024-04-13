@@ -2,9 +2,12 @@ import dotenv from 'dotenv';
 
 dotenv.config(); // Load environment variables from .env file
 
-const config = {
-  DB_ATLAS_URI: process.env.DB_ATLAS_URI,
-  API_VERSION: process.env.API_VERSION,
-};
+const envVariables = ['DB_ATLAS_URI', 'API_VERSION', 'ACCESS_TOKEN_SECRET', 'REFRESH_TOKEN_SECRET'];
 
-export default config;
+// auto generate config object
+const config = {}; 
+for (const variable of envVariables) {
+  config[variable] = process.env[variable];
+}
+
+export const { DB_ATLAS_URI, API_VERSION, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = config;
