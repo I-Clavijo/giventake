@@ -1,13 +1,11 @@
 import { axiosPrivate } from "../api/axios";
 import { useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
-import { useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY } from "../constants/queryKeys";
+import { useUser } from "./useUser";
 
 const useAxiosPrivate = () => {
     const refresh = useRefreshToken();
-    const queryClient = useQueryClient();
-    const user = queryClient.getQueryData([QUERY_KEY.user]);
+    const { data: user } = useUser();
 
     useEffect(() => {
 
@@ -26,8 +24,9 @@ const useAxiosPrivate = () => {
                 const prevRequest = error?.config;
                 if (error?.response?.status === 403 && !prevRequest?.sent) {
                     prevRequest.sent = true;
-                    const newAccessToken = await refresh();
-                    prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+
+                    refresh();
+                    prevRequest.headers['Authorization'] = `Bearer ${user?.accessToken}`;
                     return axiosPrivate(prevRequest);
                 }
                 return Promise.reject(error);

@@ -6,14 +6,14 @@ import { useUser } from "../../hooks/useUser";
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
     const refresh = useRefreshToken();
-    const { user } = useUser();
+    const { data: user } = useUser();
 
     useEffect(() => {
         let isMounted = true;
 
         const verifyRefreshToken = async () => {
             try {
-                await refresh();
+                refresh()
             }
             catch (err) {
                 console.error(err);
@@ -22,16 +22,11 @@ const PersistLogin = () => {
                 isMounted && setIsLoading(false);
             }
         }
-
+        console.log("refresh: ", !user?.accessToken && user.persist)
         !user?.accessToken && user.persist ? verifyRefreshToken() : setIsLoading(false);
 
         return () => isMounted = false;
     }, [])
-
-    useEffect(() => {
-        console.log(`isLoading: ${isLoading}`)
-        console.log(`aT: ${JSON.stringify(user?.accessToken)}`)
-    }, [isLoading])
 
     return (
         <>

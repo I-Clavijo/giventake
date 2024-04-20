@@ -16,11 +16,6 @@ export const signUp = async (req, res) => {
         //encrypt the password
         const hashedPassword = await bcrypt.hash(password, 10);
         const defaultRoles = { User: 2001 };
-        const userInfo = {
-            firstName,
-            lastName,
-            email
-        };
 
         // create JWTs
         const accessToken = jwt.sign(
@@ -35,13 +30,23 @@ export const signUp = async (req, res) => {
         );
 
         // create and store the new user
-        const userDB = await User.create({ ...userInfo, password: hashedPassword, refreshToken, roles: defaultRoles });
+        const userDB = await User.create({
+            firstName,
+            lastName,
+            email, 
+            password: hashedPassword, 
+            refreshToken, 
+            roles: defaultRoles
+        });
 
         // Creates Secure Cookie with refresh token and sends to client
         res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
+        // Delete keys from the user object
+        ['password', 'refreshToken', '__v'].forEach(key => delete userDB[key]);
+
         // Send authorization roles and access token to user
-        res.json({ accessToken, userInfo: { id: userDB._id.valueOf(), ...userInfo } });
+        res.json({ accessToken, ...userDB });
     } catch (err) {
         res.status(500).json({ 'message': err.message });
     }
@@ -57,11 +62,7 @@ export const login = async (req, res) => {
     const match = await bcrypt.compare(password, foundUser.password);
     if (match) {
         const roles = Object.values(foundUser.roles).filter(Boolean);
-        const userInfo = {
-            firstName: foundUser.firstName,
-            lastName: foundUser.lastName,
-            email: foundUser.email
-        };
+
         // create JWTs
         const accessToken = jwt.sign(
             { email: foundUser.email, roles },
@@ -75,13 +76,16 @@ export const login = async (req, res) => {
         );
         // Saving refreshToken with current user
         foundUser.refreshToken = refreshToken;
-        const userDB = await foundUser.save();
+        await foundUser.save();
 
         // Creates Secure Cookie with refresh token and sends to client
         res.cookie('jwt', refreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
+        // Delete keys from the user object
+        ['password', 'refreshToken', '__v'].forEach(key => delete foundUser[key]);
+
         // Send authorization roles and access token to user
-        res.json({ accessToken, userInfo: { id: userDB._id.valueOf(), ...userInfo } });
+        res.json({ accessToken, ...foundUser });
 
     } else {
         res.sendStatus(401);
@@ -93,7 +97,7 @@ export const handleRefreshToken = async (req, res) => {
     if (!cookies?.jwt) return res.sendStatus(401);
     const refreshToken = cookies.jwt;
 
-    const foundUser = await User.findOne({ refreshToken }).exec();
+    const foundUser = await User.findOne({ refreshToken }).lean();
     if (!foundUser) return res.sendStatus(403); //Forbidden 
     // evaluate jwt 
     jwt.verify(
@@ -103,16 +107,15 @@ export const handleRefreshToken = async (req, res) => {
             if (err || foundUser.email !== decoded.email) return res.sendStatus(403);
             const roles = Object.values(foundUser.roles);
             const accessToken = jwt.sign(
-                {
-                    "userInfo": {
-                        "email": decoded.username,
-                        "roles": roles
-                    }
-                },
+                { email: decoded.username, roles },
                 ACCESS_TOKEN_SECRET,
                 { expiresIn: '10s' }
             );
-            res.json({ accessToken })
+
+            // Delete keys from the user object
+            ['password', 'refreshToken', '__v'].forEach(key => delete foundUser[key]);
+
+            res.status(200).json({ accessToken, ...foundUser });
         }
     );
 }

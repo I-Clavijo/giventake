@@ -5,7 +5,6 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { useUser } from "./hooks/useUser";
 
 import RequireAuth from './components/Auth/RequireAuth';
 import PersistLogin from './components/Auth/PersistLogin';
@@ -20,6 +19,7 @@ import Messages from "./routes/Messages";
 import Missing from "./routes/Missing";
 import Editor from "./routes/Editor";
 import Admin from "./routes/Admin";
+import Unauthorized from "./components/Auth/Unauthorized";
 
 const ROLES = {
 	'User': 2001,
@@ -34,16 +34,16 @@ const router = createBrowserRouter([
 		path: "/", element: <Root />, errorElement: <Root><ErrorPage /></Root>,
 		children: [
 			// public routes
-			{ path: "/", element: <Home /> },
-			{ path: "/explore", element: <Explore /> },
 			{ path: "/auth", element: <Auth /> },
-			{ path: "/profile", element: <Profile /> },
-			{ path: "/messages", element: <Messages /> },
-
-			// protected routes
+			{ path: "/unauthorized", element: <Unauthorized /> },
+			// protected routes 
 			{ 
 				element: <PersistLogin />,
 				children: [
+					{ path: "/", element: <Home /> },
+					{ path: "/explore", element: <Explore /> },
+					{ path: "/profile", element: <Profile /> },
+					{ path: "/messages", element: <Messages /> },
 					{ 
 						element: <RequireAuth allowedRoles={[ROLES.User]} />, 
 						children: [

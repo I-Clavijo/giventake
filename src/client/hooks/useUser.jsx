@@ -1,25 +1,18 @@
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from '../constants/queryKeys';
 
-const getUser = async (user, signal) => {
-    const axiosPrivate = useAxiosPrivate();
-    return await axiosPrivate.get(`/users/${user.userInfo.id}`, { signal });
-};
-
 export const useUser = () => {
-
-    const { data: user } = useQuery({
+    const query = useQuery({
         queryKey: [QUERY_KEY.user],
-        queryFn: async () => getUser(user),
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
+        initialData: { persist: JSON.parse(localStorage.getItem("persist")) || false }
     });
-
+    const user = query.data;
 
     return {
-        user: user ?? null,
+        ...query,
         isLoggedIn: !!user?.accessToken || false
-    }
+    };
 };

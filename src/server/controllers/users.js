@@ -17,12 +17,19 @@ export const getUsers = async (req, res, next) => {
 };
 
 export const getUserById = async (req, res) => {
-  if (!req?.params?.id) return res.status(400).json({ "message": 'User ID required' });
+  if (!req?.query?.id) return res.status(400).json({ "message": 'User ID required' });
 
-  const user = await User.findOne({ _id: req.params.id }, "-password").exec();
+  const user = await User.findOne({ _id: req.query.id }, "-password").lean();
   if (!user) {
-    return res.status(204).json({ 'message': `User ID ${req.params.id} not found` });
+    return res.status(204).json({ 'message': `User ID ${req.query.id} not found` });
   }
+  console.log('user: ',user)
+
+  // Array of keys to delete
+  const keysToDelete = ['password', 'refreshToken'];
+  // Delete keys from the user object
+  keysToDelete.forEach(key => delete user[key]);
+  
   res.json(user);
 };
 
