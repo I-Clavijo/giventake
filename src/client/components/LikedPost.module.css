@@ -1,9 +1,12 @@
 .accordionTitle {
   height:120px;
-  background-color: #f5f5f5;
-  
+  background-color: white;
 }
 
+.accordionTitle:hover {
+  height:120px;
+  background-color: white;
+}
 
 .post {
     max-width: 600px;
@@ -17,7 +20,7 @@
   
   .postHeader, .postFooter {
     padding: 2px;
-    background-color: #f5f5f5;
+    background-color: white;
     display: flex;
     align-items: center;
     margin-top: 10px;

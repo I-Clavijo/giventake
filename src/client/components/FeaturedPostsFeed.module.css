@@ -12,7 +12,8 @@
   padding:10px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 10px; /* Adjust gap size as needed for spacing between posts */
+  row-gap: 0px; /* Adjust gap size as needed for spacing between posts */
+  column-gap: 10px;
 }
 
 @media screen and (max-width: 428px) { /* Adjust breakpoint as needed */

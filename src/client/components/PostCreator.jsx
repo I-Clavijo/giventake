@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import styles from "./PostCreator.module.css";
-import { FileInput, Label } from "flowbite-react";
+import { Button, Datepicker, FileInput, Label } from "flowbite-react";
+import { set } from 'mongoose';
 
-const interests = [
+
+const Categorys = [
   'Technology',
   'Travel',
   'Music',
@@ -10,30 +12,47 @@ const interests = [
   'Sports',
 ];
 
+const countries = [
+  { value: 'US', label: 'United States' },
+  { value: 'CA', label: 'Canada' },
+  { value: 'UK', label: 'United Kingdom' },
+];
+
+
+
 const PostCreator = () => {
   
-  const [selectedInterest, setSelectedInterest] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
   const [picture, setPicture] = useState(null);
   const [description, setDescription] = useState('');
+  const [date, setDate] = useState('');
 
   const handlePictureChange = (event) => {
     setPicture(event.target.files[0]);
+  };
+
+  const handleDateChange = (date) => {
+    setDate(date);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     // Implement form submission logic here
-    // e.g., send data to your backend
     console.log('Submitting post:', {
-      selectedInterest,
+      selectedCategory,
+      selectedCountry,
       picture,
       description,
+      date,
     });
 
-    setSelectedInterest('');
+    setSelectedCategory('');
     setPicture(null);
     setDescription('');
+    setSelectedCountry('');
+    setDate('');
   };
 
   return (
@@ -44,29 +63,51 @@ const PostCreator = () => {
       <div className="container mx-auto px-4 py-8">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="interest"
-            >
-                Select a category:
+            <label className={styles.label} htmlFor="Category">
+              Select a category:
             </label>
             <select
-              id="interest"
-              name="interest"
-              className="form-select block w-full px-3 py-1.5 text-base font-normal text-gray-700 rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:disabled:opacity-40"
-              value={selectedInterest}
-              onChange={(e) => setSelectedInterest(e.target.value)}
+              id="Category"
+              name="Category"
+              className="form-select px- py-1.7 w-full rounded-md"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
             >
-              <option value="">Select a category</option>
-              {interests.map((interest) => (
-                <option key={interest} value={interest}>
-                  {interest}
+              <option value="">Category</option>
+              {Categorys.map((Category) => (
+                <option key={Category} value={Category}>
+                  {Category}
                 </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="picture">
+            <label
+              className={styles.label}
+              htmlFor="date">Select a date:
+            </label>
+            <Datepicker id="date" onSelectedDateChanged={handleDateChange}/>
+          </div>
+          <div className="mb-4">
+            <label className={styles.label} htmlFor="country">
+              Select a country:
+            </label>
+            <select
+              id="country"
+              name="country"
+              className="form-select px- py-1.7 w-full rounded-md"
+              value={selectedCountry}
+              onChange={(e) => setSelectedCountry(e.target.value)}
+            >
+              {countries.map((country) => (
+                <option key={country.value} value={country.value}>
+                  {country.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className={styles.label} htmlFor="picture">
               Select a picture:
             </label>
             <div>
@@ -74,7 +115,7 @@ const PostCreator = () => {
              </div>
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+            <label className={styles.label} htmlFor="description">
               Write a description:
             </label>
             <textarea
@@ -87,9 +128,7 @@ const PostCreator = () => {
             />
           </div>
           <div className={styles.submitButton}>
-            <button type="submit" className="btn btn-primary px-4 py-2 rounded shadow-sm text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-600">
-              Submit
-            </button>
+            <Button color="blue" onClick={handleSubmit}>Submit</Button>
           </div>
         </form>
       </div>

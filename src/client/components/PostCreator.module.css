@@ -21,6 +21,13 @@
   color: #333;
 }
 
+.label {
+  display: block;
+  margin: 2x;
+  font-weight: bold;
+  padding: 3px;
+}
+
 .submitButton {
   display: flex;
   justify-content: center;
