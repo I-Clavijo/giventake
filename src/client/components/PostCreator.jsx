@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from "./PostCreator.module.css";
-import { Button, Datepicker, FileInput, Label } from "flowbite-react";
+import { Textarea, Button, Datepicker, FileInput, Label } from "flowbite-react";
 
 
 const Categorys = [
@@ -114,24 +114,29 @@ const PostCreator = () => {
               Select a picture:
             </label>
             <div>
-             <FileInput id="fileInput" name="file" accept=".jpg, .png" 
-             helperText="SVG, PNG, JPG or GIF (MAX. 800x400px)." 
-             onChange={handlePictureChange}/>
+              <FileInput id="fileInput" name="file" accept=".jpg, .png" 
+                helperText="SVG, PNG, JPG or GIF (MAX. 800x400px)." 
+                onChange={handlePictureChange}
+              />
              </div>
           </div>
           <div className="mb-4">
             <label className={styles.label} htmlFor="description">
               Write a description:
             </label>
-            <textarea
-              id="description"
-              name="description"
-              rows="5"
-              className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 rounded transition ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:disabled:opacity-40"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
+                <div className="mb-2 block">
+                    <Label htmlFor="description" />
+                </div>
+                    <Textarea
+                      id="description" 
+                      name="description"
+                      placeholder="Write here" 
+                      required rows={4} 
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+
+            </div>
           <div className={styles.submitButton}>
             <Button color="blue" onClick={handleSubmit}>Submit</Button>
           </div>
