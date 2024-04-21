@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styles from "./PostCreator.module.css";
 import { Button, Datepicker, FileInput, Label } from "flowbite-react";
-import { set } from 'mongoose';
 
 
 const Categorys = [
@@ -29,7 +28,11 @@ const PostCreator = () => {
   const [date, setDate] = useState('');
 
   const handlePictureChange = (event) => {
-    setPicture(event.target.files[0]);
+    setPicture(event.target.files[0]); // get the first selected file
+
+    if(picture){
+      // check if the file is an image
+    }
   };
 
   const handleDateChange = (date) => {
@@ -111,7 +114,9 @@ const PostCreator = () => {
               Select a picture:
             </label>
             <div>
-             <FileInput id="file-upload-helper-text" helperText="SVG, PNG, JPG or GIF (MAX. 800x400px)." />
+             <FileInput id="fileInput" name="file" accept=".jpg, .png" 
+             helperText="SVG, PNG, JPG or GIF (MAX. 800x400px)." 
+             onChange={handlePictureChange}/>
              </div>
           </div>
           <div className="mb-4">
