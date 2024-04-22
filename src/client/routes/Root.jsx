@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
 import { SnackbarProvider } from 'notistack';
 import AppSideBar from '../components/AppSideBar';
+import { useUser } from "../api/hooks/useUser";
 
 import HomeIcon from "../assets/images/home-icon.svg";
 import SearchIcon from "../assets/images/search-icon.svg";
@@ -10,7 +10,6 @@ import MessagesIcon from "../assets/images/messages-icon.svg";
 import LikedIcon from "../assets/images/liked-icon.svg";
 import CreateIcon from "../assets/images/create-icon.svg";
 import ProfileIcon from "../assets/images/profile-icon.svg";
-import { useUser } from "../hooks/useUser";
 
 
 export default function Root({ children }) {

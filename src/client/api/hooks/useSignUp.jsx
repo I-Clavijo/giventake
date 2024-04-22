@@ -1,8 +1,8 @@
-import axios from '../api/axios';
+import axios from '../axios';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from 'notistack';
-import { QUERY_KEY } from '../constants/queryKeys';
+import { QUERY_KEY } from '../constants';
 
 
 const signUp = async ({ firstName, lastName, email, password }) => {

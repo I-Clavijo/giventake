@@ -1,12 +1,11 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Button } from "flowbite-react";
 import Stars from '../components/Stars';
+import { useUser } from '../api/hooks/useUser';
 
 import styles from './Profile.module.scss';
 import ProfileImg from '../assets/images/profile-img.jpeg';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
-import { useUser } from '../hooks/useUser';
 
 
 const user = {

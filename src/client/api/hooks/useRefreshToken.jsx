@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from '../api/axios';
-import { QUERY_KEY } from '../constants/queryKeys';
+import axios from '../axios';
+import { QUERY_KEY } from '../constants';
 
 const verifyRefreshToken = async () => axios.get('/auth/refresh', { withCredentials: true });
 
