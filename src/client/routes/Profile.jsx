@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Button } from "flowbite-react";
 import Stars from '../components/Stars';
+import { useUser } from '../api/hooks/useUser';
 
 import styles from './Profile.module.scss';
 import ProfileImg from '../assets/images/profile-img.jpeg';
@@ -12,23 +12,14 @@ const user = {
   name: 'John Bush',
   location: 'San Francisco, CA',
   rating: 4.5,
-  interests: ['Photography', 'Travel', 'Coding'],
-  info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod bibendum laoreet.',
+  interests: ['Photography', 'Travel', 'Coding'], 
+  bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod bibendum laoreet.',
 };
 
 const Profile = () => {
-  const [selectedInterests, setSelectedInterests] = useState([]);
+  const { data: user } = useUser();
 
-  // Function to handle interest selection
-  const handleInterestClick = (interest) => {
-    if (selectedInterests.includes(interest)) {
-      setSelectedInterests(selectedInterests.filter(item => item !== interest));
-    } else {
-      setSelectedInterests([...selectedInterests, interest]);
-    }
-  };
-
-  const interestsSepByDots = user.interests.map((interest, index) => (
+  const interestsSepByDots = user.interests?.map((interest, index) => (
     <span key={index}>
       {interest} {index < user.interests.length - 1 ? '•' : ''}
     </span>
@@ -48,11 +39,11 @@ const Profile = () => {
 
         <div className="flex flex-col items-center pb-10">
           <img className="w-24 h-28 mb-3 rounded-full shadow-lg" src={ProfileImg} alt="Profile image" />
-          <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{user.name}</h5>
-          <span className="text-sm text-gray-500 dark:text-gray-400">{user.location}</span>
-          <Stars grade='4.95' />
+          <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{user.firstName} {user.lastName}</h5>
+          <span className="text-sm text-gray-500 dark:text-gray-400">{user.location || 'unknown location'}</span>
+          <Stars grade={user.rating || 0} />
           <p className={styles.interests}>{interestsSepByDots}</p>
-          <p className={styles.info}>{user.info}</p>
+          <p className={styles.info}>{user.bio}</p>
 
           <div className={styles.actions}>
             <Button>Follow</Button>

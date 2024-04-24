@@ -53,7 +53,7 @@ const EditProfile = () => {
             <Label htmlFor="bio" value="Bio" className="mb-2 block" />
             <Textarea id="bio" placeholder="Write description here..." required rows={4} className={styles.customTextarea} />
 
-            <Label htmlFor="country" value="Country" className="mb-2 block" />
+            <Label value="Country" className="mb-2 block" />
             <Dropdown id="country" label="Select your Country" color='light'>
                 {/* TODO: generate countries dynamically */}
                 <Dropdown.Item>Israel</Dropdown.Item>

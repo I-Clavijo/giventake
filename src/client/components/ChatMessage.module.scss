@@ -1,0 +1,35 @@
+.messageWrapper {
+    display: flex;
+    column-gap: 4px;
+    
+    .profileImg {
+        img{
+            border-radius: 50%;
+        }
+        &.right {
+            order: 1;
+        }
+    }
+
+    &.alignRight {
+        align-self: flex-end;
+        justify-content: end;
+    }
+
+    .message{
+        background-color: #822faf8d;
+        color: black;
+        position: relative;
+        max-width: 50%;
+        border-radius: 20px;
+        padding: 5px 10px;                
+    
+        .time {
+            font-size: 12px;
+            color: rgba(245, 245, 245, 0.833);
+            text-align: right;
+            margin: unset;
+            margin-block: 5px;
+        }
+    }
+}

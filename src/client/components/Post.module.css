@@ -1,15 +1,16 @@
 .post {
     max-width: 600px;
-    margin: 20px auto;
     border: 1px solid #ddd;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin: auto;
+    margin-bottom: 10px;
   }
   
   .postHeader, .postFooter {
     padding: 10px;
-    background-color: #f5f5f5;
+    background-color: white;
     display: flex;
     align-items: center;
   }
@@ -64,6 +65,7 @@
   .likeButton {
     height: 30px;
     margin-right:4px;
+    margin-left:10px;
   }
 
   .likeButton:hover {
@@ -82,9 +84,17 @@
 
   .pressToHelp {
     margin-top: 18px;
+    margin-right: 15px;
   }
 
   .wavingHand:hover {
+    cursor: pointer;
+  }
+
+  .report {
+    height: 22px;
+    width: 23px;
+    margin-top: 2px;
     cursor: pointer;
   }
 
@@ -105,6 +115,7 @@
     border-radius: 5px;
     cursor: pointer;
     text-decoration: underline; /* Underline for emphasis on hover */
+    height: 40px;
   }
   
   .post .readMore:hover { /* Styles on hover */

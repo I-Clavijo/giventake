@@ -7,6 +7,8 @@ import HeartIcon from  "../assets/images/heart.svg";
 import FilledHeartIcon from "../assets/images/heart-f.svg";
 import FilledHandWaving from "../assets/images/hand_waving_icon_filled.svg";
 import HandWaving from "../assets/images/hand_waving_icon.svg";
+import FlagIcon from "../assets/images/flag-icon.svg";
+import FilledFlagIcon from "../assets/images/flag-filled-icon.svg";
 
 
 const Post = ({ name, profilePic, date, location, postPic, postText, likes }) => {
@@ -25,13 +27,19 @@ const Post = ({ name, profilePic, date, location, postPic, postText, likes }) =>
       setWantToHelp(!wantToHelp);
   };
 
+  const [wantToReport, setWantToReport] = useState(false); 
+
+  const toggleReport = () => {
+      setWantToReport(!wantToReport);
+  };
+
+  // Show more button
   const [showMore, setShowMore] = useState(false);
   const toggleShowMore = () => {
     setShowMore(!showMore);
   };
 
   // sets how long ago the post was posted 
-
   const displayDate = new Date(date);
   const [timeAgo, setTimeAgo] = useState('');
 
@@ -104,10 +112,17 @@ const Post = ({ name, profilePic, date, location, postPic, postText, likes }) =>
               className={styles.wavingHand}
               src={wantToHelp ? FilledHandWaving : HandWaving}
               onClick={toggleHelp}
-              alt="Like"
+              alt="Help"
            />
          </div>
          <p className={styles.pressToHelp}>Press to help</p>
+         <div className={styles.report}>
+            <img 
+              src={wantToReport ? FilledFlagIcon : FlagIcon}
+              onClick={toggleReport}
+              alt="Report"
+           />
+         </div>
         </div>
       </div>
   );
