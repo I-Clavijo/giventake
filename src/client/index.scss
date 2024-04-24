@@ -6,7 +6,7 @@
 
 
 :root {
-  font-family: Poppins ,Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Poppins, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -18,10 +18,10 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  
+
   // color palette
   --main-bg-color: #fff;
-  
+
   //main
   --primary-color: #301466;
   --secondary-color: #5c3d99;
@@ -46,6 +46,13 @@
   --nav-font-color: var(--inverse-link-color);
   --nav-item-bg-hover-color: var(--secondary-color);
 
+  //button
+  --btn-bg-color: #38a3a5;
+  --btn-bg-hover-color: #229193;
+  --btn-font-color: var(--inverse-font-color);
+  --btn-border-color: var(--forth-color);
+
+
 }
 
 a {
@@ -53,6 +60,7 @@ a {
   color: var(--primary-link-color);
   text-decoration: inherit;
 }
+
 a:hover {
   color: var(--primary-link-hover-color);
 }
@@ -67,7 +75,12 @@ body {
 }
 
 // General styles for all heading elements 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0; // Remove default margin 
   margin-bottom: 0.5em; // Add some spacing between headings and other elements 
 }
@@ -76,40 +89,57 @@ h1 {
   font-size: 2.5rem;
   font-weight: bold;
 }
+
 h2 {
   font-size: 2rem;
   font-weight: bold;
 }
+
 h3 {
   font-size: 1.75rem;
   font-weight: bold;
 }
+
 h4 {
   font-size: 1.5rem;
   font-weight: bold;
 }
+
 h5 {
   font-size: 1.25rem;
   font-weight: bold;
 }
+
 h6 {
   font-size: 1rem;
   font-weight: bold;
 }
+
 p {
   font-size: 1rem;
   line-height: 1.5;
   margin: 0 0 1em;
 }
-b{
+
+b {
   font-weight: 600;
 }
-i{
+
+i {
   font-weight: 300;
 }
 
-// specific style for flowbite/tooltip 
-.w-fit{ 
-  width: 100%;
+.button {
+  background-color: var(--btn-bg-color);
+  color: var(--btn-font-color);
+  border-color: var(--btn-border-color);
+
+  &:hover {
+    background-color: var(--btn-bg-hover-color) !important;
+  }
 }
 
+// specific style for flowbite/tooltip 
+.w-fit {
+  width: 100%;
+}

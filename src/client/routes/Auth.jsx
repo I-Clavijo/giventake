@@ -73,15 +73,6 @@ export default function Auth() {
 
                 <form method="post" className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                     <h2>{isLogin ? 'Login' : 'Create a new user'}</h2>
-                    {/* TODO:  add errors and messages from server */}
-                    {/* {errors && (
-                        <ul>
-                            {Object.values(errors).map((err) => (
-                                <li key={err}>{err}</li>
-                            ))}
-                        </ul>
-                    )} */}
-                    {/* {data && data.message && <p>{data.message}</p>} */}
                     {!isLogin && <>
                         <div>
                             <div className="mb-1 block">
@@ -140,7 +131,7 @@ export default function Auth() {
                             {isLogin ? 'Create new user' : 'Login'}
                         </Link>
                     </div>
-                    <Button type="submit" disabled={isSubmitting}>
+                    <Button type="submit" disabled={isSubmitting} className="button">
                         {btnLoginLabel}
                     </Button>
                 </form>
