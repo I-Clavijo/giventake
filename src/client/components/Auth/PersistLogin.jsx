@@ -5,7 +5,7 @@ import { useUser } from "../../api/hooks/useUser";
 
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const refresh = useRefreshToken();
+    const { mutate: refreshToken } = useRefreshToken();
     const { data: user } = useUser();
 
     useEffect(() => {
@@ -13,7 +13,7 @@ const PersistLogin = () => {
 
         const verifyRefreshToken = async () => {
             try {
-                refresh()
+                refreshToken()
             }
             catch (err) {
                 console.error(err);
@@ -22,19 +22,17 @@ const PersistLogin = () => {
                 isMounted && setIsLoading(false);
             }
         }
-        console.log("refresh: ", !user?.accessToken && user.persist)
-        !user?.accessToken && user.persist ? verifyRefreshToken() : setIsLoading(false);
+        // console.log("refresh: ", !user?.accessToken)
+        !user?.accessToken ? verifyRefreshToken() : setIsLoading(false);
 
         return () => isMounted = false;
     }, [])
 
     return (
         <>
-            {!user.persist
-                ? <Outlet />
-                : isLoading
-                    ? <p>Loading...</p>
-                    : <Outlet />
+            {isLoading
+                ? <p>Loading...</p>
+                : <Outlet />
             }
         </>
     )

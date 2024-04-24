@@ -20,7 +20,7 @@ export default function Auth() {
         .object({
             email: z.string().email(),
             password: z.string().min(5).max(20),
-            rememberUser: z.boolean()
+            persist: z.boolean()
         });
 
     const signupSchema = z
@@ -51,8 +51,8 @@ export default function Auth() {
     let btnLoginLabel = isSubmitting ? 'Loging in...' : 'Login';
     if (!isLogin) btnLoginLabel = isSubmitting ? 'Signing Up...' : 'Sign Up';
 
-    const { mutateAsync: signuUpMutate } = useSignUp();
-    const { mutateAsync: loginMutate } = useLogin();
+    const { mutate: signuUpMutate } = useSignUp();
+    const { mutate: loginMutate } = useLogin();
     const onSubmit = isLogin ? loginMutate : signuUpMutate;
 
     return (
@@ -111,7 +111,7 @@ export default function Auth() {
 
                     {isLogin &&
                         <div className="flex items-center gap-2">
-                            <Checkbox id="remember" {...register('rememberUser')} />
+                            <Checkbox id="remember" {...register('persist')} />
                             <Label htmlFor="remember">Trust this device?</Label>
                         </div>}
 

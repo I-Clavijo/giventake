@@ -11,23 +11,23 @@ export default function AppSideBar({ children, title, search, nav }) {
 	const isWideDevice = useMediaQuery("only screen and (min-width: 1264px)");
 
 	//sidebar/ bottom buttons
-	const navLinksMapped = nav.map((item,index) => {
+	const navLinksMapped = nav.map((item, index) => {
 		const topClass = item.showOnTop ? styles.showOnTop : "";
 
-		const navlink = <NavLink to={item.link} className={`${styles.linkWrap}`}>
-			<img src={item.icon} className={styles.icon} />
-			<div className={styles.title}>{item.title}</div>
+		const content = <><img src={item.icon} className={styles.icon} />
+			<div className={styles.title}>{item.title}</div></>;
+
+		let navlink = <NavLink to={item.link} className={styles.linkWrap}>
+			{content}
 		</NavLink>;
-		
-		return <div className={topClass} key={index}>
-			{isWideDevice ? 
-				navlink : 
-				<Tooltip content={item.title} style="light" placement={isSmallDevice? "top":"right"} className={styles.tooltipCard}> {navlink}</Tooltip>}
-		</div>;
+
+		// navlink = isWideDevice ? navlink : <Tooltip content={item.title} style="light" placement={isSmallDevice ? "top" : "right"} className={styles.tooltipCard}>{navlink}</Tooltip>;
+		navlink = item.popover?.(<div className={styles.linkWrap}>{content}</div>) || navlink;
+		return <div className={topClass} key={index}>{navlink}</div>;
 	});
-	
+
 	//top nav buttons
-	const topNavLinksMapped = nav.map((item,index) => {
+	const topNavLinksMapped = nav.map((item, index) => {
 		if (item.showOnTop)
 			return <NavLink to={item.link} className={styles.linkWrap} key={index}>
 				<img src={item.icon} className={styles.icon} />
@@ -35,7 +35,7 @@ export default function AppSideBar({ children, title, search, nav }) {
 	});
 
 	return <>
-		 <div className={styles.baseCols}>
+		<div className={styles.baseCols}>
 			<div className={styles.appSideBarWrap}>
 				<div className={styles.logo}>
 					{title}
@@ -52,6 +52,6 @@ export default function AppSideBar({ children, title, search, nav }) {
 				<div className={styles.searchWrap}>{search}</div>
 				<div className={styles.topNavButtons}>{topNavLinksMapped}</div>
 			</div>
-		</div>            
+		</div>
 	</>;
 }

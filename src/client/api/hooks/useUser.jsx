@@ -7,7 +7,7 @@ export const useUser = () => {
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
-        initialData: { persist: JSON.parse(localStorage.getItem("persist")) || false }
+        initialData: {}
     });
     const user = query.data;
 

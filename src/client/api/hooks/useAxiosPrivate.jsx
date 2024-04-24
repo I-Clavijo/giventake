@@ -4,7 +4,7 @@ import useRefreshToken from "./useRefreshToken";
 import { useUser } from "./useUser";
 
 const useAxiosPrivate = () => {
-    const refresh = useRefreshToken();
+    const { mutate: refreshToken } = useRefreshToken();
     const { data: user } = useUser();
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const useAxiosPrivate = () => {
                 if (error?.response?.status === 403 && !prevRequest?.sent) {
                     prevRequest.sent = true;
 
-                    refresh();
+                    refreshToken();
                     prevRequest.headers['Authorization'] = `Bearer ${user?.accessToken}`;
                     return axiosPrivate(prevRequest);
                 }
@@ -37,7 +37,7 @@ const useAxiosPrivate = () => {
             axiosPrivate.interceptors.request.eject(requestIntercept);
             axiosPrivate.interceptors.response.eject(responseIntercept);
         }
-    }, [user, refresh])
+    }, [user, user?.accessToken])
 
     return axiosPrivate;
 }

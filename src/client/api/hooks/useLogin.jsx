@@ -5,8 +5,7 @@ import { useSnackbar } from 'notistack';
 import { QUERY_KEY } from '../constants';
 
 
-const login = async ({ email, password }) => {
-    const loginData = { email, password };
+const login = async (loginData = { email, password, persist }) => {
     return await axios.post('/auth/login', JSON.stringify(loginData), {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true
@@ -23,12 +22,8 @@ export const useLogin = (data) => {
     const { enqueueSnackbar } = useSnackbar();
 
     return useMutation({
-        mutationFn: (data) => {
-            localStorage.setItem("persist", data.rememberUser);
-            queryClient.setQueryData([QUERY_KEY.user], prev => ({...prev, persist: data.rememberUser }))
-            return login(data)
-        },
-        onSuccess: ({data, status}) => {
+        mutationFn: login,
+        onSuccess: ({data}) => {
             queryClient.setQueryData([QUERY_KEY.user], prev => ({...prev, ...data })) // save the user in the state            
             navigate(from, { replace: true });
         },

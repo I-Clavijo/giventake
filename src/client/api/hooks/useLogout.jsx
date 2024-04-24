@@ -1,21 +1,21 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "../axios";
-import useAuth from "./useAuth";
+import { QUERY_KEY } from "../constants";
+import { useNavigate } from "react-router-dom";
+
+const logout = async () => axios.post('/auth/logout', { withCredentials: true });
 
 const useLogout = () => {
-    const { setAuth } = useAuth();
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
-    const logout = async () => {
-        setAuth({});
-        try {
-            const response = await axios('/logout', {
-                withCredentials: true
-            });
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    return logout;
+    return useMutation({
+        mutationFn: logout,
+        onMutate: () => {
+            queryClient.setQueryData([QUERY_KEY.user],{});
+            navigate('/auth?mode=login')
+        },
+    });
 }
 
-export default useLogout
+export default useLogout;
