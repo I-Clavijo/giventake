@@ -14,6 +14,7 @@ import ProfileIcon from "../assets/images/profile-icon.svg";
 import LockIcon from "../assets/images/lock-icon.svg";
 import { Button, Popover } from "flowbite-react";
 import { MdOutlinePerson, MdOutlineLogout, MdLockOutline } from "react-icons/md";
+import { TbHeartHandshake } from "react-icons/tb";
 import useLogout from "../api/hooks/useLogout";
 
 
@@ -30,7 +31,6 @@ export default function Root({ children }) {
     } 
     const navlinks = [
         { icon: HomeIcon, title: "Home", link: "/" },
-        { icon: SearchIcon, title: "Search", link: "/search" },
         { icon: ExploreIcon, title: "Explore", link: "/explore" },
         { icon: MessagesIcon, title: "Messages", link: "/messages" },
         { icon: LikedIcon, title: "Liked", link: "/liked", showOnTop: true },
@@ -42,7 +42,7 @@ export default function Root({ children }) {
 
     return (
         <>
-            <AppSideBar title="Given'take" nav={navlinks}>
+            <AppSideBar icon={<TbHeartHandshake size={70} stroke="#fff" />} title="given'take" nav={navlinks}>
                 {children}
                 <SnackbarProvider autoHideDuration={5000} anchorOrigin={{ horizontal: 'center', vertical: 'top' }}>
                     <Outlet />

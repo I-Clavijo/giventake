@@ -2,10 +2,12 @@
 
 import styles from "./AppSideBar.module.scss";
 import { NavLink } from "react-router-dom";
-import { Tooltip } from "flowbite-react";
+import { TextInput, Tooltip } from "flowbite-react";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import { MdSearch } from "react-icons/md";
 
-export default function AppSideBar({ children, title, search, nav }) {
+
+export default function AppSideBar({ children, icon, title, search, nav }) {
 
 	const isSmallDevice = useMediaQuery("only screen and (max-width: 767px)");
 	const isWideDevice = useMediaQuery("only screen and (min-width: 1264px)");
@@ -37,18 +39,20 @@ export default function AppSideBar({ children, title, search, nav }) {
 	return <>
 		<div className={styles.baseCols}>
 			<div className={styles.appSideBarWrap}>
-				<div className={styles.logo}>
-					{title}
-				</div>
+				<div className={styles.logo}>{icon}</div>
 				<nav className={styles.navWrap}>
 					{navLinksMapped}
 				</nav>
 			</div>
 			<div className={styles.pageWrap}>
-				{children}
+				{!isSmallDevice && <div className={styles.secondaryNav}>
+					<h1 className={styles.logo}>{title}</h1>
+					<div className={styles.searchWrap}><TextInput icon={MdSearch} placeholder="Search..." color='light'  /></div>
+				</div>}
+				<div className={styles.innerWrap}>{children}</div>
 			</div>
 			<div className={styles.topBar}>
-				<div className={styles.logo}>{title}</div>
+				<div className={styles.logo}>{icon}<span>{title}</span></div>
 				<div className={styles.searchWrap}>{search}</div>
 				<div className={styles.topNavButtons}>{topNavLinksMapped}</div>
 			</div>

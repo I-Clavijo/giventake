@@ -3,8 +3,6 @@
     --nav-wide-width: 200px;
     --nav-medium-width: 80px;
     --nav-narrow-height: 50px;
-    --nav-bg-color: #eee;
-    --nav-item-bg-hover-color: #ddd;
 }
 
 .baseCols{
@@ -12,11 +10,11 @@
 	width: 100vw;
 	display: flex;
 	flex-direction: row;
+    
 
 	.appSideBarWrap{
 		background: var(--nav-bg-color);
 		height: 100%;
-		padding: 20px;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
@@ -28,12 +26,29 @@
             .logo{
                 font-size: 30px;
                 font-weight: bold;
+                padding: 5px;
+                width: 100%;
+                border-bottom: 1px solid #000;
+                background-color: var(--forth-color);
+
+                svg{
+                    margin: auto;
+                }
             }
 		}
 		@media screen and (min-width: 768px) and (max-width: 1263px){ // Laptop
 			width: 80px;
             .logo{
-                display: none;
+                padding: 15px;
+                width: 100%;
+                border-bottom: 1px solid #000;
+                background-color: var(--forth-color);
+                // display: none;
+                svg{
+                    height: 50px;
+                    width: 50px;
+                    margin: auto;
+                }
             }
 		}
 		@media screen and (max-width: 767px){ // Mobile
@@ -50,7 +65,7 @@
         .navWrap {
             display: flex;
             flex-direction: column;
-            padding: 20px 0 0 0;
+            padding: 20px;
             gap: .8em;
             
             .tooltipCard{
@@ -68,7 +83,7 @@
             .linkWrap{
                 display: flex;
                 flex-direction: row;
-                color: black;
+                color: var(--nav-font-color);
                 gap: .5em;
                 font-weight: bold;
                 font-weight: 600;
@@ -86,6 +101,7 @@
 
                 .icon{
                     display: block;
+
                 }
                 
                 @media screen and (min-width: 768px) and (max-width: 1263px){ // Laptop
@@ -117,9 +133,34 @@
 		background: #fff;
         min-height: 100vh;
 		height: fit-content;
-		padding: 20px;
 		width: 100%;
 		box-sizing: border-box;
+        .secondaryNav{
+            width: 100%;
+            background-color: var(--nav-secondary-bg-color);
+            border-bottom: 1px solid #ddd;
+            box-shadow: #eee 0px 3px 5px 0px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .logo{
+                color: var(--logo-color);
+                margin: 0;
+            }
+            div.searchWrap{
+                width: fit-content;
+                input{
+                    width: 20em;
+                }
+            }
+
+        }
+        
+        .innerWrap {
+            padding: 20px;
+        }
 
         @media screen and (min-width: 1264px){ // Large - Desktop
             width: calc(100% - var(--nav-wide-width));
@@ -150,6 +191,18 @@
         .logo{
             font-size: 20px;
             font-weight: bold;
+            color: var(--nav-font-color);
+            display: flex;
+            align-items: center;
+            gap:10px;
+
+            svg{
+                height: 30px;
+                width: 30px;
+            }
+            span{
+                width: fit-content;
+            }
         }
         
         .topNavButtons{
