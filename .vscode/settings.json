@@ -1,0 +1,4 @@
+{
+    "workbench.editor.labelFormat": "short",
+    "scss.lint.unknownAtRules": "ignore"
+}
