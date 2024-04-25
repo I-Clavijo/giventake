@@ -8,6 +8,7 @@ const RequireAuth = ({ allowedRoles }) => {
 
     const decoded = user?.accessToken ? jwtDecode(user.accessToken) : undefined;
     const roles = decoded?.roles || [];
+    console.log(decoded?.roles)
 
     return (
         roles.find(role => allowedRoles?.includes(role))
