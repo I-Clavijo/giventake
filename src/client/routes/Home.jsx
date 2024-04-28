@@ -1,5 +1,6 @@
 import styles from "./Home.module.scss";
 import Feed from "../components/Feed.jsx";
+import InterestsLocationModal from "../components/InterestsLocationModal.jsx";
 
 const posts = [
   {
@@ -35,6 +36,7 @@ const posts = [
 export default function Home() {
   return (
     <>
+      <InterestsLocationModal />
       <Feed posts={posts} />
     </>
   );
