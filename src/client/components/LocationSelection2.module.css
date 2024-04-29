@@ -1,6 +1,6 @@
 .locationSelection {
     position: relative;
-    margin-left: 10px;
+    margin-left: 5px;
     display: flex;
     flex-wrap: wrap;
   }
@@ -9,6 +9,7 @@
     position: absolute;
     z-index: 1;
     background-color: #fff; /* Add your desired background color */
+    border-radius: 10px;
     border: 1px solid #ccc; /* Add your desired border style */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add your desired box shadow */
     padding: 10px;
@@ -29,9 +30,9 @@
   .searchInput {
     width: 250px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .selectedCityContainer {
