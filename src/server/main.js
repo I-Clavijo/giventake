@@ -3,6 +3,14 @@ import createApp from "./app.js"
 import ViteExpress from "vite-express";
 
 try {
+	process.on('uncaughtException', err => {
+		console.log(err.name, err.message);
+		console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+	  
+		process.exit(1);
+	  
+	  });
+	  
 	const app = createApp();
 
 	// Connect to the database

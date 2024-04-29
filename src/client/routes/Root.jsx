@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { SnackbarProvider } from 'notistack';
 import AppSideBar from '../components/AppSideBar';
-import { useUser } from "../api/hooks/useUser";
+import { useUser } from "../api/user/useUser";
 import styles from './Root.module.scss';
 
 import HomeIcon from "../assets/images/home-icon.svg";
@@ -15,7 +15,7 @@ import LockIcon from "../assets/images/lock-icon.svg";
 import { Button, Popover } from "flowbite-react";
 import { MdOutlinePerson, MdOutlineLogout, MdLockOutline } from "react-icons/md";
 import { TbHeartHandshake } from "react-icons/tb";
-import useLogout from "../api/hooks/useLogout";
+import useLogout from "../api/user/useLogout";
 
 
 export default function Root({ children }) {

@@ -1,5 +1,7 @@
 import styles from "./Home.module.scss";
-import Feed from "../components/Feed.jsx";
+import Feed, { showAs } from "../components/Feed.jsx";
+import { usePosts } from "../api/posts/usePosts.jsx";
+import { Spinner } from "flowbite-react";
 
 const posts = [
   {
@@ -33,9 +35,14 @@ const posts = [
 
 
 export default function Home() {
-  return (
-    <>
-      <Feed posts={posts} />
-    </>
-  );
+
+  const { data: posts, isLoading } = usePosts();
+  console.log(posts);
+  return <>
+    {posts && !isLoading ?
+        <Feed {...{ posts }} />
+        :
+        <Spinner />
+    }
+  </>;
 }

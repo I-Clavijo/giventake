@@ -23,7 +23,7 @@ export default function AppSideBar({ children, icon, title, search, nav }) {
 			{content}
 		</NavLink>;
 
-		// navlink = isWideDevice ? navlink : <Tooltip content={item.title} style="light" placement={isSmallDevice ? "top" : "right"} className={styles.tooltipCard}>{navlink}</Tooltip>;
+		navlink = isWideDevice ? navlink : <Tooltip content={item.title} style="light" placement={isSmallDevice ? "top" : "right"} className={styles.tooltipCard}>{navlink}</Tooltip>;
 		navlink = item.popover?.(<div className={styles.linkWrap}>{content}</div>) || navlink;
 		return <div className={topClass} key={index}>{navlink}</div>;
 	});
