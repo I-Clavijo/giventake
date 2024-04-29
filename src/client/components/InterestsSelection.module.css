@@ -8,19 +8,15 @@
 .interestButton {
     background-color: lightgrey;
     color:black;
-    width: 140px ;
+    width: 130px ;
     align-items: center;
-}
-
-.interestButton:hover {
-    background-color: var(--secondary-color);
-    color:white;
 }
 
 .selectedButton {
     background-color: var(--secondary-color);
     color:white;
 }
+
 
 .buttonIcon {
     font-size: 1.3rem;

@@ -13,7 +13,7 @@ const InterestsLocationModal = () => {
   return (
     <>
       {/* <Button onClick={() => setOpenModal(true)}>Toggle modal</Button> */}
-      <Modal dismissible show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal size="lg" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>
             <div className={styles.title}>Thank you for joining!</div>
             <div className={styles.subtitle}>To get a more presonalized experience, we would like to know a little more about you</div>

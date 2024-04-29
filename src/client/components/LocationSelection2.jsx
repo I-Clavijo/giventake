@@ -30,38 +30,37 @@ function LocationSelection2() {
 
   return (
     <div className={styles.locationSelection}>
-      <input
-        type="text"
-        placeholder="Search your city..."
-        value={searchInput}
-        onChange={handleSearchInputChange}
-      />
-      {searchInput && (
-        <ul className={styles.searchResults}>
-          {filteredCities.length === 0 ? (
-            <p>No matching cities found</p>
-          ) : (
-            filteredCities.map((city, index) => (
-              <li
-                key={index}
-                onMouseEnter={() => handleMouseEnter(city.city)}
-                onMouseLeave={handleMouseLeave}
-                onClick={() => handleCitySelect(city.city)}
-              >
-                {city.city}
-              </li>
-            ))
-          )}
-        </ul>
-      )}
-
-      {selectedCity && (
-        <div>
-          <h3>Selected City</h3>
-          <p>Name: {selectedCity}</p>
-          {/* You can add more details about the selected city here */}
-        </div>
-      )}
+      <div className={styles.input}>
+        <input
+          className={styles.searchInput}
+          type="text"
+          placeholder="Search your city..."
+          value={searchInput}
+          onChange={handleSearchInputChange}
+        />
+        {searchInput && (
+          <ul className={styles.searchResults}>
+            {filteredCities.length === 0 ? (
+              <p>No matching cities found</p>
+            ) : (
+              filteredCities.map((city, index) => (
+                <li
+                  key={index}
+                  onMouseEnter={() => handleMouseEnter(city.city)}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={() => handleCitySelect(city.city)}
+                >
+                  {city.city}
+                </li>
+              ))
+            )}
+          </ul>
+        )}
+      </div>
+      <div className={styles.selectedCityContainer}>
+        <label className={styles.selectedLabel}>Selected City:</label>
+        {selectedCity && <span>{selectedCity}</span>}
+      </div>
     </div>
   );
 }

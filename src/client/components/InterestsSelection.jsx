@@ -47,11 +47,11 @@ const interests = [
       <div className={styles.interestsSelection}>
         <div className= {styles.gridContainer}>
             {interests.map((interest) => (
-                <Button onClick={() => handleClick(interest.id)}
+                <Button color="lightgrey" onClick={() => handleClick(interest.id)}
                 className={`${styles.interestButton} ${
-                    selectedInterests.includes(interest.id) ? styles.selectedButton : ''
-                    }`}
-                > <div className={styles.buttonIcon}>{interest.icon}</div>
+                    selectedInterests.includes(interest.id) ? styles.selectedButton : ''}`}
+                > 
+                <div className={styles.buttonIcon}>{interest.icon}</div>
                 {interest.name}</Button>
             ))}
         </div>
