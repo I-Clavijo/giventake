@@ -1,4 +1,5 @@
 import express from 'express';
+import 'express-async-errors';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import corsOptions from './config/corsOptions.js';
@@ -7,11 +8,12 @@ import credentials from './middleware/credentials.js';
 import errorHandler from './middleware/errorHandler.js';
 import authRoutes from "./routes/auth.js";
 import apiRoutes from './routes/api.js';
-// import rootRoutes from './routes/root.js';
 import { API_VERSION } from "./config.js";
 
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import AppError from './utils/AppError.js';
+import User from './model/User.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -37,12 +39,6 @@ export default function createApp() {
 
 	//middleware for cookies
 	app.use(cookieParser());
-
-	//serve static files
-	// app.use('/', express.static(path.join(__dirname, '/public')));
-
-	//public routes
-	app.use("/auth", authRoutes);
 
 	// api routes
 	app.use(`/api/v${API_VERSION}`, apiRoutes);

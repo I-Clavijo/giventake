@@ -6,8 +6,8 @@ import {
 import { Button, Checkbox, Label, TextInput, Card } from 'flowbite-react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSignUp } from '../api/hooks/useSignUp'
-import { useLogin } from "../api/hooks/useLogin";
+import { useSignUp } from '../api/user/useSignUp'
+import { useLogin } from "../api/user/useLogin";
 import LoginImg from '../assets/images/login-photo.png';
 import styles from "./Auth.module.scss";
 
@@ -18,7 +18,7 @@ export default function Auth() {
 
     const loginSchema = z
         .object({
-            email: z.string().email(),
+            email: z.string().email().toLowerCase(),
             password: z.string().min(5).max(20),
             persist: z.boolean()
         });
@@ -27,7 +27,7 @@ export default function Auth() {
         .object({
             firstName: z.string().min(2).max(30),
             lastName: z.string().min(2).max(30),
-            email: z.string().email(),
+            email: z.string().email().toLowerCase(),
             password: z.string().min(5).max(20),
             confirmPassword: z.string().min(5).max(20),
             agreeTerms: z.boolean()

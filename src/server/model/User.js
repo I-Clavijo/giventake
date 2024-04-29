@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema({
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, minlength: 5 },
+    imgName: String,
+    interests: [String],
+    city: String,
+    address: String,
     roles: {
         User: {
             type: Number,
@@ -15,7 +19,7 @@ const userSchema = new mongoose.Schema({
         Admin: Number
     },
     refreshToken: String
-});
+}, { timestamps: true });
 
 userSchema.plugin(uniqueValidator); 
 

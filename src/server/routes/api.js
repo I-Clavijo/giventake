@@ -1,11 +1,12 @@
 import express from "express";
-import verifyAuth from '../middleware/verifyAuth.js';
-import usersRoutes from "./users.js";
+import postsRoutes from "./posts.js";
+import authRoutes from './auth.js';
 
 
 const router = express.Router();
 
-router.use("/users", verifyAuth, usersRoutes);
+router.use("/auth", authRoutes);
+router.use("/posts", postsRoutes);
 
 
 export default router;

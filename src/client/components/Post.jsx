@@ -1,36 +1,37 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import styles from "./Post.module.css";
+import styles from "./Post.module.scss";
 import ProfilePic from "../assets/images/profile-picture-example.jpg";
 import PostPic from "../assets/images/example-post.jpg";
-import HeartIcon from  "../assets/images/heart.svg";
+import HeartIcon from "../assets/images/heart.svg";
 import FilledHeartIcon from "../assets/images/heart-f.svg";
 import FilledHandWaving from "../assets/images/hand_waving_icon_filled.svg";
 import HandWaving from "../assets/images/hand_waving_icon.svg";
 import FlagIcon from "../assets/images/flag-icon.svg";
 import FilledFlagIcon from "../assets/images/flag-filled-icon.svg";
+import { Button, Tooltip } from 'flowbite-react';
 
 
-const Post = ({ name, profilePic, date, location, postPic, postText, likes }) => {
+const Post = ({ fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', likes = 0 }) => {
 
   const [isLiked, setIsLiked] = useState(false); // Track like state
   const [likeCount, setLikeCount] = useState(likes); // Manage like counter
 
   const toggleLike = () => {
-      setIsLiked(!isLiked);
-      setLikeCount( isLiked ? likeCount -1 : likeCount -1 +2);
+    setIsLiked(!isLiked);
+    setLikeCount(isLiked ? likeCount - 1 : likeCount - 1 + 2);
   };
 
-  const [wantToHelp, setWantToHelp] = useState(false); 
+  const [wantToHelp, setWantToHelp] = useState(false);
 
   const toggleHelp = () => {
-      setWantToHelp(!wantToHelp);
+    setWantToHelp(!wantToHelp);
   };
 
-  const [wantToReport, setWantToReport] = useState(false); 
+  const [wantToReport, setWantToReport] = useState(false);
 
   const toggleReport = () => {
-      setWantToReport(!wantToReport);
+    setWantToReport(!wantToReport);
   };
 
   // Show more button
@@ -40,13 +41,13 @@ const Post = ({ name, profilePic, date, location, postPic, postText, likes }) =>
   };
 
   // sets how long ago the post was posted 
-  const displayDate = new Date(date);
+  const displayDate = new Date(createdAt);
   const [timeAgo, setTimeAgo] = useState('');
 
   useEffect(() => {
     const calculateTimeAgo = () => {
       const currentDate = new Date();
-      const postDateTime = new Date(date);
+      const postDateTime = new Date(createdAt);
 
       const timeDifference = currentDate.getTime() - postDateTime.getTime();
       const seconds = Math.floor(timeDifference / 1000);
@@ -74,23 +75,24 @@ const Post = ({ name, profilePic, date, location, postPic, postText, likes }) =>
     const interval = setInterval(calculateTimeAgo, 60000);
 
     return () => clearInterval(interval);
-  }, [date]);
+  }, [createdAt]);
 
-    return (
+  return (
     <div className={styles.post}>
       <div className={styles.postHeader}>
-        <img src={ProfilePic} alt="Profile" className={styles.profilePic}/>
+        {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
         <div>
-          <h2>{name}</h2>
-          <p>posted {timeAgo}</p>
-          <p>{location}, {displayDate.toLocaleString()}</p>
+          <h6>{fullName}</h6>
+          <p>{timeAgo} • {location}</p>
         </div>
       </div>
       <div className={styles.postBody}>
-        <img src={PostPic} alt="Post"/>
+        <div className={styles.imgCrop}>
+          <img src={postPic} alt="Post" />
+        </div>
         <p>
-          {showMore ? postText : postText.substring(0, 150) + '...'}
-          {!showMore && postText.length > 150 && (
+          {showMore ? description : description.substring(0, 150) + '...'}
+          {!showMore && description.length > 150 && (
             <button className={styles.readMore} onClick={toggleShowMore}>
               Read More
             </button>
@@ -107,24 +109,27 @@ const Post = ({ name, profilePic, date, location, postPic, postText, likes }) =>
           />
           <span className={styles.likeCount}>{likeCount}</span>
         </div>
-          <div className={styles.hand}>
-            <img 
+
+        <div className={styles.hand}>
+          <Tooltip content='Press to help' style={{ width: 'fit-content' }}>
+            <img
               className={styles.wavingHand}
               src={wantToHelp ? FilledHandWaving : HandWaving}
               onClick={toggleHelp}
               alt="Help"
-           />
-         </div>
-         <p className={styles.pressToHelp}>Press to help</p>
-         <div className={styles.report}>
-            <img 
-              src={wantToReport ? FilledFlagIcon : FlagIcon}
-              onClick={toggleReport}
-              alt="Report"
-           />
-         </div>
+            />
+          </Tooltip>
+        </div>
+
+        <div className={styles.report}>
+          <img
+            src={wantToReport ? FilledFlagIcon : FlagIcon}
+            onClick={toggleReport}
+            alt="Report"
+          />
         </div>
       </div>
+    </div>
   );
 };
 

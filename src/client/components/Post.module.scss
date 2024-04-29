@@ -1,0 +1,157 @@
+.post {
+  max-width: 470px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+
+  .postHeader,
+  .postFooter {
+    padding: 10px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+  }
+
+  .postHeader {
+    div {
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    h6 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #888;
+    }
+  }
+
+
+  .profilePic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+
+  .postBody {
+    // padding: 10px;
+    background-color: #fff;
+    overflow: hidden;
+    /* Initially hide overflowing text */
+    text-overflow: ellipsis;
+    /* Add ellipsis for truncated text */
+
+    .imgCrop {
+      position: relative;
+
+      &::after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    p {
+      padding: 10px;
+      margin: 0;
+    }
+
+    &.showMore {
+      overflow: visible;
+      /* Show all text when expanded */
+    }
+
+    .readMore {
+      background-color: transparent;
+      /* Makes the button less prominent */
+      color: #333;
+      /* Darker color for better contrast */
+      border: 1px solid #ddd;
+      /* Subtle border */
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: underline;
+      /* Underline for emphasis on hover */
+      height: 40px;
+
+      &:hover {
+        /* Styles on hover */
+        background-color: #eee;
+        /* Slightly lighter background on hover */
+      }
+    }
+  }
+
+  .postFooter {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    .likes {
+      display: flex;
+      align-items: center;
+
+      .likeButton {
+        height: 30px;
+        margin-right: 4px;
+        margin-left: 10px;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      .likeCount {}
+    }
+
+    .hand{
+      &>div.w-fit {
+        width: fit-content;
+
+      }
+      .wavingHand {
+        // margin-left: 6px;
+        height: 26px;
+        // margin-right: 6px;
+  
+        &:hover {
+          cursor: pointer;
+        }
+      }
+  
+      .pressToHelp {
+        // margin-top: 18px;
+        // margin-right: 15px;
+      }
+    }
+
+
+    .report {
+      height: 22px;
+      width: 23px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+  }
+}
