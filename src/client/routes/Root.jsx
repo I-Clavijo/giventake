@@ -8,7 +8,7 @@ import HomeIcon from "../assets/images/home-icon.svg";
 import SearchIcon from "../assets/images/search-icon.svg";
 import ExploreIcon from "../assets/images/explore-icon.svg";
 import MessagesIcon from "../assets/images/messages-icon.svg";
-import LikedIcon from "../assets/images/liked-icon.svg";
+import BookmarkIcon from "../assets/images/bookmark-icon.svg";
 import CreateIcon from "../assets/images/create-icon.svg";
 import ProfileIcon from "../assets/images/profile-icon.svg";
 import LockIcon from "../assets/images/lock-icon.svg";
@@ -33,7 +33,7 @@ export default function Root({ children }) {
         { icon: HomeIcon, title: "Home", link: "/" },
         { icon: ExploreIcon, title: "Explore", link: "/explore" },
         { icon: MessagesIcon, title: "Messages", link: "/messages" },
-        { icon: LikedIcon, title: "Liked", link: "/liked", showOnTop: true },
+        { icon: BookmarkIcon, title: "Saved for Later", link: "/saved", showOnTop: true },
         { icon: CreateIcon, title: "Create", link: "/create", showOnTop: true },
         isLoggedIn 
            ? { icon: ProfileIcon, title: `${user.firstName} ${user.lastName}`, popover: profilePopover } 

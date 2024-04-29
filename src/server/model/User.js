@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
+import { MODEL_KEY } from "./constants.js";
+const ObjectId = mongoose.Schema.ObjectId;
 
 const userSchema = new mongoose.Schema({
 	firstName: { type: String, required: true },
@@ -18,9 +20,12 @@ const userSchema = new mongoose.Schema({
         Editor: Number,
         Admin: Number
     },
-    refreshToken: String
+    refreshToken: String,
+    likedPosts: [ObjectId],
+    interestedPosts: [ObjectId],
+    reportedPosts: [ObjectId]
 }, { timestamps: true });
 
 userSchema.plugin(uniqueValidator); 
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model(MODEL_KEY.User, userSchema);

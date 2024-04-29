@@ -4,40 +4,48 @@ import styles from "./Post.module.scss";
 import ProfilePic from "../assets/images/profile-picture-example.jpg";
 import PostPic from "../assets/images/example-post.jpg";
 import HeartIcon from "../assets/images/heart.svg";
+import BookmarkIcon from "../assets/images/bookmark-icon-black.svg";
+import BookmarkIconFilled from "../assets/images/bookmark-icon-black-filled.svg";
 import FilledHeartIcon from "../assets/images/heart-f.svg";
 import FilledHandWaving from "../assets/images/hand_waving_icon_filled.svg";
 import HandWaving from "../assets/images/hand_waving_icon.svg";
-import FlagIcon from "../assets/images/flag-icon.svg";
+import FlagIcon from "../assets/images/flag-icon-v2.svg";
 import FilledFlagIcon from "../assets/images/flag-filled-icon.svg";
 import { Button, Tooltip } from 'flowbite-react';
+import { usePostAction } from '../api/posts/usePostAction';
 
 
-const Post = ({ fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', likes = 0 }) => {
-
-  const [isLiked, setIsLiked] = useState(false); // Track like state
-  const [likeCount, setLikeCount] = useState(likes); // Manage like counter
-
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
-    setLikeCount(isLiked ? likeCount - 1 : likeCount - 1 + 2);
-  };
+const Post = ({ postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0 }) => {
+  const { mutate: postAction } = usePostAction();
+  const [isSaved, setIsSaved] = useState(false); // Track like state
 
   const [wantToHelp, setWantToHelp] = useState(false);
-
-  const toggleHelp = () => {
-    setWantToHelp(!wantToHelp);
-  };
+  const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
 
   const [wantToReport, setWantToReport] = useState(false);
+  const [showMore, setShowMore] = useState(false);
+
+  const toggleSaveForLater = () => {
+    postAction({ postId, actions: { like: !isSaved } });
+
+    setIsSaved(prevIsSaved => !prevIsSaved);
+  };
+
+  const toggleHelp = () => {
+    postAction({ postId, actions: { interested: !wantToHelp } });
+
+    setWantToHelpCount(prevCount => !wantToHelp ? prevCount + 1 : prevCount - 1);
+    setWantToHelp(prevWantToHelp => !prevWantToHelp);
+  };
 
   const toggleReport = () => {
-    setWantToReport(!wantToReport);
+    postAction({ postId, actions: { report: { key: 'SPAM', description: 'To much messages!' } } });
+    setWantToReport(prevWantToReport => !prevWantToReport);
   };
 
   // Show more button
-  const [showMore, setShowMore] = useState(false);
   const toggleShowMore = () => {
-    setShowMore(!showMore);
+    setShowMore(prevShowMore => !prevShowMore);
   };
 
   // sets how long ago the post was posted 
@@ -100,25 +108,30 @@ const Post = ({ fullName, profilePic = '', createdAt, helpDate, location = '', p
         </p>
       </div>
       <div className={styles.postFooter}>
-        <div className={styles.likes}>
-          <img
-            className={`${styles.likeButton} ${isLiked ? 'liked' : ''}`} // Add CSS class for styling
-            src={isLiked ? FilledHeartIcon : HeartIcon}
-            onClick={toggleLike}
-            alt="Like"
-          />
-          <span className={styles.likeCount}>{likeCount}</span>
-        </div>
-
-        <div className={styles.hand}>
-          <Tooltip content='Press to help' style={{ width: 'fit-content' }}>
+        <div style={{ width: 'fit-content', display:'flex', alignItems:'center'}}>
+          <div className={styles.likes}>
             <img
-              className={styles.wavingHand}
-              src={wantToHelp ? FilledHandWaving : HandWaving}
-              onClick={toggleHelp}
-              alt="Help"
+              className={`${styles.likeButton} ${isSaved ? styles.liked : ''}`} // Add CSS class for styling
+              src={isSaved ? BookmarkIconFilled : BookmarkIcon}
+              onClick={toggleSaveForLater}
+              alt="Save for Later"
             />
-          </Tooltip>
+          </div>
+
+          <div className={styles.hand}>
+            <Tooltip content='Press to help'>
+              <div style={{ display: 'flex' }}>
+                <img
+                  className={styles.wavingHand}
+                  src={wantToHelp ? FilledHandWaving : HandWaving}
+                  onClick={toggleHelp}
+                  alt="Help"
+                />
+                <span className={styles.likeCount}>{wantToHelpCount}</span>
+
+              </div>
+            </Tooltip>
+          </div>
         </div>
 
         <div className={styles.report}>

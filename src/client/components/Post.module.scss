@@ -107,13 +107,14 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    justify-content: space-between;
 
     .likes {
       display: flex;
       align-items: center;
 
       .likeButton {
-        height: 30px;
+        height: 25px;
         margin-right: 4px;
         margin-left: 10px;
 
@@ -121,19 +122,12 @@
           cursor: pointer;
         }
       }
-
-      .likeCount {}
     }
 
     .hand{
-      &>div.w-fit {
-        width: fit-content;
-
-      }
       .wavingHand {
-        // margin-left: 6px;
         height: 26px;
-        // margin-right: 6px;
+        margin-right: 6px;
   
         &:hover {
           cursor: pointer;

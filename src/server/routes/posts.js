@@ -1,6 +1,6 @@
 import express from "express";
 import verifyAuth from '../middleware/verifyAuth.js';
-import { createPost, getPosts } from "../controllers/posts.js";
+import { createPost, getPosts, postAction } from "../controllers/posts.js";
 import multer from 'multer';
 
 
@@ -11,5 +11,6 @@ const router = express.Router();
 
 router.get('/', getPosts);
 router.put('/', upload.single('attachment'), verifyAuth, createPost);
+router.post('/action', verifyAuth, postAction);
 
 export default router;

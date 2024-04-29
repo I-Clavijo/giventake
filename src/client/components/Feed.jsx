@@ -16,6 +16,7 @@ const Feed = ({ posts, styleOrder = showAs.LIST }) => {
         <div className={postsWrapperClass}>
             {posts.map(post => {
                 let postTag = <Post
+                    postId={post._id}
                     key={post._id}
                     fullName={`${post.user.firstName} ${post.user.lastName}`}
                     profilePic={post.user?.imgUrl}
@@ -25,6 +26,7 @@ const Feed = ({ posts, styleOrder = showAs.LIST }) => {
                     postPic={post.imgUrl}
                     description={post.description}
                     likes={post.usersLiked?.length || 0}
+                    interested={post.usersInterested?.length || 0}
                 />;
 
                 return postTag;

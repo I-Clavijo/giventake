@@ -17,6 +17,15 @@ export default function verifyAuth(req, res, next) {
         (err, decoded) => {
             if (err) return res.sendStatus(403); //invalid token
             req.user = { ...decoded };
+
+            // req.user structure should look like:
+
+            // req.user = {
+            //      _id: ObjectId,
+            //      email: String,
+            //      roles:{...}
+            // }
+
             next();
         }
     );

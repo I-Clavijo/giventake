@@ -34,7 +34,7 @@ const posts = [
 ];
 
 
-export default function LikedPosts() {
+export default function SavedPosts() {
   const { data: posts, isLoading } = usePosts();
 
   // only for test purposes

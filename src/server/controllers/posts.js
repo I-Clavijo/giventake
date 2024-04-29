@@ -1,11 +1,13 @@
-import Post from '../model/Post.js';
+import { HttpStatusCode } from 'axios';
+import { Post, ReportedPost, User } from '../model/index.js';
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET, S3_REGION } from '../config.js';
 import crypto from 'crypto';
 import sharp from 'sharp';
 import AppError from '../utils/AppError.js';
-
+import { runInTransaction } from '../utils/runInTransaction.js';
+import { REPORTS_KEYS } from '../model/constants.js';
 
 // Set up AWS credentials
 const s3Client = new S3Client({
@@ -65,8 +67,8 @@ export const getPosts = async (req, res) => {
     const posts = await Post
         .find()
         .populate({ path: 'user', select: 'firstName lastName' })
-        .populate('usersLiked')
-        .populate('usersInterestedToHelp')
+        .populate({ path: 'usersLiked', select: 'firstName lastName' })
+        .populate({ path: 'usersInterested', select: 'firstName lastName' })
         .lean();
 
     // get post image from S3 bucket
@@ -112,4 +114,79 @@ export const deletePost = async (req, res) => {
     await Post.deleteOne({ _id: postId });
 
     res.status(201).send();
+}
+
+export const postAction = async (req, res) => {
+    const { postId, actions } = req.body || {};
+    console.log('postId: ', postId);
+    console.log('actions: ', actions);
+
+    let filter, updateQuery;
+    if (actions.hasOwnProperty('like')) {
+
+        await runInTransaction(async (session) => {
+
+            // update 'User' collection
+            filter = { _id: req.user._id };
+            updateQuery = actions.like
+                ? { '$addToSet': { likedPosts: postId } }
+                : { '$pull': { likedPosts: postId } };
+            await User.updateOne(filter, updateQuery, { session });
+
+            // update 'Post' collection
+            filter = { _id: postId };
+            updateQuery = actions.like
+                ? { '$addToSet': { usersLiked: req.user._id } }
+                : { '$pull': { usersLiked: req.user._id } };
+            await Post.updateOne(filter, updateQuery, { session });
+        });
+
+    }
+
+    if (actions.hasOwnProperty('interested')) {
+
+        await runInTransaction(async (session) => {
+
+            // update 'User' collection
+            filter = { _id: req.user._id };
+            updateQuery = actions.interested
+                ? { '$addToSet': { interestedPosts: postId } }
+                : { '$pull': { interestedPosts: postId } };
+            await User.updateOne(filter, updateQuery, { session });
+
+            // update 'Post' collection
+            filter = { _id: postId };
+            updateQuery = actions.interested
+                ? { '$addToSet': { usersInterested: req.user._id } }
+                : { '$pull': { usersInterested: req.user._id } };
+            await Post.updateOne(filter, updateQuery, { session });
+        });
+    }
+
+    if (actions.hasOwnProperty('report')) {
+        const errorKey = actions.report.key || 'OTHER';
+
+        await runInTransaction(async (session) => {
+            // update 'User' collection
+            filter = { _id: req.user._id };
+            updateQuery = {
+                '$addToSet': { reportedPosts: postId }
+            };
+            await User.updateOne(filter, updateQuery, { session });
+
+            // update 'ReportedPost' collection
+            filter = { post: postId, };
+            updateQuery = {
+                post: postId,
+                '$addToSet': {
+                    reports: {
+                        user: req.user._id,
+                        reasonKey: errorKey,
+                        description: actions.report.description || '',
+                    }
+                }
+            };
+            await ReportedPost.updateOne(filter, updateQuery, { upsert: true, session });
+        });
+    }
 }
