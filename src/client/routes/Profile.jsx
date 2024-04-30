@@ -8,20 +8,9 @@ import styles from './Profile.module.scss';
 import ProfileImg from '../assets/images/profile-img.jpeg';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
+import ReviewsFeed from "../components/Reviews.jsx"
 
 
-const posts = [
-  {
-    name: 'John Doe',
-    profilePic: 'profile-picture-example.jpg',
-    date: '2024-04-05T23:30:00',
-    location: 'New York',
-    postPic: 'picture-example.jpg',
-    postText: 'Hello, My sweet grandmother is sick and needs someone to take care of her dog for a few days. Unfortunately, I\'m not in the city at the moment. We would be very grateful if someone could help.',
-    likes: '23'
-  }
-
-];
 const postExample = posts[0];
 for (let i = 0; i < 10; i++) {
   posts.push(postExample);
@@ -29,7 +18,7 @@ for (let i = 0; i < 10; i++) {
 const Profile = () => {
   const { data: user } = useUser();
 
-  const [isOwnProfile, setIsOwnProfile] = useState(true);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
   {/* filter only the posts that belong to this profile*/}
   const filterUserPosts = (posts, user) => {
     const fullName = `${user.firstName} ${user.lastName}`;
@@ -47,10 +36,10 @@ const Profile = () => {
     <Card>
       <div className={styles.profileInfo}>
         <div className={styles.profileLeft}>
-          <img className="w-28 h-28 mb-3 rounded-full shadow-lg" src={ProfileImg} alt="Profile image" />
-          <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{user.firstName} {user.lastName}</h5>
+          <img className="w-28 h-28 mb-2  rounded-full shadow-lg" src={ProfileImg} alt="Profile image" />
+          <h5 className="ml-2 text-xxl font-large text-gray-900 dark:text-white">{user.firstName} {user.lastName}</h5>
           <span className="text-sm text-gray-500 dark:text-gray-400">{user.location || 'unknown location'}</span>
-          <div className="pb-10">
+          <div className="pb-1">
             <Stars grade={user.rating || 0} />
             <p className={styles.interests}>{interestsSepByDots}</p>
             <p className={styles.info}>{user.bio}</p>
@@ -65,11 +54,11 @@ const Profile = () => {
             </div>
             <div className={styles.stat}>
               <p className={styles.statNumber}>10</p>
-              <p className={styles.statText}>Following</p>
+              <p className={styles.statText}>Followers</p>
             </div>
             <div className={styles.stat}>
               <p className={styles.statNumber}>20</p>
-              <p className={styles.statText}>Followers</p>
+              <p className={styles.statText}>Following</p>
             </div>
           </div>
           {isOwnProfile && (
@@ -84,36 +73,35 @@ const Profile = () => {
           )}
           {!isOwnProfile && (
           <div className={styles.actions}>
-            <Button>Follow</Button>
             <Button color="light">Message</Button>
+            <Button>Follow Me</Button>
           </div>
           )}
         </div>
       </div>
     </Card>
 
-    <Tabs aria-label="Default tabs" style="default" className="flex justify-center">
+    <Tabs aria-label="Default tabs" style="default" className="flex justify-center mt-2">
       {isOwnProfile && (
-      <Tabs.Item active title="My Posts" icon={HiUserCircle}>
+      <Tabs.Item active title="My Posts" icon={HiUserCircle} className="tabItem">
             <FeaturedPostsFeed posts={userPosts} showTitle={false} />
       </Tabs.Item>
       )}
       {!isOwnProfile && (
-      <Tabs.Item active title="Posts" icon={HiUserCircle}>
+      <Tabs.Item active title="Posts" icon={HiUserCircle} className="tabItem">
           {/* should change to userPosts also when is ready */}
       <FeaturedPostsFeed posts={posts} showTitle={false} />
       </Tabs.Item>
        )}
-      <Tabs.Item title="Reviews" icon={HiChartSquareBar}>
+      <Tabs.Item title="Reviews" icon={HiChartSquareBar} className="tabItem">
         This is <span className="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</span>.
-        Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-        control the content visibility and styling.
+
+       {/*<ReviewsFeed reviews={reviews}/>*/}
       </Tabs.Item>
 
-      <Tabs.Item title="Contacts" icon={HiClipboardList}>
+      <Tabs.Item title="Contacts" icon={HiClipboardList} className="tabItem">
         This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.
-        Here we gonna list all the contant the the user follows-in a list,and add the option to follow them to
-        Maybe list mutaul friends as well.
+     
       </Tabs.Item>
 
     </Tabs>
