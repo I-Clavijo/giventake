@@ -26,7 +26,7 @@ export default function Explore() {
   return (
     <>
       <FeaturedCategories />
-      <FeaturedPostsFeed posts={posts} />
+      <FeaturedPostsFeed posts={posts} showTitle={true}/>
     </>
   );
 }

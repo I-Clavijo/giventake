@@ -7,14 +7,36 @@ import { HiChartSquareBar, HiClipboardList, HiUserCircle } from "react-icons/hi"
 import styles from './Profile.module.scss';
 import ProfileImg from '../assets/images/profile-img.jpeg';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
+import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
 
 
+const posts = [
+  {
+    name: 'John Doe',
+    profilePic: 'profile-picture-example.jpg',
+    date: '2024-04-05T23:30:00',
+    location: 'New York',
+    postPic: 'picture-example.jpg',
+    postText: 'Hello, My sweet grandmother is sick and needs someone to take care of her dog for a few days. Unfortunately, I\'m not in the city at the moment. We would be very grateful if someone could help.',
+    likes: '23'
+  }
 
-
+];
+const postExample = posts[0];
+for (let i = 0; i < 10; i++) {
+  posts.push(postExample);
+}
 const Profile = () => {
   const { data: user } = useUser();
 
-  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [isOwnProfile, setIsOwnProfile] = useState(true);
+  {/* filter only the posts that belong to this profile*/}
+  const filterUserPosts = (posts, user) => {
+    const fullName = `${user.firstName} ${user.lastName}`;
+    return posts.filter(post => post.name === fullName);
+  };
+  const userPosts = filterUserPosts(posts, user);
+
   const interestsSepByDots = user.interests?.map((interest, index) => (
     <span key={index}>
       {interest} {index < user.interests.length - 1 ? '•' : ''}
@@ -68,26 +90,18 @@ const Profile = () => {
           )}
         </div>
       </div>
-
-      
     </Card>
 
-
-    <Tabs aria-label="Default tabs" style="default">
+    <Tabs aria-label="Default tabs" style="default" className="flex justify-center">
       {isOwnProfile && (
       <Tabs.Item active title="My Posts" icon={HiUserCircle}>
-        This is <span className="font-medium text-gray-800 dark:text-white">Profile tab's associated content</span>.
-        Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-        control the content visibility and styling.
-        add here posts the belong to this user
+            <FeaturedPostsFeed posts={userPosts} showTitle={false} />
       </Tabs.Item>
       )}
       {!isOwnProfile && (
       <Tabs.Item active title="Posts" icon={HiUserCircle}>
-        This is <span className="font-medium text-gray-800 dark:text-white">Profile tab's associated content</span>.
-        Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-        control the content visibility and styling.
-        add here posts the belong to this user
+          {/* should change to userPosts also when is ready */}
+      <FeaturedPostsFeed posts={posts} showTitle={false} />
       </Tabs.Item>
        )}
       <Tabs.Item title="Reviews" icon={HiChartSquareBar}>

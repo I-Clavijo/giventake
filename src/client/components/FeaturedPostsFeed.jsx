@@ -2,12 +2,14 @@ import React from 'react';
 import styles from './FeaturedPostsFeed.module.css';
 import Post from './Post.jsx';
 
-const FeaturedPostsFeed = ({ posts }) => {
+const FeaturedPostsFeed = ({ posts, showTitle }) => {
     return (
         <div className={styles.feed}>
-            <div className={styles.header}>
-                <h2 className={styles.title}>Explore featured Posts</h2>
-            </div>
+            {showTitle && (
+                <div className={styles.header}>
+                    <h2 className={styles.title}>Explore featured Posts</h2>
+                </div>
+            )}
             <div className={styles.postsGrid}>
                 {posts.map(( post, index ) => (
                     <Post
@@ -22,10 +24,8 @@ const FeaturedPostsFeed = ({ posts }) => {
                     />
                 ))}
             </div>
-            
         </div>
-            )
-            
+    );
 };
 
 export default FeaturedPostsFeed;
