@@ -1,12 +1,19 @@
 import jwt from 'jsonwebtoken';
 import AppError from '../utils/AppError.js';
 
-export default function verifyAuth(req, res, next) {
+export function enforceAuth(req, res, next) {
+    verifyAuth(req, res, next, true);
+}
+
+export function verifyAuth(req, res, next, enforceNotAuthenticated = false) {
     const authHeader = req.headers.authorization || req.headers.Authorization;
     if (!authHeader?.startsWith('Bearer ')) {
-        console.log('NOT AUTHENTICATED. AUTH HEADER INVALID.');
-        throw new AppError('Not authenticated.', 400);
-        // return next(new NotAuthorizedError('Not authenticated.'));
+        if(enforceNotAuthenticated){
+            console.log('NOT AUTHENTICATED. AUTH HEADER INVALID.');
+            throw new AppError('Not authenticated.', 400);    
+        } else {
+            return next();
+        }
     }
 
     const token = authHeader.split(' ')[1];
@@ -18,8 +25,7 @@ export default function verifyAuth(req, res, next) {
             if (err) return res.sendStatus(403); //invalid token
             req.user = { ...decoded };
 
-            // req.user structure should look like:
-
+            // ## req.user structure should look like:
             // req.user = {
             //      _id: ObjectId,
             //      email: String,
@@ -30,3 +36,6 @@ export default function verifyAuth(req, res, next) {
         }
     );
 }
+
+
+

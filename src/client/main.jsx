@@ -20,7 +20,7 @@ import Missing from "./routes/Missing";
 import Editor from "./routes/Editor";
 import Admin from "./routes/Admin";
 import Unauthorized from "./components/Auth/Unauthorized";
-import LikedPosts from "./routes/SavedPosts";
+import SavedPosts from "./routes/SavedPosts";
 import Create from "./routes/Create";
 
 const ROLES = {
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
 				children: [
 					{ path: "/", element: <Home /> },
 					{ path: "/explore", element: <Explore /> },
-					{ path: "/saved", element: <LikedPosts />},
+					{ path: "/saved", element: <SavedPosts />},
 
 					{ 
 						element: <RequireAuth allowedRoles={[ROLES.User]} />, 

@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         Admin: Number
     },
     refreshToken: String,
-    likedPosts: [ObjectId],
+    savedPosts: [ObjectId],
     interestedPosts: [ObjectId],
     reportedPosts: [ObjectId]
 }, { timestamps: true });

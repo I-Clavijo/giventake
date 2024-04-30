@@ -8,6 +8,7 @@ import sharp from 'sharp';
 import AppError from '../utils/AppError.js';
 import { runInTransaction } from '../utils/runInTransaction.js';
 import { REPORTS_KEYS } from '../model/constants.js';
+import mongoose from 'mongoose';
 
 // Set up AWS credentials
 const s3Client = new S3Client({
@@ -23,8 +24,6 @@ const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex
 export const createPost = async (req, res) => {
     const file = req.file;
     const { category, startDate, endDate, description, startTime, endTime, city, address } = req.body;
-    console.log("sav:", req.file)
-    console.log("sav2:", req.body)
 
     const fileBuffer = await sharp(file.buffer)
         .resize({ height: 1920, width: 1080, fit: "contain" })
@@ -64,12 +63,57 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
     //get all posts from DB
-    const posts = await Post
-        .find()
-        .populate({ path: 'user', select: 'firstName lastName' })
-        .populate({ path: 'usersLiked', select: 'firstName lastName' })
-        .populate({ path: 'usersInterested', select: 'firstName lastName' })
-        .lean();
+    const userIdObjectId = req.user ? new mongoose.Types.ObjectId(req.user._id) : null;
+    let posts = await Post.aggregate([
+        {
+            "$lookup": {
+                from: User.collection.name,
+                localField: "user",
+                foreignField: "_id",
+                as: "user",
+                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
+            },
+        },
+        { $unwind: '$user' },
+        {
+            $project: {
+                _id: 1, user: 1, category: 1, city: 1, address: 1, helpDate: 1, imgName: 1, description: 1, usersSaved: 1, createdAt: 1, updatedAt: 1, usersInterested: 1, usersReported: 1,
+                ...(req.user && {
+                    isSavedByUser: { $in: [userIdObjectId, '$usersSaved'] },
+                    isUserInterested: { $in: [userIdObjectId, '$usersInterested'] },
+                    isUserReported: { $in: [userIdObjectId, '$usersReported'] },
+                }),
+
+            },
+        },
+        {
+            "$lookup": {
+                from: User.collection.name,
+                localField: "usersSaved",
+                foreignField: "_id",
+                as: "usersSaved",
+                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
+            }
+        },
+        {
+            "$lookup": {
+                from: User.collection.name,
+                localField: "usersInterested",
+                foreignField: "_id",
+                as: "usersInterested",
+                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
+            }
+        },
+        {
+            "$lookup": {
+                from: User.collection.name,
+                localField: "usersReported",
+                foreignField: "_id",
+                as: "usersReported",
+                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
+            }
+        },
+    ]);
 
     // get post image from S3 bucket
     for (const post of posts) {
@@ -87,8 +131,7 @@ export const getPosts = async (req, res) => {
         post.imgUrl = url;
     }
     console.log(posts)
-
-    res.status(200).json(posts)
+    res.status(200).json(posts);
 }
 
 export const deletePost = async (req, res) => {
@@ -122,49 +165,49 @@ export const postAction = async (req, res) => {
     console.log('actions: ', actions);
 
     let filter, updateQuery;
-    if (actions.hasOwnProperty('like')) {
+    if (actions.hasOwnProperty('isSavedByUser')) {
 
         await runInTransaction(async (session) => {
 
             // update 'User' collection
             filter = { _id: req.user._id };
-            updateQuery = actions.like
-                ? { '$addToSet': { likedPosts: postId } }
-                : { '$pull': { likedPosts: postId } };
+            updateQuery = actions.isSavedByUser
+                ? { '$addToSet': { savedPosts: postId } }
+                : { '$pull': { savedPosts: postId } };
             await User.updateOne(filter, updateQuery, { session });
 
             // update 'Post' collection
             filter = { _id: postId };
-            updateQuery = actions.like
-                ? { '$addToSet': { usersLiked: req.user._id } }
-                : { '$pull': { usersLiked: req.user._id } };
+            updateQuery = actions.isSavedByUser
+                ? { '$addToSet': { usersSaved: req.user._id } }
+                : { '$pull': { usersSaved: req.user._id } };
             await Post.updateOne(filter, updateQuery, { session });
         });
-
     }
 
-    if (actions.hasOwnProperty('interested')) {
+    if (actions.hasOwnProperty('isUserInterested')) {
 
         await runInTransaction(async (session) => {
 
             // update 'User' collection
             filter = { _id: req.user._id };
-            updateQuery = actions.interested
+            updateQuery = actions.isUserInterested
                 ? { '$addToSet': { interestedPosts: postId } }
                 : { '$pull': { interestedPosts: postId } };
             await User.updateOne(filter, updateQuery, { session });
 
             // update 'Post' collection
             filter = { _id: postId };
-            updateQuery = actions.interested
+            updateQuery = actions.isUserInterested
                 ? { '$addToSet': { usersInterested: req.user._id } }
                 : { '$pull': { usersInterested: req.user._id } };
             await Post.updateOne(filter, updateQuery, { session });
         });
     }
 
-    if (actions.hasOwnProperty('report')) {
+    if (actions.hasOwnProperty('isUserReported')) {
         const errorKey = actions.report.key || 'OTHER';
+        const userId = new mongoose.Types.ObjectId(req.user._id);
 
         await runInTransaction(async (session) => {
             // update 'User' collection
@@ -174,19 +217,28 @@ export const postAction = async (req, res) => {
             };
             await User.updateOne(filter, updateQuery, { session });
 
-            // update 'ReportedPost' collection
-            filter = { post: postId, };
+            // update 'Post' collection
+            filter = { _id: postId };
             updateQuery = {
-                post: postId,
-                '$addToSet': {
-                    reports: {
-                        user: req.user._id,
-                        reasonKey: errorKey,
-                        description: actions.report.description || '',
-                    }
-                }
+                '$addToSet': { usersReported: req.user._id }
             };
-            await ReportedPost.updateOne(filter, updateQuery, { upsert: true, session });
+            await Post.updateOne(filter, updateQuery, { session });
+
+            // update 'ReportedPost' collection
+            // First, check if the document exists
+            const existingDocument = await ReportedPost.findOne({ post: postId }, null, { session });
+            const reportObj = { user: req.user._id, reasonKey: errorKey, description: actions.report.description || '' };
+
+            if (existingDocument) {
+                // If the document exists, update it
+                filter = { post: postId, 'reports.user': { $ne: req.user._id } };
+                updateQuery = { $addToSet: { reports: reportObj } };
+                await ReportedPost.updateOne(filter, updateQuery, { session });
+            } else {
+                // If the document doesn't exist, create a new one
+                const newReportObj = { post: postId, reports: [reportObj] };
+                await ReportedPost.create([newReportObj], { session });
+            }
         });
     }
 }

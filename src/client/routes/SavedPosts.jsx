@@ -38,17 +38,17 @@ export default function SavedPosts() {
   const { data: posts, isLoading } = usePosts();
 
   // only for test purposes
-  if (posts && !isLoading) {
-    const postExample = posts[0];
-    for (let i = 0; i < 10; i++) {
-      posts.push(postExample);
-    }
-    console.log(posts);
-  }
+  // if (posts && !isLoading) {
+  //   const postExample = posts[0];
+  //   for (let i = 0; i < 10; i++) {
+  //     posts.push(postExample);
+  //   }
+  //   console.log(posts);
+  // }
 
   return <>
     {posts && !isLoading ?
-      <div class={styles.feedWrap}>
+      <div className={styles.feedWrap}>
         <h4 className='mb-0'>Saved for later</h4>
         <Feed {...{ posts }} styleOrder={showAs.GRID} />
       </div>

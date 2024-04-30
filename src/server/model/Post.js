@@ -15,8 +15,9 @@ const postSchema = new mongoose.Schema({
     },
     imgName: String,
     description: String,
-    usersLiked: [{ type: mongoose.Schema.ObjectId, ref: MODEL_KEY.User }],
+    usersSaved: [{ type: mongoose.Schema.ObjectId, ref: MODEL_KEY.User }],
     usersInterested: [{ type: mongoose.Schema.ObjectId, ref: MODEL_KEY.User }],
+    usersReported: [{ type: mongoose.Schema.ObjectId, ref: MODEL_KEY.User }],
 }, { timestamps: true });
 
 export default mongoose.model(MODEL_KEY.Post, postSchema);

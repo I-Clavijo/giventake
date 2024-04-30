@@ -1,7 +1,6 @@
 import React from 'react';
 import Post from './Post';
 import styles from './Feed.module.scss';
-import { Accordion } from 'flowbite-react';
 
 export const showAs = {
     LIST: 'list', // default
@@ -25,8 +24,11 @@ const Feed = ({ posts, styleOrder = showAs.LIST }) => {
                     location={post.city}
                     postPic={post.imgUrl}
                     description={post.description}
-                    likes={post.usersLiked?.length || 0}
+                    likes={post.usersSaved?.length || 0}
                     interested={post.usersInterested?.length || 0}
+                    isSavedByUser={post.isSavedByUser}
+                    isUserInterested={post.isUserInterested}
+                    isUserReported={post.isUserReported}
                 />;
 
                 return postTag;

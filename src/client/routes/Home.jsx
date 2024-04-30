@@ -37,7 +37,7 @@ const posts = [
 export default function Home() {
 
   const { data: posts, isLoading } = usePosts();
-  console.log(posts);
+
   return <>
     {posts && !isLoading ?
         <Feed {...{ posts }} />

@@ -15,37 +15,33 @@ import { Button, Tooltip } from 'flowbite-react';
 import { usePostAction } from '../api/posts/usePostAction';
 
 
-const Post = ({ postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0 }) => {
+const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported }) => {
   const { mutate: postAction } = usePostAction();
-  const [isSaved, setIsSaved] = useState(false); // Track like state
 
-  const [wantToHelp, setWantToHelp] = useState(false);
   const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
-
-  const [wantToReport, setWantToReport] = useState(false);
-  const [showMore, setShowMore] = useState(false);
+  const [showMoreActive, setShowMoreActive] = useState(false);
 
   const toggleSaveForLater = () => {
-    postAction({ postId, actions: { like: !isSaved } });
-
-    setIsSaved(prevIsSaved => !prevIsSaved);
+    postAction({ postId, actions: { isSavedByUser: !isSavedByUser } });
   };
 
   const toggleHelp = () => {
-    postAction({ postId, actions: { interested: !wantToHelp } });
-
-    setWantToHelpCount(prevCount => !wantToHelp ? prevCount + 1 : prevCount - 1);
-    setWantToHelp(prevWantToHelp => !prevWantToHelp);
+    postAction({ postId, actions: { isUserInterested: !isUserInterested } });
+    setWantToHelpCount(prevCount => !isUserInterested ? prevCount + 1 : prevCount - 1);
   };
 
   const toggleReport = () => {
-    postAction({ postId, actions: { report: { key: 'SPAM', description: 'To much messages!' } } });
-    setWantToReport(prevWantToReport => !prevWantToReport);
+    postAction({
+      postId, actions: {
+        isUserReported: !isUserReported,
+        report: { key: 'SPAM', description: 'To much messages!' }
+      }
+    });
   };
 
   // Show more button
   const toggleShowMore = () => {
-    setShowMore(prevShowMore => !prevShowMore);
+    setShowMoreActive(prevShowMore => !prevShowMore);
   };
 
   // sets how long ago the post was posted 
@@ -99,8 +95,11 @@ const Post = ({ postId, fullName, profilePic = '', createdAt, helpDate, location
           <img src={postPic} alt="Post" />
         </div>
         <p>
-          {showMore ? description : description.substring(0, 150) + '...'}
-          {!showMore && description.length > 150 && (
+          {showMoreActive
+            ? description
+            : (description.length > MAX_DESCRIPTION_LENGTH ? description.substring(0, MAX_DESCRIPTION_LENGTH) + '...' : description)
+          }
+          {!showMoreActive && description.length > MAX_DESCRIPTION_LENGTH && (
             <button className={styles.readMore} onClick={toggleShowMore}>
               Read More
             </button>
@@ -108,11 +107,11 @@ const Post = ({ postId, fullName, profilePic = '', createdAt, helpDate, location
         </p>
       </div>
       <div className={styles.postFooter}>
-        <div style={{ width: 'fit-content', display:'flex', alignItems:'center'}}>
+        <div style={{ width: 'fit-content', display: 'flex', alignItems: 'center' }}>
           <div className={styles.likes}>
             <img
-              className={`${styles.likeButton} ${isSaved ? styles.liked : ''}`} // Add CSS class for styling
-              src={isSaved ? BookmarkIconFilled : BookmarkIcon}
+              className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''}`} // Add CSS class for styling
+              src={isSavedByUser ? BookmarkIconFilled : BookmarkIcon}
               onClick={toggleSaveForLater}
               alt="Save for Later"
             />
@@ -123,7 +122,7 @@ const Post = ({ postId, fullName, profilePic = '', createdAt, helpDate, location
               <div style={{ display: 'flex' }}>
                 <img
                   className={styles.wavingHand}
-                  src={wantToHelp ? FilledHandWaving : HandWaving}
+                  src={isUserInterested ? FilledHandWaving : HandWaving}
                   onClick={toggleHelp}
                   alt="Help"
                 />
@@ -136,7 +135,7 @@ const Post = ({ postId, fullName, profilePic = '', createdAt, helpDate, location
 
         <div className={styles.report}>
           <img
-            src={wantToReport ? FilledFlagIcon : FlagIcon}
+            src={isUserReported ? FilledFlagIcon : FlagIcon}
             onClick={toggleReport}
             alt="Report"
           />

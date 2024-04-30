@@ -5,8 +5,8 @@ import mongooseUniqueValidator from "mongoose-unique-validator";
 const reportedPostSchema = new mongoose.Schema({
     post: { type: mongoose.Schema.ObjectId, required: true, ref: MODEL_KEY.Post, unique: true },
     reports: [{
-        _id: false,
-        user: { type: mongoose.Schema.ObjectId, required: true, ref: MODEL_KEY.User, unique: true },
+        // _id: false,
+        user: { type: mongoose.Schema.ObjectId, required: true, ref: MODEL_KEY.User },
         reasonKey: { type: String, enum: REPORTS_KEYS },
         description: String
     }]
