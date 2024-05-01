@@ -49,6 +49,9 @@ export const usePostAction = () => {
                     return post;
                 });
                 queryClient.setQueryData([QUERY_KEY.posts], updatedPosts);
+                
+                if(data.actions.hasOwnProperty('isUserReported'))
+                    enqueueSnackbar("Report sent.", { variant: 'success' });
             }
         },
 

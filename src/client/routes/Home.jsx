@@ -1,5 +1,5 @@
 import styles from "./Home.module.scss";
-import Feed, { showAs } from "../components/Feed.jsx";
+import Feed, { showAs } from "../components/Posts/Feed.jsx";
 import { usePosts } from "../api/posts/usePosts.jsx";
 import { Spinner } from "flowbite-react";
 

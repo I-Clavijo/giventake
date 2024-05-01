@@ -228,7 +228,8 @@ export const postAction = async (req, res) => {
             // First, check if the document exists
             const existingDocument = await ReportedPost.findOne({ post: postId }, null, { session });
             const reportObj = { user: req.user._id, reasonKey: errorKey, description: actions.report.description || '' };
-
+            
+            // BEHAVIOR: if a user has already reported a post, his old report will remain and the new one will NOT be inserted
             if (existingDocument) {
                 // If the document exists, update it
                 filter = { post: postId, 'reports.user': { $ne: req.user._id } };

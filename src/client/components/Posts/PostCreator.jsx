@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
 import styles from "./PostCreator.module.scss";
 import { Textarea, Button, Datepicker, FileInput, Label, TextInput } from "flowbite-react";
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreatePost } from '../api/posts/useCreatePost';
+import { useCreatePost } from '../../api/posts/useCreatePost';
 
 
 const categories = [

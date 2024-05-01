@@ -1,6 +1,6 @@
 import styles from './Explore.module.scss';
 import FeaturedCategories from "../components/FeaturedCategories.jsx";
-import Feed, { showAs } from "../components/Feed.jsx";
+import Feed, { showAs } from "../components/Posts/Feed.jsx";
 import { usePosts } from "../api/posts/usePosts.jsx";
 import { Spinner } from "flowbite-react";
 
@@ -23,7 +23,7 @@ export default function Explore() {
       <div className={styles.feedWrap}>
         <FeaturedCategories />
         <h4 className='mb-0'>Explore</h4>
-        <Feed {...{ posts }} styleOrder={showAs.GRID} />
+        <Feed {...{ posts }} styleOrder={showAs.MASONRY} />
       </div>
       :
       <Spinner />

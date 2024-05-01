@@ -1,5 +1,5 @@
 import styles from "./Create.module.scss";
-import PostCreator from "../components/PostCreator.jsx";
+import PostCreator from "../components/Posts/PostCreator.jsx";
 
 const Create = () => {
 

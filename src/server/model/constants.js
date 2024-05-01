@@ -6,12 +6,12 @@ export const MODEL_KEY = {
 
 
 export const REPORTS_REASONS = {
-  SPAM: 'This post contains spam',
-  INAPPROPRIATE_CONTENT: 'This post contains inappropriate content',
-  OFFENSIVE_LANGUAGE: 'This post contains offensive language',
-  COPYRIGHT_VIOLATION: 'This post violates copyright',
-  FALSE_INFORMATION: 'This post contains false information',
-  PERSONAL_ATTACK: 'This post contains a personal attack',
+  SPAM: 'Spam',
+  INAPPROPRIATE_CONTENT: 'Inappropriate content',
+  OFFENSIVE_LANGUAGE: 'Offensive language',
+  COPYRIGHT_VIOLATION: 'Copyright violation',
+  FALSE_INFORMATION: 'False information',
+  PERSONAL_ATTACK: 'Personal attack',
   OTHER: 'Other reason (please specify)'
 };
 

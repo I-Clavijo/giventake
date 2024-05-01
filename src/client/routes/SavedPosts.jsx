@@ -1,7 +1,7 @@
 import styles from "./Home.module.scss";
 import { usePosts } from "../api/posts/usePosts.jsx";
 import { Spinner } from "flowbite-react";
-import Feed, { showAs } from "../components/Feed.jsx";
+import Feed, { showAs } from "../components/Posts/Feed.jsx";
 
 const posts = [
   {

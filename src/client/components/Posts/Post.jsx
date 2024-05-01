@@ -1,25 +1,24 @@
-import React from 'react';
 import { useEffect, useState } from 'react';
 import styles from "./Post.module.scss";
-import ProfilePic from "../assets/images/profile-picture-example.jpg";
-import PostPic from "../assets/images/example-post.jpg";
-import HeartIcon from "../assets/images/heart.svg";
-import BookmarkIcon from "../assets/images/bookmark-icon-black.svg";
-import BookmarkIconFilled from "../assets/images/bookmark-icon-black-filled.svg";
-import FilledHeartIcon from "../assets/images/heart-f.svg";
-import FilledHandWaving from "../assets/images/hand_waving_icon_filled.svg";
-import HandWaving from "../assets/images/hand_waving_icon.svg";
-import FlagIcon from "../assets/images/flag-icon-v2.svg";
-import FilledFlagIcon from "../assets/images/flag-filled-icon.svg";
-import { Button, Tooltip } from 'flowbite-react';
-import { usePostAction } from '../api/posts/usePostAction';
+import ProfilePic from "../../assets/images/profile-img.jpeg";
+import BookmarkIcon from "../../assets/images/bookmark-icon-black.svg";
+import BookmarkIconFilled from "../../assets/images/bookmark-icon-black-filled.svg";
+import FilledHandWaving from "../../assets/images/hand_waving_icon_filled.svg";
+import HandWaving from "../../assets/images/hand_waving_icon.svg";
+import FlagIcon from "../../assets/images/flag-icon-v2.svg";
+import FilledFlagIcon from "../../assets/images/flag-filled-icon.svg";
+import { Modal, Tooltip } from 'flowbite-react';
+import { usePostAction } from '../../api/posts/usePostAction';
+import { FaExpandAlt, FaEyeSlash } from "react-icons/fa";
+import ReportModal from './ReportModal';
 
 
-const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported }) => {
+const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported, postInModal = false, openModalHandler }) => {
   const { mutate: postAction } = usePostAction();
 
   const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
-  const [showMoreActive, setShowMoreActive] = useState(false);
+  const [showMoreActive, setShowMoreActive] = useState(postInModal);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   const toggleSaveForLater = () => {
     postAction({ postId, actions: { isSavedByUser: !isSavedByUser } });
@@ -28,15 +27,6 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
   const toggleHelp = () => {
     postAction({ postId, actions: { isUserInterested: !isUserInterested } });
     setWantToHelpCount(prevCount => !isUserInterested ? prevCount + 1 : prevCount - 1);
-  };
-
-  const toggleReport = () => {
-    postAction({
-      postId, actions: {
-        isUserReported: !isUserReported,
-        report: { key: 'SPAM', description: 'To much messages!' }
-      }
-    });
   };
 
   // Show more button
@@ -81,14 +71,23 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
     return () => clearInterval(interval);
   }, [createdAt]);
 
-  return (
-    <div className={styles.post}>
+
+  const postTag = <div className={`${styles.post} ${isUserReported ? styles.reportedPost : ''}`}>
+    <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
       <div className={styles.postHeader}>
-        {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
         <div>
-          <h6>{fullName}</h6>
-          <p>{timeAgo} • {location}</p>
+          {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
+          <div>
+            <h6>{fullName}</h6>
+            <p>{timeAgo} • {location}</p>
+          </div>
         </div>
+        {!postInModal &&
+          <div className={styles.btnOpenModal} onClick={openModalHandler}>
+            <FaExpandAlt />
+          </div>
+        }
+
       </div>
       <div className={styles.postBody}>
         <div className={styles.imgCrop}>
@@ -99,7 +98,7 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
             ? description
             : (description.length > MAX_DESCRIPTION_LENGTH ? description.substring(0, MAX_DESCRIPTION_LENGTH) + '...' : description)
           }
-          {!showMoreActive && description.length > MAX_DESCRIPTION_LENGTH && (
+          {!showMoreActive && !postInModal && description.length > MAX_DESCRIPTION_LENGTH && (
             <button className={styles.readMore} onClick={toggleShowMore}>
               Read More
             </button>
@@ -118,7 +117,7 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
           </div>
 
           <div className={styles.hand}>
-            <Tooltip content='Press to help'>
+            <Tooltip content={isUserInterested ? 'Press to cancel help' : 'Press to help'}>
               <div style={{ display: 'flex' }}>
                 <img
                   className={styles.wavingHand}
@@ -127,7 +126,6 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
                   alt="Help"
                 />
                 <span className={styles.likeCount}>{wantToHelpCount}</span>
-
               </div>
             </Tooltip>
           </div>
@@ -136,13 +134,36 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
         <div className={styles.report}>
           <img
             src={isUserReported ? FilledFlagIcon : FlagIcon}
-            onClick={toggleReport}
+            onClick={() => setShowReportModal(true)}
             alt="Report"
           />
         </div>
       </div>
     </div>
-  );
+
+    {isUserReported && <div className={styles.overlay}>
+      <FaEyeSlash size={40} />
+      <div>Post reported.</div>
+    </div>}
+
+  </div>;
+
+
+  return <>
+    <ReportModal show={showReportModal} onClose={() => setShowReportModal(false)} {...{ postId, isUserReported }} />
+    {postTag}
+  </>;
 };
 
-export default Post;
+const PostWithModal = (props) => {
+  const [openModal, setOpenModal] = useState(false);
+
+  return <>
+    <Modal dismissible show={openModal} onClose={() => setOpenModal(false)} className={styles.modalWrap}>
+      <Post {...props} postInModal />
+    </Modal>
+    <Post {...props} openModalHandler={() => setOpenModal(true)} />
+  </>;
+}
+
+export default PostWithModal;
