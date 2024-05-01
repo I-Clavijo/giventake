@@ -84,7 +84,7 @@ export default function Messages() {
 	return (
 		<>
 			<div>
-				<h1>Messages</h1>
+				<h4>Messages</h4>
 				<div className={styles.chatPage}>
 					 <Card className={`max-w-sm ${styles.cardWrapper}`}>
 						<div className="flex items-center justify-between">

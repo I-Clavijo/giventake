@@ -35,11 +35,11 @@ export const signUp = async (req, res) => {
     try {
         //encrypt the password
         const hashedPassword = await bcrypt.hash(password, 10);
-        const defaultRoles = { User: 2001 };
+        const defaultRoles = { 'User': 2001 };
         const refreshToken = generateRefreshToken({ email });
 
         // create and store the new user
-        const userDB = await User.create({
+        let userDB = await User.create({
             firstName,
             lastName,
             email,
@@ -51,14 +51,16 @@ export const signUp = async (req, res) => {
         // Delete keys from the user object
         userDB = userDB.toObject();
         removePropsFromArray(userDB, ['password', 'refreshToken', '__v']);
-        const accessToken = generateAccessToken({ _id: userDB._id, email, roles: defaultRoles });
+        const roles = Object.values(userDB.roles).filter(Boolean);
+        userDB.roles = roles;
+        const accessToken = generateAccessToken({ _id: userDB._id, email, roles });
 
         // Creates Secure Cookie with refresh token and sends to client
         res.cookie('jwt', refreshToken, {
             httpOnly: true, //accessible only by web server
             secure: true,  // TLS (https)
-            sameSite: 'strict', // not a cross-site cookie
-            maxAge: 7 * 24 * 60 * 60 * 1000  //cookie expiry: set to match refreshToken
+            sameSite: 'None', // not a cross-site cookie
+            maxAge: null  //cookie expiry: set to match refreshToken
         });
 
         // Send authorization roles and access token to user
@@ -87,7 +89,7 @@ export const login = async (req, res) => {
         foundUser.refreshToken = refreshToken;
         await foundUser.save()
         foundUser = foundUser.toObject();
-
+        foundUser.roles = roles;
         removePropsFromArray(foundUser, ['password', 'refreshToken', '__v']);
         const accessToken = generateAccessToken({ _id: foundUser._id, email, roles });
 
@@ -95,7 +97,7 @@ export const login = async (req, res) => {
         res.cookie('jwt', refreshToken, {
             httpOnly: true, //accessible only by web server
             secure: true,  // TLS (https)
-            sameSite: 'strict', // not a cross-site cookie
+            sameSite: 'None', // not a cross-site cookie
             maxAge: persist? 7 * 24 * 60 * 60 * 1000 : null  //cookie expiry: set to match refreshToken
         });
 
@@ -144,7 +146,7 @@ export const logout = async (req, res) => {
         const result = await foundUser.save();
     }
 
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'strict', secure: true });
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
     return res.sendStatus(204);
 
 

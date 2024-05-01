@@ -26,9 +26,9 @@ const categories = [
 const FeaturedCategories = () => {
 
   return (
-    <div className={styles.grid}>
+    <div >
         <div className={styles.gridHeader}>
-            <div className={styles.gridTitle}>Explore featured categories</div>
+            <h6>Featured categories</h6>
         </div>
         <div className={styles.categoriesGrid}>
           {categories.map((category) => (
