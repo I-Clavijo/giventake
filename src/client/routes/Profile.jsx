@@ -9,8 +9,8 @@ import ProfileImg from '../assets/images/profile-img.jpeg';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
 import ReviewsFeed from "../components/Reviews.jsx";
-{/*
-import {Rate as ReviewComponent} from "../components/Rate.jsx";*/}
+import { FriendsTable } from '../components/ListOfFriends.jsx';
+//import {Rate } from "../components/Rate.jsx";
 
 
 
@@ -36,7 +36,7 @@ for (let i = 0; i < 10; i++) {
 const Profile = () => {
   const { data: user } = useUser();
   const [openModal, setOpenModal] = useState(true);
-  const [isOwnProfile, setIsOwnProfile] = useState(true);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
   {/* filter only the posts that belong to this profile*/}
   const filterUserPosts = (posts, user) => {
     const fullName = `${user.firstName} ${user.lastName}`;
@@ -79,16 +79,13 @@ const Profile = () => {
               <p className={styles.statText}>Following</p>
             </div>
           </div>
-          {/*
+          
           {isOwnProfile&&(
              <div className={styles.popover}>
-             <Rate>
-             <Button onClick={() => setOpenModal(true)}>Review latest Activity</Button>
-             </Rate>
-             <ReviewComponent />
+             {/*<Rate />*/}
            </div>
           )}
-          */}
+          
           {isOwnProfile && (
           <div className={styles.topActions}>
             <Link to='/account/edit'>
@@ -128,8 +125,8 @@ const Profile = () => {
       </Tabs.Item>
 
       <Tabs.Item title="Contacts" icon={HiClipboardList} className="tabItem">
-        This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.
-     
+        
+       <FriendsTable/>
       </Tabs.Item>
 
     </Tabs>
