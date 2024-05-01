@@ -10,7 +10,7 @@ import { HiOutlinePencilSquare } from "react-icons/hi2";
 import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
 import ReviewsFeed from "../components/Reviews.jsx";
 import { FriendsTable } from '../components/ListOfFriends.jsx';
-import {Rate} from "../components/Rate.jsx";
+//import {Rate} from "../components/Rate.jsx";
 
 
 
@@ -36,7 +36,7 @@ for (let i = 0; i < 10; i++) {
 const Profile = () => {
   const { data: user } = useUser();
   const [openModal, setOpenModal] = useState(true);
-  const [isOwnProfile, setIsOwnProfile] = useState(true);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [mode, setMode] = useState(false);
   const changeMode = (isOwnProfile) => {
     setMode(isOwnProfile ? 'myOwnContacts' : 'userContacts');
@@ -86,7 +86,7 @@ const Profile = () => {
           
           {isOwnProfile&&(
              <div className={styles.popover}>
-             <Rate />
+             {/*<Rate />*/}
            </div>
           )}
           
