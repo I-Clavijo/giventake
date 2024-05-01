@@ -5,15 +5,16 @@ import { useUser } from "./useUser";
 
 const useAxiosPrivate = () => {
     const { mutate: refreshToken } = useRefreshToken();
-    const { data: user } = useUser();
+    const { data: user, isLoggedIn } = useUser();
 
     useEffect(() => {
 
         const requestIntercept = axiosPrivate.interceptors.request.use(
-            config => {
-                if (!config.headers['Authorization']) {
+            (config) => {
+                if (isLoggedIn && !config.headers['Authorization']) {
                     config.headers['Authorization'] = `Bearer ${user?.accessToken}`;
                 }
+
                 return config;
             }, (error) => Promise.reject(error)
         );

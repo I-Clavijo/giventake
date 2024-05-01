@@ -5,15 +5,15 @@ import { useSnackbar } from 'notistack';
 import { QUERY_KEY } from '../constants';
 
 
-const login = async (loginData = { email, password, persist }) => {
-    return await axios.post('/auth/login', JSON.stringify(loginData), {
+const signUp = async ({ firstName, lastName, email, password }) => {
+    const signupData = { firstName, lastName, email, password };
+    return await axios.post('/auth/signup', JSON.stringify(signupData), {
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
     });
 };
 
 
-export const useLogin = (data) => {
+export const useSignUp = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
@@ -22,17 +22,19 @@ export const useLogin = (data) => {
     const { enqueueSnackbar } = useSnackbar();
 
     return useMutation({
-        mutationFn: login,
+        mutationFn: (data) => signUp(data),
         onSuccess: ({data}) => {
-            queryClient.setQueryData([QUERY_KEY.user], prev => ({...prev, ...data })) // save the user in the state            
+            console.log("onSuccess: ", data);
+            queryClient.setQueryData([QUERY_KEY.user], data) // save the user in the state            
             navigate(from, { replace: true });
         },
         onError: (error) => {
-            let errMsg = 'Error on login. Try again!';
+            let errMsg = 'Error on sign up. Try again!';
             switch (error?.request?.status) {
-                case 401:
-                    errMsg = "Wrong email or password"; break;
+                case 409:
+                    errMsg = "User already exists."; break;
             }
+            console.log('error: ', errMsg);
             enqueueSnackbar(errMsg, { variant: 'error' });
         }
     })
