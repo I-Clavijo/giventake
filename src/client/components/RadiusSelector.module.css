@@ -1,9 +1,22 @@
 .wrapper {
     display: flex;
-    flex-direction: row;
+    flex-direction: wrap;
     justify-content: center;
     align-items: center;
     padding-bottom: 10px;
+}
+
+.locationLabel {
+    margin-right: 10px;
+}
+
+.currentLocation {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.currentCity {
+    white-space: nowrap;
 }
 
 .radiusContainer {
@@ -16,10 +29,19 @@
     width: 85px;
 }
 
+.changeCity {
+
+}
+
 .changeButton {
     font-style: italic;
     cursor: pointer;
     color: grey;
     margin: 10px;
     font-size: 14px;
+}
+
+.citySelector {
+    position: absolute; /* Make the selector positioned absolutely */
+    transform: translateX(-80px);
 }

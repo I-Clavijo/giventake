@@ -3,7 +3,7 @@ import { Dropdown } from "flowbite-react";
 import styles from "./RadiusSelector.module.css";
 import CitySelector from "./CitySelector";
 
-export function RadiusSelector({ country, city, lat, lng, onCitySelected }) {
+export function RadiusSelector({ country, city, lat, lng }) {
   
   const [showCitySelector, setShowCitySelector] = useState(false);
   const [selectedCity, setSelectedCity] = useState(city || ""); // Initialize with initial city
@@ -21,15 +21,24 @@ export function RadiusSelector({ country, city, lat, lng, onCitySelected }) {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.currentLocation}>Location: {selectedCity ? selectedCity + ", " + country : country}</div>
-      <div className={styles.changeButton} onClick={handleChangeButtonClick}>
-        Change
+      <div className={styles.currentLocation}>
+        <div className={styles.locationLabel}>Location:</div>
+        <div className={styles.currentCity}>
+          {selectedCity ? selectedCity + ", " + country : country}
+        </div>
       </div>
-      {showCitySelector && (
-        <CitySelector country={country} onCitySelected={handleCitySelected} />
-      )}
+      <div className={styles.changeCity}>
+        <div className={styles.changeButton} onClick={handleChangeButtonClick}>
+          Change
+        </div>
+        <div className={styles.citySelector}>
+          {showCitySelector && (
+            <CitySelector country={country} onCitySelected={handleCitySelected} />
+          )}
+        </div>
+      </div>
       <div className={styles.radiusContainer}>
-        <Dropdown className={styles.dropdown} size="sm" label="Radius" inline>
+        <Dropdown className={styles.dropdown} label="Radius" inline>
           <Dropdown.Item>All</Dropdown.Item>
           <Dropdown.Item>1 km</Dropdown.Item>
           <Dropdown.Item>10 km</Dropdown.Item>

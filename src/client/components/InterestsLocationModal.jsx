@@ -21,12 +21,12 @@ const InterestsLocationModal = () => {
         <Modal.Body>
           <div className={styles.body}>
             <label>
-              where are you located?
+              Where are you located?
             </label>
             <LocationSelection/>
             <CitySelector/>
             <label>
-              what are your interests? select the ones you like
+              What are your interests? Select the ones you like
             </label>
             <InterestsSelection/>
           </div>
