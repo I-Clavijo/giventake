@@ -32,7 +32,7 @@ const LocationSelection = () => {
               .then(response => {
                 if (!response.ok) {
                   throw new Error('Nominatim API request failed'); // Throw error for non-200 status
-                }
+                }   
                 return response.json();
               })
               .then(data => {
@@ -47,7 +47,7 @@ const LocationSelection = () => {
           }
 
         function error() {
-            // Handle location retrieval errors (optional)
+            // Geolocation API request failed
         }
 
         navigator.geolocation.getCurrentPosition(success, error);

@@ -4,7 +4,7 @@ import { Button, Modal } from "flowbite-react";
 import { useState } from "react";
 import InterestsSelection from './InterestsSelection.jsx';
 import LocationSelection from './LocationSelection.jsx';
-import LocationSelection2 from './LocationSelection2.jsx';
+import CitySelector from './CitySelector.jsx';
 
 
 const InterestsLocationModal = () => {
@@ -13,7 +13,7 @@ const InterestsLocationModal = () => {
   return (
     <>
       {/* <Button onClick={() => setOpenModal(true)}>Toggle modal</Button> */}
-      <Modal size="lg" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal size="xl" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>
             <div className={styles.title}>Thank you for joining!</div>
             <div className={styles.subtitle}>To get a more presonalized experience, we would like to know a little more about you</div>
@@ -24,7 +24,7 @@ const InterestsLocationModal = () => {
               where are you located?
             </label>
             <LocationSelection/>
-            <LocationSelection2/>
+            <CitySelector/>
             <label>
               what are your interests? select the ones you like
             </label>

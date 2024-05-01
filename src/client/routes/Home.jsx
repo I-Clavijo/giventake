@@ -1,6 +1,9 @@
 import styles from "./Home.module.scss";
 import Feed from "../components/Feed.jsx";
+import RadiusSelector from "../components/RadiusSelector.jsx";
 import InterestsLocationModal from "../components/InterestsLocationModal.jsx";
+import UserCountry from "../components/UserCountry.jsx";
+
 
 const posts = [
   {
@@ -32,11 +35,17 @@ const posts = [
   },
 ];
 
+const user = {
+  country: "IL",
+  city: "Tel Aviv",
+  lat: "32.0853",
+  lng: "34.7818"
+}; 
 
 export default function Home() {
   return (
     <>
-      <InterestsLocationModal />
+      <RadiusSelector country={user.country} city={user.city} lat={user.lat} lng={user.lng}/>
       <Feed posts={posts} />
     </>
   );

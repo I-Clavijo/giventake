@@ -18,9 +18,17 @@
     padding: 0; /* Reset padding */
     width: 250px;
   }
+  .searchResultsAfter {
+    display:none;
+  }
 
   .searchResults:hover {
     cursor: pointer;
+  }
+
+  .searchResults li {
+    padding: 8px 12px; /* Adjust padding for better spacing */
+    font-size: 14px;
   }
   
   .searchResults li {
@@ -34,14 +42,3 @@
     border-radius: 10px;
     font-size: 14px;
   }
-
-  .selectedCityContainer {
-    display: flex;
-    align-items: center;
-    margin-right: 100px;
-  }
-
-  .selectedLabel {
-    font-size: 0.9rem;
-  }
-  

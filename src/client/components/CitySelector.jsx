@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import styles from './LocationSelection2.module.css';
-
+import styles from './CitySelector.module.css';
 import citiesData from '../assets/Cities_il.json'; // Assuming JSON file is in the same directory
 
-function LocationSelection2() {
+export const showAs = {
+  CHANGE: 'Change',
+  SEARCH: 'Search',
+}
+
+
+function CitySelector({country, styleOrder = showAs.SEARCH , onCitySelect }) {
+
+  let placeholderText = showAs.SEARCH;
+  if (styleOrder === showAs.CHANGE) placeholderText = showAs.CHANGE;
+  
   const [searchInput, setSearchInput] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
 
@@ -15,8 +24,9 @@ function LocationSelection2() {
   const handleCitySelect = (cityName) => {
     setSearchInput(cityName);
     setSelectedCity(cityName);
-    setSearchInput('');
-    
+    if (onCitySelect) {
+      onCitySelect(cityName); // Call the prop function with the selected city
+    }
   };
 
   const handleMouseLeave = () => {
@@ -34,14 +44,14 @@ function LocationSelection2() {
         <input
           className={styles.searchInput}
           type="text"
-          placeholder="Search your city..."
+          placeholder={`${placeholderText} your city here...`}
           value={searchInput}
           onChange={handleSearchInputChange}
         />
         {searchInput && (
-          <ul className={styles.searchResults}>
+          <ul className={ !selectedCity ? styles.searchResults : styles.searchResultsAfter}>
             {filteredCities.length === 0 ? (
-              <p>No matching cities found</p>
+              <p style={{ marginLeft: '10px'}}>No matching cities found</p>
             ) : (
               filteredCities.map((city, index) => (
                 <li
@@ -57,12 +67,8 @@ function LocationSelection2() {
           </ul>
         )}
       </div>
-      <div className={styles.selectedCityContainer}>
-        <label className={styles.selectedLabel}>Selected City:</label>
-        {selectedCity && <span>{selectedCity}</span>}
-      </div>
     </div>
   );
 }
 
-export default LocationSelection2;
+export default CitySelector;
