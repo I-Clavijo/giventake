@@ -29,10 +29,6 @@
     width: 85px;
 }
 
-.changeCity {
-
-}
-
 .changeButton {
     font-style: italic;
     cursor: pointer;
@@ -44,4 +40,8 @@
 .citySelector {
     position: absolute; /* Make the selector positioned absolutely */
     transform: translateX(-80px);
+}
+
+.item {
+    justify-content: center;
 }

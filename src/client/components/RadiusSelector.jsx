@@ -39,10 +39,10 @@ export function RadiusSelector({ country, city, lat, lng }) {
       </div>
       <div className={styles.radiusContainer}>
         <Dropdown className={styles.dropdown} label="Radius" inline>
-          <Dropdown.Item>All</Dropdown.Item>
-          <Dropdown.Item>1 km</Dropdown.Item>
-          <Dropdown.Item>10 km</Dropdown.Item>
-          <Dropdown.Item>100 km</Dropdown.Item>
+          <Dropdown.Item className={styles.item}>All</Dropdown.Item>
+          <Dropdown.Item className={styles.item}>1 km</Dropdown.Item>
+          <Dropdown.Item className={styles.item}>10 km</Dropdown.Item>
+          <Dropdown.Item className={styles.item}>100 km</Dropdown.Item>
         </Dropdown>
       </div>
     </div>

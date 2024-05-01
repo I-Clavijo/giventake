@@ -45,7 +45,9 @@ const user = {
 export default function Home() {
   return (
     <>
+      <UserCountry />
       <RadiusSelector country={user.country} city={user.city} lat={user.lat} lng={user.lng}/>
+      <InterestsLocationModal />
       <Feed posts={posts} />
     </>
   );
