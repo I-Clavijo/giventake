@@ -8,17 +8,35 @@ import styles from './Profile.module.scss';
 import ProfileImg from '../assets/images/profile-img.jpeg';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
-import ReviewsFeed from "../components/Reviews.jsx"
+import ReviewsFeed from "../components/Reviews.jsx";
+{/*
+import {Rate as ReviewComponent} from "../components/Rate.jsx";*/}
 
 
+
+const posts = [
+  {
+    name: 'John Doe',
+    profilePic: 'profile-picture-example.jpg',
+    date: '2024-04-05T23:30:00',
+    location: 'New York',
+    postPic: 'picture-example.jpg',
+    postText: 'Hello, My sweet grandmother is sick and needs someone to take care of her dog for a few days. Unfortunately, I\'m not in the city at the moment. We would be very grateful if someone could help.',
+    likes: '23'
+  }
+
+];
+
+// adds more posts to the posts array
 const postExample = posts[0];
 for (let i = 0; i < 10; i++) {
   posts.push(postExample);
 }
+
 const Profile = () => {
   const { data: user } = useUser();
-
-  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [openModal, setOpenModal] = useState(true);
+  const [isOwnProfile, setIsOwnProfile] = useState(true);
   {/* filter only the posts that belong to this profile*/}
   const filterUserPosts = (posts, user) => {
     const fullName = `${user.firstName} ${user.lastName}`;
@@ -61,6 +79,16 @@ const Profile = () => {
               <p className={styles.statText}>Following</p>
             </div>
           </div>
+          {/*
+          {isOwnProfile&&(
+             <div className={styles.popover}>
+             <Rate>
+             <Button onClick={() => setOpenModal(true)}>Review latest Activity</Button>
+             </Rate>
+             <ReviewComponent />
+           </div>
+          )}
+          */}
           {isOwnProfile && (
           <div className={styles.topActions}>
             <Link to='/account/edit'>

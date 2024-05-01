@@ -1,6 +1,6 @@
 import React from 'react';
 import Stars from './Stars'; 
-import styles from "./Review.module.scss"; 
+import styles from "./Reviews.module.scss"; 
 
 const Review = ({ name, profilePic, date, location, reviewText, rating }) => {
     return (
