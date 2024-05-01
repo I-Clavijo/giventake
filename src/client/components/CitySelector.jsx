@@ -5,14 +5,9 @@ import citiesData from '../assets/Cities_il.json'; // Assuming JSON file is in t
 export const showAs = {
   CHANGE: 'Change',
   SEARCH: 'Search',
-}
+};
 
-
-function CitySelector({country, styleOrder = showAs.SEARCH , onCitySelect }) {
-
-  let placeholderText = showAs.SEARCH;
-  if (styleOrder === showAs.CHANGE) placeholderText = showAs.CHANGE;
-  
+function CitySelector({ country, styleOrder = showAs.SEARCH, onCitySelected }) {
   const [searchInput, setSearchInput] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
 
@@ -24,13 +19,9 @@ function CitySelector({country, styleOrder = showAs.SEARCH , onCitySelect }) {
   const handleCitySelect = (cityName) => {
     setSearchInput(cityName);
     setSelectedCity(cityName);
-    if (onCitySelect) {
-      onCitySelect(cityName); // Call the prop function with the selected city
+    if (onCitySelected) {
+      onCitySelected(cityName); // Call the prop function with the selected city
     }
-  };
-
-  const handleMouseLeave = () => {
-    
   };
 
   // Filter cities based on the first letters of the search input
@@ -44,20 +35,19 @@ function CitySelector({country, styleOrder = showAs.SEARCH , onCitySelect }) {
         <input
           className={styles.searchInput}
           type="text"
-          placeholder={`${placeholderText} your city here...`}
+          placeholder={`${styleOrder === showAs.CHANGE ? showAs.CHANGE : showAs.SEARCH} your city here...`}
           value={searchInput}
           onChange={handleSearchInputChange}
         />
         {searchInput && (
-          <ul className={ !selectedCity ? styles.searchResults : styles.searchResultsAfter}>
+          <ul className={!selectedCity ? styles.searchResults : styles.searchResultsAfter}>
             {filteredCities.length === 0 ? (
-              <p style={{ marginLeft: '10px'}}>No matching cities found</p>
+              <p style={{ marginLeft: '10px' }}>No matching cities found</p>
             ) : (
               filteredCities.map((city, index) => (
                 <li
                   key={index}
-                  onMouseEnter={() => handleMouseEnter(city.city)}
-                  onMouseLeave={handleMouseLeave}
+                  onMouseEnter={() => handleMouseEnter(city.city)} // Optional functionality
                   onClick={() => handleCitySelect(city.city)}
                 >
                   {city.city}
