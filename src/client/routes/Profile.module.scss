@@ -22,7 +22,16 @@
 .actions button {
   padding: 0.5rem 1rem;
 }
-
+.stats .stat {
+  align-items: center;
+   
+  text-align: center;
+  
+ 
+}
+.statNumber{
+  font-weight: bold;
+}
 
 @media (max-width: 768px) {
   .profileInfo {
@@ -60,27 +69,26 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
     gap: 1rem;
-    margin-top: 0.5rem;
+    margin-left: 2.5rem;
   }
 }
 
 @media (min-width: 768px) {
   .profileLeft {
     display: inline-block;
+    margin-left: 1rem;
   }
+  
   .actions{
-    margin-left: 80px;
+    margin-left: 6rem;
   }
   .stats {
     display: flex;
     
     gap:1rem;
-    margin-left: 80px;
+    margin-left: 7rem;
   }
-  .stats .stat {
-     align-items: center;
-     justify-content: center; 
-  }
+
 }
