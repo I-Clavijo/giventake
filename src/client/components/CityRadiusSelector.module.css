@@ -7,12 +7,12 @@
 }
 
 .locationLabel {
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .currentLocation {
     display: flex;
-    flex-wrap: wrap;
+
 }
 
 .currentCity {
@@ -35,6 +35,7 @@
     color: grey;
     margin: 10px;
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .citySelector {

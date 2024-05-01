@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import styles from './LocationSelection.module.css';
 
 const baseUrl = 'https://nominatim.openstreetmap.org/reverse?';
 
-const LocationSelection = () => {
+const GetUserCountryCodeUsingNavGeo = ({onCountryChangeUsingNavGeo}) => {
     const [location, setLocation] = useState({
         loaded: false,
         coordinates: {
@@ -53,17 +52,13 @@ const LocationSelection = () => {
         navigator.geolocation.getCurrentPosition(success, error);
     }, []); // Empty dependency array ensures this effect runs only once on component mount
 
-    return (
-        <div>
-          {location.loaded ? (
-            <p style={{ marginLeft: '10px' }}>
-                Your location: Latitude: {location.coordinates.latitude}, Longitude: {location.coordinates.longitude}, Country: {location.country_code}
-            </p>
-          ) : (
-            <p style={{ marginLeft: '10px'}}>Locating...</p>
-          )}
-        </div>
-      );
+
+    useEffect(() => {
+      if(location.country_code){
+        onCountryChangeUsingNavGeo(location.country_code.toUpperCase());
+      }
+    }, [location.country_code]); 
+      
 };
 
-export default LocationSelection;
+export default GetUserCountryCodeUsingNavGeo;

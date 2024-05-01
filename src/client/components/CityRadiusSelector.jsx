@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown } from "flowbite-react";
-import styles from "./RadiusSelector.module.css";
+import styles from "./CityRadiusSelector.module.css";
 import CitySelector from "./CitySelector";
 
-export function RadiusSelector({ country, city, lat, lng }) {
+export function CityRadiusSelector({ country, city, lat, lng }) {
   
   const [showCitySelector, setShowCitySelector] = useState(false);
   const [selectedCity, setSelectedCity] = useState(city || ""); // Initialize with initial city
@@ -29,7 +29,7 @@ export function RadiusSelector({ country, city, lat, lng }) {
       </div>
       <div className={styles.changeCity}>
         <div className={styles.changeButton} onClick={handleChangeButtonClick}>
-          Change
+          Change City
         </div>
         <div className={styles.citySelector}>
           {showCitySelector && (
@@ -49,4 +49,4 @@ export function RadiusSelector({ country, city, lat, lng }) {
   );
 }
 
-export default RadiusSelector;
+export default CityRadiusSelector;

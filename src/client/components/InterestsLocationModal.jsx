@@ -1,18 +1,23 @@
 import React from 'react';
 import styles from './InterestsLocationModal.module.css';
 import { Button, Modal } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import InterestsSelection from './InterestsSelection.jsx';
-import LocationSelection from './LocationSelection.jsx';
 import CitySelector from './CitySelector.jsx';
-
+import GetUserCountryCodeUsingIP from './GetUserCountryCodeUsingIP.jsx';
+import GetUserCountryCodeUsingNavGeo from './GetUserCountryCodeUsingNavGeo.jsx';
 
 const InterestsLocationModal = () => {
   const [openModal, setOpenModal] = useState(true);
+  const [countryCodeUsingIP, setCountryCodeUsingIP] = useState(null);
+  const [countryCodeUsingNavGeo, setCountryCodeUsingNavGeo] = useState(null);
+
+  const displayedCountryCode = countryCodeUsingIP || countryCodeUsingNavGeo;
 
   return (
     <>
-      {/* <Button onClick={() => setOpenModal(true)}>Toggle modal</Button> */}
+      <GetUserCountryCodeUsingIP onCountryChangeUsingIP={setCountryCodeUsingIP} />
+      <GetUserCountryCodeUsingNavGeo onCountryChangeUsingNavGeo={setCountryCodeUsingNavGeo} />
       <Modal size="xl" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>
             <div className={styles.title}>Thank you for joining!</div>
@@ -23,7 +28,7 @@ const InterestsLocationModal = () => {
             <label>
               Where are you located?
             </label>
-            <LocationSelection/>
+            <p style={{ marginLeft: '10px' }}>Country: {displayedCountryCode}</p>
             <CitySelector/>
             <label>
               What are your interests? Select the ones you like
@@ -41,7 +46,5 @@ const InterestsLocationModal = () => {
     </>
   );
 }
-
-
 
 export default InterestsLocationModal;

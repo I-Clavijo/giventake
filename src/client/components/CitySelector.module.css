@@ -28,7 +28,7 @@
 
   .searchResults li {
     padding: 8px 12px; /* Adjust padding for better spacing */
-    font-size: 14px;
+    font-size: 16px;
   }
   
   .searchResults li {
@@ -40,5 +40,5 @@
     padding: 10px;
     border: 2px solid #ccc;
     border-radius: 10px;
-    font-size: 14px;
+    font-size: 16px;
   }
