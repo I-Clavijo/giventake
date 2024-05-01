@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const UserCountry = () => {
+const UserCountryByIP = () => {
   const [userCountry, setUserCountry] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // Add error state for better handling
@@ -44,4 +44,4 @@ const UserCountry = () => {
   );
 };
 
-export default UserCountry;
+export default UserCountryByIP;

@@ -37,10 +37,10 @@ const LocationSelection = () => {
               })
               .then(data => {
                 // Extract the country name from the response (assuming success)
-                const country = data.address && data.address.country; // Check for existence
+                const country_code = data.address && data.address.country_code; // Check for existence
                 setLocation(prevLocation => ({
                   ...prevLocation,
-                  country,
+                  country_code,
                 }));
               })
               .catch(error => console.error('Error fetching location details:', error));
@@ -57,7 +57,7 @@ const LocationSelection = () => {
         <div>
           {location.loaded ? (
             <p style={{ marginLeft: '10px' }}>
-                Your location: Latitude: {location.coordinates.latitude}, Longitude: {location.coordinates.longitude}, Country: {location.country}
+                Your location: Latitude: {location.coordinates.latitude}, Longitude: {location.coordinates.longitude}, Country: {location.country_code}
             </p>
           ) : (
             <p style={{ marginLeft: '10px'}}>Locating...</p>
