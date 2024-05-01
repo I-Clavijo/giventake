@@ -10,7 +10,7 @@ import { HiOutlinePencilSquare } from "react-icons/hi2";
 import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
 import ReviewsFeed from "../components/Reviews.jsx";
 import { FriendsTable } from '../components/ListOfFriends.jsx';
-//import {Rate } from "../components/Rate.jsx";
+import {Rate} from "../components/Rate.jsx";
 
 
 
@@ -36,7 +36,11 @@ for (let i = 0; i < 10; i++) {
 const Profile = () => {
   const { data: user } = useUser();
   const [openModal, setOpenModal] = useState(true);
-  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [isOwnProfile, setIsOwnProfile] = useState(true);
+  const [mode, setMode] = useState(false);
+  const changeMode = (isOwnProfile) => {
+    setMode(isOwnProfile ? 'myOwnContacts' : 'userContacts');
+  };
   {/* filter only the posts that belong to this profile*/}
   const filterUserPosts = (posts, user) => {
     const fullName = `${user.firstName} ${user.lastName}`;
@@ -56,8 +60,8 @@ const Profile = () => {
         <div className={styles.profileLeft}>
           <img className="w-28 h-28 mb-2  rounded-full shadow-lg" src={ProfileImg} alt="Profile image" />
           <h5 className="ml-2 text-xxl font-large text-gray-900 dark:text-white">{user.firstName} {user.lastName}</h5>
-          <span className="text-sm text-gray-500 dark:text-gray-400">{user.location || 'unknown location'}</span>
-          <div className="pb-1">
+          <span className="text-sm ml-2 text-gray-500 dark:text-gray-400">{user.location || 'unknown location'}</span>
+          <div className="pb-1 ml-2">
             <Stars grade={user.rating || 0} />
             <p className={styles.interests}>{interestsSepByDots}</p>
             <p className={styles.info}>{user.bio}</p>
@@ -82,7 +86,7 @@ const Profile = () => {
           
           {isOwnProfile&&(
              <div className={styles.popover}>
-             {/*<Rate />*/}
+             <Rate />
            </div>
           )}
           
@@ -124,9 +128,9 @@ const Profile = () => {
        {/*<ReviewsFeed reviews={reviews}/>*/}
       </Tabs.Item>
 
-      <Tabs.Item title="Contacts" icon={HiClipboardList} className="tabItem">
+      <Tabs.Item title="Following" icon={HiClipboardList} className="tabItem">
         
-       <FriendsTable/>
+       <FriendsTable mode={mode} changeMode={changeMode}/>
       </Tabs.Item>
 
     </Tabs>

@@ -1,8 +1,15 @@
-
-
 import { Table } from "flowbite-react";
+import { useState } from "react";
 
 export function FriendsTable() {
+  const [mode, setMode] = useState('myOwnContacts');
+  const renderActionLink = () => {
+    if (mode === "myOwnContacts") {
+      return <a href="#" className="font-medium text-red-600 hover:underline dark:text-red-500">Remove</a>;
+    } else {
+      return <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">Add</a>;
+    }
+  };
   return (
     <div className="overflow-x-auto">
       <Table striped>
@@ -22,9 +29,7 @@ export function FriendsTable() {
             </Table.Cell>
             <Table.Cell>10</Table.Cell>
             <Table.Cell>
-              <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                Add
-              </a>
+            {renderActionLink()}
             </Table.Cell>
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -34,9 +39,7 @@ export function FriendsTable() {
             </Table.Cell>
             <Table.Cell>30</Table.Cell>
             <Table.Cell>
-              <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                Add
-              </a>
+            {renderActionLink()}
             </Table.Cell>
           </Table.Row>
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -46,9 +49,7 @@ export function FriendsTable() {
             </Table.Cell>
             <Table.Cell>50</Table.Cell>
             <Table.Cell>
-              <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                Add
-              </a>
+            {renderActionLink()}
             </Table.Cell>
           </Table.Row>
           

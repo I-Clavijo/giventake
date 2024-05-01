@@ -6,7 +6,7 @@ const Review = ({ name, profilePic, date, location, reviewText, rating }) => {
     return (
         <div className={styles.review}>
             <div className={styles.reviewHeader}>
-                <img src={profilePic} alt="Profile" className={styles.profilePic}/>
+                <img src={profilePic} alt="ProfilePic" className={styles.profilePic}/>
                 <div>
                     <h2>{name}</h2>
                     <p>Posted on {date}</p>
