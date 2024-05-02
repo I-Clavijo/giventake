@@ -21,8 +21,7 @@ const Profile = () => {
   const isMyProfile = !userId;
 
   const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser({ userId });
-  if(isErrorUser) throw new PageError('Profile page not found.', 'Are you sure you are in the right page?');
-  //  json({ title: 'Profile page not found', message: 'Are you sure you are in the right page?' });
+  if (isErrorUser) throw new PageError('Profile page not found.', 'Are you sure you are in the right page?');
 
   const { data: posts, isLoading: isLoadingPosts } = usePosts({ userId });
 
@@ -78,15 +77,11 @@ const Profile = () => {
 
           {isMyProfile && (
             <div className={styles.actions}>
-              {editModal ? (
-                <EditProfileModal onClose={handleCloseEditClick} />
-              ) : (
-                <Button color="light" pill className={styles.btnEdit} onClick={handleOpenEditClick}>
-                  <HiOutlinePencilSquare className="mr-2 h-5 w-5" />
-                  Edit Profile
-                </Button>
-
-              )}
+              <Button color="light" pill className={styles.btnEdit} onClick={handleOpenEditClick}>
+                <HiOutlinePencilSquare className="mr-2 h-5 w-5" />
+                Edit Profile
+              </Button>
+              {editModal && <EditProfileModal onClose={handleCloseEditClick} />}
               {openModal ? (
                 <Rate onClose={handleCloseModal} />
               ) : (
