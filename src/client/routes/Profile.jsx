@@ -10,8 +10,8 @@ import { HiOutlinePencilSquare } from "react-icons/hi2";
 import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
 import ReviewsFeed from "../components/Reviews.jsx";
 import { FriendsTable } from '../components/ListOfFriends.jsx';
-import {EditProfileModal} from '../components/EditProfileModal.jsx';
-import { Component } from "../components/Rate.jsx";
+import { EditProfileModal } from '../components/EditProfileModal.jsx';
+import { Rate } from "../components/Rate.jsx";
 
 
 
@@ -41,11 +41,11 @@ const Profile = () => {
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   //edit modal
-  const [editModal,setEditModal] = useState(false);
-  const handleOpenEditClick = () => setEditModal(true); 
-  const handleCloseEditClick = () => setEditModal(false); 
- 
-  const [isOwnProfile, setIsOwnProfile] = useState(true);
+  const [editModal, setEditModal] = useState(false);
+  const handleOpenEditClick = () => setEditModal(true);
+  const handleCloseEditClick = () => setEditModal(false);
+
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [mode, setMode] = useState(false);
   const changeMode = (isOwnProfile) => {
     setMode(isOwnProfile ? 'myOwnContacts' : 'userContacts');
@@ -96,17 +96,21 @@ const Profile = () => {
 
           {isOwnProfile && (
             <div className={styles.actions}>
-               <>
-               <Button color="light" pill className={styles.btnEdit} onClick={handleOpenEditClick}>
+              {editModal ? (
+                <EditProfileModal onClose={handleCloseEditClick} />
+              ): (
+                <Button color="light" pill className={styles.btnEdit} onClick={handleOpenEditClick}>
                   <HiOutlinePencilSquare className="mr-2 h-5 w-5" />
                   Edit Profile
                 </Button>
-                {editModal && <EditProfileModal onClose={handleCloseEditClick} />}
-                </>
-              <>
+               
+              )}
+             
+              {openModal ? (
+                <Rate onClose={handleCloseModal} />
+              ) : (
                 <Button onClick={handleOpenModal}>Review Latest Activity</Button>
-                {openModal && <Component onClose={handleCloseModal} />}
-              </>
+              )}
             </div>
           )}
           {!isOwnProfile && (

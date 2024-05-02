@@ -2,7 +2,7 @@ import { Button, Label, Modal, TextInput, Dropdown } from "flowbite-react";
 import { useState,useMemo } from "react";
 import { useSnackbar } from 'notistack';
 
-export function Component() {
+export function Rate() {
   const [openModal, setOpenModal] = useState(true);
   const [selectedUser, setSelectedUser] = useState("");
   const [reviewText, setReviewText] = useState("");
