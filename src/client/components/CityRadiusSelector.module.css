@@ -41,6 +41,7 @@
 .citySelector {
     position: absolute; /* Make the selector positioned absolutely */
     transform: translateX(-80px);
+    z-index: 1;
 }
 
 .item {

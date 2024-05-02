@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const GetUserCountryCodeUsingIP = ({onCountryChangeUsingIP}) => {
+const GetUserCountryCodeUsingIP = () => {
   const [countryCode, setCountryCode] = useState(null);
   const [error, setError] = useState(null);  // Add error state for better handling
 
@@ -24,10 +24,8 @@ const GetUserCountryCodeUsingIP = ({onCountryChangeUsingIP}) => {
     fetchIPAndCountry();
   }, []);
 
-  useEffect(() => {
-    onCountryChangeUsingIP(countryCode);
-  }, [countryCode]); 
-  
+  return countryCode;
+
 };
 
 export default GetUserCountryCodeUsingIP;

@@ -2,6 +2,8 @@ import styles from "./Home.module.scss";
 import Feed, { showAs } from "../components/Posts/Feed.jsx";
 import { usePosts } from "../api/posts/usePosts.jsx";
 import { Spinner } from "flowbite-react";
+import InterestsLocationModal from "../components/InterestsLocationModal.jsx";
+import CityRadiusSelector from "../components/CityRadiusSelector.jsx";
 
 const posts = [
   {
@@ -45,6 +47,8 @@ export default function Home() {
   const { data: posts, isLoading } = usePosts();
 
   return <>
+    <InterestsLocationModal />
+    <CityRadiusSelector country="IL" city="Tel-Aviv"/>
     {posts && !isLoading ?
         <Feed {...{ posts }} />
         :

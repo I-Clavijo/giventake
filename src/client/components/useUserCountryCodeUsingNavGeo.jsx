@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const baseUrl = 'https://nominatim.openstreetmap.org/reverse?';
 
-const GetUserCountryCodeUsingNavGeo = ({onCountryChangeUsingNavGeo}) => {
+const GetUserCountryCodeUsingNavGeo = () => {
     const [location, setLocation] = useState({
         loaded: false,
         coordinates: {
@@ -52,12 +52,10 @@ const GetUserCountryCodeUsingNavGeo = ({onCountryChangeUsingNavGeo}) => {
         navigator.geolocation.getCurrentPosition(success, error);
     }, []); // Empty dependency array ensures this effect runs only once on component mount
 
-
-    useEffect(() => {
-      if(location.country_code){
-        onCountryChangeUsingNavGeo(location.country_code.toUpperCase());
-      }
-    }, [location.country_code]); 
+    if(location.country_code)
+      return location.country_code.toUpperCase();
+    else
+      return null;
       
 };
 

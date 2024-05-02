@@ -4,20 +4,19 @@ import { Button, Modal } from "flowbite-react";
 import { useState, useEffect } from "react";
 import InterestsSelection from './InterestsSelection.jsx';
 import CitySelector from './CitySelector.jsx';
-import GetUserCountryCodeUsingIP from './GetUserCountryCodeUsingIP.jsx';
-import GetUserCountryCodeUsingNavGeo from './GetUserCountryCodeUsingNavGeo.jsx';
+import useUserCountryCodeUsingIP from './useUserCountryCodeUsingIP.jsx';
+import useUserCountryCodeUsingNavGeo from './useUserCountryCodeUsingNavGeo.jsx';
 
 const InterestsLocationModal = () => {
   const [openModal, setOpenModal] = useState(true);
-  const [countryCodeUsingIP, setCountryCodeUsingIP] = useState(null);
-  const [countryCodeUsingNavGeo, setCountryCodeUsingNavGeo] = useState(null);
+
+  const countryCodeUsingIP = useUserCountryCodeUsingIP();
+  const countryCodeUsingNavGeo = useUserCountryCodeUsingNavGeo();
 
   const displayedCountryCode = countryCodeUsingIP || countryCodeUsingNavGeo;
 
   return (
     <>
-      <GetUserCountryCodeUsingIP onCountryChangeUsingIP={setCountryCodeUsingIP} />
-      <GetUserCountryCodeUsingNavGeo onCountryChangeUsingNavGeo={setCountryCodeUsingNavGeo} />
       <Modal size="xl" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>
             <div className={styles.title}>Thank you for joining!</div>
