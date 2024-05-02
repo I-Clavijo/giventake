@@ -29,3 +29,4 @@ const FeaturedPostsFeed = ({ posts, showTitle }) => {
 };
 
 export default FeaturedPostsFeed;
+

@@ -1,19 +1,20 @@
 import { Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
-import useRefreshToken from '../../api/hooks/useRefreshToken';
-import { useUser } from "../../api/hooks/useUser";
+import useRefreshToken from '../../api/user/useRefreshToken';
+import { useUser } from "../../api/user/useUser";
+import { Spinner } from "flowbite-react";
 
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const { mutate: refreshToken } = useRefreshToken();
-    const { data: user } = useUser();
+    const { mutateAsync: refreshToken } = useRefreshToken();
+    const { isLoggedIn } = useUser();
 
     useEffect(() => {
         let isMounted = true;
 
         const verifyRefreshToken = async () => {
             try {
-                refreshToken()
+                await refreshToken()
             }
             catch (err) {
                 console.error(err);
@@ -23,7 +24,7 @@ const PersistLogin = () => {
             }
         }
         // console.log("refresh: ", !user?.accessToken)
-        !user?.accessToken ? verifyRefreshToken() : setIsLoading(false);
+        !isLoggedIn ? verifyRefreshToken() : setIsLoading(false);
 
         return () => isMounted = false;
     }, [])
@@ -31,7 +32,11 @@ const PersistLogin = () => {
     return (
         <>
             {isLoading
-                ? <p>Loading...</p>
+                ? 
+                <div style={{display:'flex', justifyContent: 'center'}}>
+                    <Spinner aria-label="Extra large spinner example" size="xl" style={{ margin: 'auto' }} />
+                </div>
+
                 : <Outlet />
             }
         </>

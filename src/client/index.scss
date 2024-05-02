@@ -4,7 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
+div{
+  // that is because tailwind side effect
+  outline: none;
+}
 :root {
   font-family: Poppins, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
