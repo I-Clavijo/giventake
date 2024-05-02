@@ -25,31 +25,19 @@ const interests = [
 
 
 
-  const InterestsSelection = () => {
-    const [selectedInterests, setSelectedInterests] = useState([]);
-  
-    const handleClick = (interestId) => {
-      const newSelectedInterests = [...selectedInterests]; // Create a copy
-      const index = newSelectedInterests.indexOf(interestId);
-  
-      if (index !== -1) {
-        // Remove interest if already selected
-        newSelectedInterests.splice(index, 1);
-      } else {
-        // Add interest if not selected
-        newSelectedInterests.push(interestId);
-      }
-  
-      setSelectedInterests(newSelectedInterests);
-    };
-  
+  const InterestsSelection = ({ selectedInterests, onInterestSelection }) => {
+
+    const handleClick = ( interestName) => {
+      onInterestSelection(interestName);
+    }
+
     return (
       <div className={styles.interestsSelection}>
         <div className= {styles.gridContainer}>
             {interests.map((interest) => (
-                <Button color="lightgrey" onClick={() => handleClick(interest.id)}
+                <Button color="lightgrey" onClick={() => handleClick(interest.name)}
                 className={`${styles.interestButton} ${
-                    selectedInterests.includes(interest.id) ? styles.selectedButton : ''}`}
+                    selectedInterests.includes(interest.name) ? styles.selectedButton : ''}`}
                 > 
                 <div className={styles.buttonIcon}>{interest.icon}</div>
                 {interest.name}</Button>

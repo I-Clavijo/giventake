@@ -3,7 +3,9 @@ import { Dropdown } from "flowbite-react";
 import styles from "./CityRadiusSelector.module.css";
 import CitySelector from "./CitySelector";
 
-export function CityRadiusSelector({ country, city, lat, lng }) {
+export function CityRadiusSelector({ user }) {
+  
+  const { country, city } = user;
   
   const [showCitySelector, setShowCitySelector] = useState(false);
   const [selectedCity, setSelectedCity] = useState(city || ""); // Initialize with initial city

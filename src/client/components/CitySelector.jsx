@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CitySelector.module.css';
-import citiesData from '../assets/Cities_il.json'; // Assuming JSON file is in the same directory
+import citiesData from '../assets/Cities_il.json';
 
 export const showAs = {
   CHANGE: 'Change',
   SEARCH: 'Search',
 };
 
-function CitySelector({ country, styleOrder = showAs.SEARCH, onCitySelected }) {
+function CitySelector({ register, setValue, styleOrder = showAs.SEARCH, onCitySelected }) {
   const [searchInput, setSearchInput] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
 
@@ -22,6 +22,7 @@ function CitySelector({ country, styleOrder = showAs.SEARCH, onCitySelected }) {
     if (onCitySelected) {
       onCitySelected(cityName); // Call the prop function with the selected city
     }
+    setValue('city', cityName);
   };
 
   // Filter cities based on the first letters of the search input
