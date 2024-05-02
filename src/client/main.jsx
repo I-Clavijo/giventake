@@ -14,7 +14,6 @@ import Home from "./routes/Home";
 import Explore from "./routes/Explore";
 import Auth from "./routes/Auth";
 import Profile from "./routes/Profile";
-import EditProfile from "./routes/EditProfile";
 import Messages from "./routes/Messages";
 import Missing from "./routes/Missing";
 import Editor from "./routes/Editor";
@@ -51,7 +50,6 @@ const router = createBrowserRouter([
 						children: [
 							{ path: "/profile", element: <Profile /> },
 							{ path: "/create", element: <Create />},
-							{ path: "/account/edit", element: <EditProfile /> },
 							{ path: "/messages", element: <Messages /> },
 						] 
 					},

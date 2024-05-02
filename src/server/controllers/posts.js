@@ -1,25 +1,15 @@
-import { HttpStatusCode } from 'axios';
 import { Post, ReportedPost, User } from '../model/index.js';
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
-import { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET, S3_REGION } from '../config.js';
-import crypto from 'crypto';
+import { S3_BUCKET } from '../config.js';
 import sharp from 'sharp';
 import AppError from '../utils/AppError.js';
 import { runInTransaction } from '../utils/runInTransaction.js';
 import { REPORTS_KEYS } from '../model/constants.js';
 import mongoose from 'mongoose';
+import { generateFileName } from '../utils/lib.js';
+import { s3Client } from '../config/s3Client.js';
 
-// Set up AWS credentials
-const s3Client = new S3Client({
-    region: S3_REGION,
-    credentials: {
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY,
-    },
-});
-
-const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 
 export const createPost = async (req, res) => {
     const file = req.file;
@@ -130,20 +120,15 @@ export const getPosts = async (req, res) => {
 
         post.imgUrl = url;
     }
-    console.log(posts)
+
     res.status(200).json(posts);
 }
 
 export const deletePost = async (req, res) => {
     const { _id: postId } = req.body || {};
-    //get all posts from DB
 
     const post = await Post.findOne({ _id: postId }).exec();
-
-    if (!post) {
-        res.status(404).json({ message: 'Post not found.' })
-        return;
-    }
+    if (!post) throw AppError('Post not found', 404);
 
     // delete post image from S3 bucket
     const getObjectParams = {
@@ -151,7 +136,7 @@ export const deletePost = async (req, res) => {
         Key: post.img
     };
     const command = new DeleteObjectCommand(getObjectParams);
-    const url = await getSignedUrl(s3Client, command, { expiresIn: 60 });
+    await s3Client.send(command)
 
     // delete post from DB
     await Post.deleteOne({ _id: postId });

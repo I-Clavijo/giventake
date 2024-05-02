@@ -25,16 +25,8 @@ const Profile = () => {
 
   const { data: posts, isLoading: isLoadingPosts } = usePosts({ userId });
 
-
-  //review modal
-  const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
-
-  //edit modal
-  const [editModal, setEditModal] = useState(false);
-  const handleOpenEditClick = () => setEditModal(true);
-  const handleCloseEditClick = () => setEditModal(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
 
   const interestsSepByDots = user?.interests?.map((interest, index) => (
@@ -43,15 +35,21 @@ const Profile = () => {
     </span>
   ));
 
+  let txtLocation = '';
+  if (user.location.city) {
+    txtLocation = user.location.city;
+    if (user.location.country) txtLocation += `, ${user.location.country}`;
+  }
+  
 
   return <>
     {user && <>
 
       <div className={styles.profileInfo}>
         <div className={styles.profileLeft}>
-          <img className="w-28 h-28 mb-2  rounded-full shadow-lg" src={ProfileImg} alt="Profile image" />
+          <img className="w-28 h-28 mb-2  rounded-full shadow-lg" src={user.imgUrl ? user.imgUrl : ProfileImg} alt="Profile image" />
           <h5 className="ml-2 text-xxl font-large text-gray-900 dark:text-white">{user.firstName} {user.lastName}</h5>
-          <span className="text-sm ml-2 text-gray-500 dark:text-gray-400">{user.location || 'unknown location'}</span>
+          <span className="text-sm ml-2 text-gray-500 dark:text-gray-400">{txtLocation}</span>
           <div className="pb-1 ml-2 extra">
             <Stars grade={user.rating || 0} />
             <p className={styles.interests}>{interestsSepByDots}</p>
@@ -77,16 +75,14 @@ const Profile = () => {
 
           {isMyProfile && (
             <div className={styles.actions}>
-              <Button color="light" pill className={styles.btnEdit} onClick={handleOpenEditClick}>
+              <Button color="light" className={styles.btnEdit} onClick={() => setShowEditModal(true)}>
                 <HiOutlinePencilSquare className="mr-2 h-5 w-5" />
                 Edit Profile
               </Button>
-              {editModal && <EditProfileModal onClose={handleCloseEditClick} />}
-              {openModal ? (
-                <Rate onClose={handleCloseModal} />
-              ) : (
-                <Button onClick={handleOpenModal}>Review Latest Activity</Button>
-              )}
+              <EditProfileModal show={showEditModal} onClose={() => setShowEditModal(false)} />
+
+              <Button onClick={() => setShowReviewModal(true)} className='button'>Review Latest Activity</Button>
+              <Rate show={showReviewModal} onClose={() => setShowReviewModal(false)} />
             </div>
           )}
           {!isMyProfile && (

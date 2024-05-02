@@ -2,8 +2,7 @@ import { Button, Label, Modal, TextInput, Dropdown } from "flowbite-react";
 import { useState,useMemo } from "react";
 import { useSnackbar } from 'notistack';
 
-export function Rate() {
-  const [openModal, setOpenModal] = useState(true);
+export function Rate({ show, onClose }) {
   const [selectedUser, setSelectedUser] = useState("");
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
@@ -23,8 +22,7 @@ export function Rate() {
 
   return (
     <>
-      <Button onClick={() => setOpenModal(true)}>Review latest Activity</Button>
-      <Modal show={openModal} size="md" popup onClose={() => setOpenModal(false)}>
+      <Modal {...{show, onClose}} size="md" popup>
         <Modal.Header />
         <Modal.Body>
           <div className="space-y-6">

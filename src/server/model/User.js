@@ -10,8 +10,15 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true, minlength: 5 },
     imgName: String,
     interests: [String],
-    city: String,
-    address: String,
+    location: {
+        lat: String,
+        long: String,
+        country: String,
+        city: String,
+        address: String,
+    },
+    
+    bio: String,
     roles: {
         User: {
             type: Number,

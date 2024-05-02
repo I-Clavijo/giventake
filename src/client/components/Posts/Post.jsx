@@ -161,7 +161,7 @@ const PostWithModal = (props) => {
   const [openModal, setOpenModal] = useState(false);
 
   return <>
-    <Modal dismissible show={openModal} onClose={() => setOpenModal(false)} className={styles.modalWrap}>
+    <Modal size="md" dismissible show={openModal} onClose={() => setOpenModal(false)} className={styles.modalWrap}>
       <Post {...props} postInModal />
     </Modal>
     <Post {...props} openModalHandler={() => setOpenModal(true)} />

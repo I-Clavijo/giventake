@@ -1,7 +1,11 @@
 import bcrypt from 'bcrypt';
 import User from '../model/User.js';
 import jwt from 'jsonwebtoken';
-import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from '../config.js';
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, S3_BUCKET } from '../config.js';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { s3Client } from '../config/s3Client.js';
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+import AppError from '../utils/AppError.js';
 
 // mutable!!
 const removePropsFromArray = (obj, propertiesToRemove) => {
@@ -25,58 +29,56 @@ const generateRefreshToken = (data) => jwt.sign(
 
 export const signUp = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
-    console.log("signUp: ", req.body)
-    if (!email || !password) return res.status(400).json({ 'message': 'Email and password are required.' });
+
+    if (!email || !password) throw new AppError('Email and password are required.', 400);
 
     // check for duplicate usernames in the db
     const duplicate = await User.findOne({ email }).exec();
-    if (duplicate) return res.sendStatus(409); //Conflict 
+    if (duplicate) throw new AppError('Conflict. User already exists.', 409);
 
-    try {
-        //encrypt the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const defaultRoles = { 'User': 2001 };
-        const refreshToken = generateRefreshToken({ email });
 
-        // create and store the new user
-        let userDB = await User.create({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-            refreshToken,
-            roles: defaultRoles
-        });
+    //encrypt the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const defaultRoles = { 'User': 2001 };
+    const refreshToken = generateRefreshToken({ email });
 
-        // Delete keys from the user object
-        userDB = userDB.toObject();
-        removePropsFromArray(userDB, ['password', 'refreshToken', '__v']);
-        const roles = Object.values(userDB.roles).filter(Boolean);
-        userDB.roles = roles;
-        const accessToken = generateAccessToken({ _id: userDB._id, email, roles });
+    // create and store the new user
+    let userDB = await User.create({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        refreshToken,
+        roles: defaultRoles
+    });
 
-        // Creates Secure Cookie with refresh token and sends to client
-        res.cookie('jwt', refreshToken, {
-            httpOnly: true, //accessible only by web server
-            secure: true,  // TLS (https)
-            sameSite: 'None', // not a cross-site cookie
-            maxAge: null  //cookie expiry: set to match refreshToken
-        });
+    // Delete keys from the user object
+    userDB = userDB.toObject();
+    removePropsFromArray(userDB, ['password', 'refreshToken', '__v']);
+    const roles = Object.values(userDB.roles).filter(Boolean);
+    userDB.roles = roles;
+    const accessToken = generateAccessToken({ _id: userDB._id, email, roles });
 
-        // Send authorization roles and access token to user
-        res.json({ accessToken, ...userDB });
-    } catch (err) {
-        res.status(500).json({ 'message': err.message });
-    }
+    // Creates Secure Cookie with refresh token and sends to client
+    res.cookie('jwt', refreshToken, {
+        httpOnly: true, //accessible only by web server
+        secure: true,  // TLS (https)
+        sameSite: 'None', // not a cross-site cookie
+        maxAge: null  //cookie expiry: set to match refreshToken
+    });
+
+    // Send authorization roles and access token to user
+    res.json({ accessToken, ...userDB });
+
 }
 
 export const login = async (req, res) => {
     const { email, password, persist } = req.body;
 
-    if (!email || !password) return res.status(400).json({ 'message': 'Email and password are required.' });
+    if (!email || !password) throw new AppError('Email and password are required.', 400);
 
     let foundUser = await User.findOne({ email }).exec();
-    if (!foundUser) return res.sendStatus(401); //Unauthorized 
+    if (!foundUser) throw new AppError('Unauthorized', 401);
     // evaluate password 
     const match = await bcrypt.compare(password, foundUser.password);
     if (match) {
@@ -93,12 +95,24 @@ export const login = async (req, res) => {
         removePropsFromArray(foundUser, ['password', 'refreshToken', '__v']);
         const accessToken = generateAccessToken({ _id: foundUser._id, email, roles });
 
+        // get profile image url from S3
+        let url = '';
+        if (foundUser.imgName) {
+            const getObjectParams = {
+                Bucket: S3_BUCKET,
+                Key: foundUser.imgName
+            };
+            const command = new GetObjectCommand(getObjectParams);
+            url = await getSignedUrl(s3Client, command, { expiresIn: 60 * 1000 });
+        }
+        foundUser.imgUrl = url;
+
         // Creates Secure Cookie with refresh token and sends to client
         res.cookie('jwt', refreshToken, {
             httpOnly: true, //accessible only by web server
             secure: true,  // TLS (https)
             sameSite: 'None', // not a cross-site cookie
-            maxAge: persist? 7 * 24 * 60 * 60 * 1000 : null  //cookie expiry: set to match refreshToken
+            maxAge: persist ? 7 * 24 * 60 * 60 * 1000 : null  //cookie expiry: set to match refreshToken
         });
 
         // Send authorization roles and access token to user
@@ -111,20 +125,32 @@ export const login = async (req, res) => {
 
 export const handleRefreshToken = async (req, res) => {
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(401);
+    if (!cookies?.jwt) throw new AppError('Unauthorized', 401);
     const refreshToken = cookies.jwt;
 
     const foundUser = await User.findOne({ refreshToken }).lean();
-    if (!foundUser) return res.sendStatus(403); //Forbidden 
+    if (!foundUser) throw new AppError('Forbidden', 403);
     // evaluate jwt 
     jwt.verify(
         refreshToken,
         REFRESH_TOKEN_SECRET,
-        (err, decoded) => {
+        async (err, decoded) => {
             if (err || foundUser.email !== decoded.email) return res.sendStatus(403);
             const roles = Object.values(foundUser.roles);
             const accessToken = generateAccessToken({ _id: foundUser._id, email: decoded.username, roles });
             removePropsFromArray(foundUser, ['password', 'refreshToken', '__v']);
+
+            // get profile image url from S3
+            let url = '';
+            if (foundUser.imgName) {
+                const getObjectParams = {
+                    Bucket: S3_BUCKET,
+                    Key: foundUser.imgName
+                };
+                const command = new GetObjectCommand(getObjectParams);
+                url = await getSignedUrl(s3Client, command, { expiresIn: 60 * 1000 });
+            }
+            foundUser.imgUrl = url;
 
             res.status(200).json({ accessToken, ...foundUser });
         }
