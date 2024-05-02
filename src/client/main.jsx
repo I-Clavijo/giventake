@@ -45,7 +45,7 @@ const router = createBrowserRouter([
 					{ path: "/", element: <Home /> },
 					{ path: "/explore", element: <Explore /> },
 					{ path: "/saved", element: <SavedPosts />},
-
+					{ path: "/profile/:id", element: <Profile /> },
 					{ 
 						element: <RequireAuth allowedRoles={[ROLES.User]} />, 
 						children: [

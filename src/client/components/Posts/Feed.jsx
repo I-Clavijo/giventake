@@ -8,7 +8,7 @@ export const showAs = {
     MASONRY: 'masonry'
 }
 
-const Feed = ({ posts, styleOrder = showAs.LIST }) => {
+const Feed = ({ posts, styleOrder = showAs.LIST, isLoading }) => {
     let postsWrapperClass = styles.list;
     if (styleOrder === showAs.GRID) postsWrapperClass = styles.grid;
     else if (styleOrder === showAs.MASONRY) postsWrapperClass = styles.masonry;
@@ -29,6 +29,7 @@ const Feed = ({ posts, styleOrder = showAs.LIST }) => {
             isSavedByUser={post.isSavedByUser}
             isUserInterested={post.isUserInterested}
             isUserReported={post.isUserReported}
+            {...{isLoading}}
         />;
 
         return postTag;

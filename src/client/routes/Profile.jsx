@@ -1,71 +1,53 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams, useSearchParams, json } from 'react-router-dom';
 import { Card, Button, Tabs } from "flowbite-react";
 import Stars from '../components/Stars';
-import { useUser } from '../api/hooks/useUser';
+import { useUser } from '../api/user/useUser';
 import { HiChartSquareBar, HiClipboardList, HiUserCircle } from "react-icons/hi";
 import styles from './Profile.module.scss';
 import ProfileImg from '../assets/images/profile-img.jpeg';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
-import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
-import ReviewsFeed from "../components/Reviews.jsx";
-import { FriendsTable } from '../components/ListOfFriends.jsx';
-import { EditProfileModal } from '../components/EditProfileModal.jsx';
-import { Rate } from "../components/Rate.jsx";
+import Feed, { showAs } from "../components/Posts/Feed.jsx";
+import ReviewsFeed from "../components/Profile/Reviews.jsx";
+import { FriendsTable } from '../components/Profile/ListOfFriends.jsx';
+import { EditProfileModal } from '../components/Profile/EditProfileModal.jsx';
+import { Rate } from "../components/Profile/Rate.jsx";
+import { usePosts } from '../api/posts/usePosts.jsx';
+import PageError from '../utils/PageError.js';
 
-
-
-const posts = [
-  {
-    name: 'John Doe',
-    profilePic: 'profile-picture-example.jpg',
-    date: '2024-04-05T23:30:00',
-    location: 'New York',
-    postPic: 'picture-example.jpg',
-    postText: 'Hello, My sweet grandmother is sick and needs someone to take care of her dog for a few days. Unfortunately, I\'m not in the city at the moment. We would be very grateful if someone could help.',
-    likes: '23'
-  }
-
-];
-
-// adds more posts to the posts array
-const postExample = posts[0];
-for (let i = 0; i < 10; i++) {
-  posts.push(postExample);
-}
 
 const Profile = () => {
-  const { data: user } = useUser();
+  let { id: userId } = useParams();
+  const isMyProfile = !userId;
+
+  const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser({ userId });
+  if(isErrorUser) throw new PageError('Profile page not found.', 'Are you sure you are in the right page?');
+  //  json({ title: 'Profile page not found', message: 'Are you sure you are in the right page?' });
+
+  const { data: posts, isLoading: isLoadingPosts } = usePosts({ userId });
+
+
   //review modal
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+
   //edit modal
   const [editModal, setEditModal] = useState(false);
   const handleOpenEditClick = () => setEditModal(true);
   const handleCloseEditClick = () => setEditModal(false);
 
-  const [isOwnProfile, setIsOwnProfile] = useState(false);
-  const [mode, setMode] = useState(false);
-  const changeMode = (isOwnProfile) => {
-    setMode(isOwnProfile ? 'myOwnContacts' : 'userContacts');
-  };
 
-  {/* filter only the posts that belong to this profile*/ }
-  const filterUserPosts = (posts, user) => {
-    const fullName = `${user.firstName} ${user.lastName}`;
-    return posts.filter(post => post.name === fullName);
-  };
-  const userPosts = filterUserPosts(posts, user);
-
-  const interestsSepByDots = user.interests?.map((interest, index) => (
+  const interestsSepByDots = user?.interests?.map((interest, index) => (
     <span key={index}>
       {interest} {index < user.interests.length - 1 ? '•' : ''}
     </span>
   ));
 
+
   return <>
-    <Card>
+    {user && <>
+
       <div className={styles.profileInfo}>
         <div className={styles.profileLeft}>
           <img className="w-28 h-28 mb-2  rounded-full shadow-lg" src={ProfileImg} alt="Profile image" />
@@ -94,16 +76,16 @@ const Profile = () => {
             </div>
           </div>
 
-          {isOwnProfile && (
+          {isMyProfile && (
             <div className={styles.actions}>
               {editModal ? (
                 <EditProfileModal onClose={handleCloseEditClick} />
-              ): (
+              ) : (
                 <Button color="light" pill className={styles.btnEdit} onClick={handleOpenEditClick}>
                   <HiOutlinePencilSquare className="mr-2 h-5 w-5" />
                   Edit Profile
                 </Button>
-               
+
               )}
               {openModal ? (
                 <Rate onClose={handleCloseModal} />
@@ -112,37 +94,38 @@ const Profile = () => {
               )}
             </div>
           )}
-          {!isOwnProfile && (
+          {!isMyProfile && (
             <div className={styles.actions}>
               <Link to="/messages">
-              <Button color="light">Message</Button>
+                <Button color="light">Message</Button>
               </Link>
               <Button>Follow Me</Button>
             </div>
           )}
         </div>
       </div>
-    </Card>
 
-    <Tabs aria-label="Default tabs" style="default" className="flex justify-center mt-2">
-      {isOwnProfile && (
-        <Tabs.Item active title="My Posts" icon={HiUserCircle} className="tabItem">
-          <FeaturedPostsFeed posts={userPosts} showTitle={false} />
-        </Tabs.Item>
-      )}
-      {!isOwnProfile && (
+
+      <Tabs aria-label="Default tabs" style="default" className="flex justify-center mt-2">
+
         <Tabs.Item active title="Posts" icon={HiUserCircle} className="tabItem">
-          <FeaturedPostsFeed posts={posts} showTitle={false} />
+          {posts &&
+            // FIXME: add property to Feed 'showTitle={false}'
+            <Feed posts={posts} styleOrder={showAs.MASONRY} isLoading={isLoadingPosts} />
+          }
+
         </Tabs.Item>
-      )}
-      <Tabs.Item title="Reviews" icon={HiChartSquareBar} className="tabItem">
-        This is <span className="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</span>.
-        {/*<ReviewsFeed reviews={reviews}/>*/}
-      </Tabs.Item>
-      <Tabs.Item title="Following" icon={HiClipboardList} className="tabItem">
-        <FriendsTable mode={mode} changeMode={changeMode} />
-      </Tabs.Item>
-    </Tabs>
+
+        <Tabs.Item title="Reviews" icon={HiChartSquareBar} className="tabItem">
+          This is <span className="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</span>.
+          {/*<ReviewsFeed reviews={reviews}/>*/}
+        </Tabs.Item>
+        <Tabs.Item title="Following" icon={HiClipboardList} className="tabItem">
+          <FriendsTable />
+        </Tabs.Item>
+      </Tabs>
+    </>
+    }
   </>;
 };
 

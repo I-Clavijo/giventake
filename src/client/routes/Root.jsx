@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { SnackbarProvider } from 'notistack';
-import AppSideBar from '../components/AppSideBar';
+import AppSideBar from '../components/layout/AppSideBar';
 import { useUser } from "../api/user/useUser";
 import styles from './Root.module.scss';
 
