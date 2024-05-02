@@ -1,5 +1,5 @@
 import styles from './Explore.module.scss';
-import FeaturedCategories from "../components/FeaturedCategories.jsx";
+import FeaturedCategories from "../components/Posts/FeaturedCategories.jsx";
 import Feed, { showAs } from "../components/Posts/Feed.jsx";
 import { usePosts } from "../api/posts/usePosts.jsx";
 import { Spinner } from "flowbite-react";

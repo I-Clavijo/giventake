@@ -10,7 +10,7 @@ const Stars = ({ grade }) => {
     return <>
         <Rating className="mb-2">
             {starsJsx}
-            <p className="pt-4 ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">{grade} out of {MAX_STARS}</p>
+            {/*<p className="pt-4 ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">{grade} out of {MAX_STARS}</p>*/}
         </Rating>
      </>;
 };

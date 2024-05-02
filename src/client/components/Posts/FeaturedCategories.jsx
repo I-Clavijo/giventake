@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './FeaturedCategories.module.css';
 
-import Car from '../assets/images/categories_grid/car.jpg';
-import Elderly from '../assets/images/categories_grid/elderly.jpg';
-import Home from '../assets/images/categories_grid/home_fix.jpg';
-import Moving from '../assets/images/categories_grid/moving.jpg';
-import Pets from '../assets/images/categories_grid/pets.jpg';
-import Photography from '../assets/images/categories_grid/photography.jpg';
-import Sports from '../assets/images/categories_grid/sports.jpg';
-import Travel from '../assets/images/categories_grid/travel.jpg';
+import Car from '../../assets/images/categories_grid/car.jpg';
+import Elderly from '../../assets/images/categories_grid/elderly.jpg';
+import Home from '../../assets/images/categories_grid/home_fix.jpg';
+import Moving from '../../assets/images/categories_grid/moving.jpg';
+import Pets from '../../assets/images/categories_grid/pets.jpg';
+import Photography from '../../assets/images/categories_grid/photography.jpg';
+import Sports from '../../assets/images/categories_grid/sports.jpg';
+import Travel from '../../assets/images/categories_grid/travel.jpg';
 
 const categories = [
   { id: 1, name: 'Road Assistance', obj: Car, to: '/feed/road-assistance' },

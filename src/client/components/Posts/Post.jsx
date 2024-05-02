@@ -11,9 +11,10 @@ import { Modal, Tooltip } from 'flowbite-react';
 import { usePostAction } from '../../api/posts/usePostAction';
 import { FaExpandAlt, FaEyeSlash } from "react-icons/fa";
 import ReportModal from './ReportModal';
+import PostSkeleton from './PostSkeleton';
 
 
-const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported, postInModal = false, openModalHandler }) => {
+const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported, postInModal = false, openModalHandler, isLoading }) => {
   const { mutate: postAction } = usePostAction();
 
   const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
@@ -151,7 +152,8 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
 
   return <>
     <ReportModal show={showReportModal} onClose={() => setShowReportModal(false)} {...{ postId, isUserReported }} />
-    {postTag}
+    {isLoading ? <PostSkeleton /> : postTag}
+
   </>;
 };
 
