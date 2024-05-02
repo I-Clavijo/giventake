@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, Button, Tabs } from "flowbite-react";
 import Stars from '../components/Stars';
 import { useUser } from '../api/hooks/useUser';
@@ -105,7 +105,6 @@ const Profile = () => {
                 </Button>
                
               )}
-             
               {openModal ? (
                 <Rate onClose={handleCloseModal} />
               ) : (
@@ -115,7 +114,9 @@ const Profile = () => {
           )}
           {!isOwnProfile && (
             <div className={styles.actions}>
+              <Link to="/messages">
               <Button color="light">Message</Button>
+              </Link>
               <Button>Follow Me</Button>
             </div>
           )}
@@ -131,24 +132,17 @@ const Profile = () => {
       )}
       {!isOwnProfile && (
         <Tabs.Item active title="Posts" icon={HiUserCircle} className="tabItem">
-          {/* should change to userPosts also when is ready */}
           <FeaturedPostsFeed posts={posts} showTitle={false} />
         </Tabs.Item>
       )}
       <Tabs.Item title="Reviews" icon={HiChartSquareBar} className="tabItem">
         This is <span className="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</span>.
-
         {/*<ReviewsFeed reviews={reviews}/>*/}
       </Tabs.Item>
-
       <Tabs.Item title="Following" icon={HiClipboardList} className="tabItem">
-
         <FriendsTable mode={mode} changeMode={changeMode} />
       </Tabs.Item>
-
     </Tabs>
-
-
   </>;
 };
 
