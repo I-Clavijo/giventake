@@ -10,7 +10,8 @@ import { HiOutlinePencilSquare } from "react-icons/hi2";
 import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
 import ReviewsFeed from "../components/Reviews.jsx";
 import { FriendsTable } from '../components/ListOfFriends.jsx';
-//import {Rate} from "../components/Rate.jsx";
+import {EditProfileModal} from '../components/EditProfileModal.jsx';
+import { Component } from "../components/Rate.jsx";
 
 
 
@@ -35,13 +36,22 @@ for (let i = 0; i < 10; i++) {
 
 const Profile = () => {
   const { data: user } = useUser();
-  const [openModal, setOpenModal] = useState(true);
-  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  //review modal
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  //edit modal
+  const [editModal,setEditModal] = useState(false);
+  const handleOpenEditClick = () => setEditModal(true); 
+  const handleCloseEditClick = () => setEditModal(false); 
+ 
+  const [isOwnProfile, setIsOwnProfile] = useState(true);
   const [mode, setMode] = useState(false);
   const changeMode = (isOwnProfile) => {
     setMode(isOwnProfile ? 'myOwnContacts' : 'userContacts');
   };
-  {/* filter only the posts that belong to this profile*/}
+
+  {/* filter only the posts that belong to this profile*/ }
   const filterUserPosts = (posts, user) => {
     const fullName = `${user.firstName} ${user.lastName}`;
     return posts.filter(post => post.name === fullName);
@@ -61,7 +71,7 @@ const Profile = () => {
           <img className="w-28 h-28 mb-2  rounded-full shadow-lg" src={ProfileImg} alt="Profile image" />
           <h5 className="ml-2 text-xxl font-large text-gray-900 dark:text-white">{user.firstName} {user.lastName}</h5>
           <span className="text-sm ml-2 text-gray-500 dark:text-gray-400">{user.location || 'unknown location'}</span>
-          <div className="pb-1 ml-2">
+          <div className="pb-1 ml-2 extra">
             <Stars grade={user.rating || 0} />
             <p className={styles.interests}>{interestsSepByDots}</p>
             <p className={styles.info}>{user.bio}</p>
@@ -83,28 +93,27 @@ const Profile = () => {
               <p className={styles.statText}>Following</p>
             </div>
           </div>
-          
-          {isOwnProfile&&(
-             <div className={styles.popover}>
-             {/*<Rate />*/}
-           </div>
-          )}
-          
+
           {isOwnProfile && (
-          <div className={styles.topActions}>
-            <Link to='/account/edit'>
-              <Button color="light" pill className={styles.btnEdit}>
-                <HiOutlinePencilSquare className="mr-2 h-5 w-5" />
-                Edit
-              </Button>
-            </Link>
-          </div>
+            <div className={styles.actions}>
+               <>
+               <Button color="light" pill className={styles.btnEdit} onClick={handleOpenEditClick}>
+                  <HiOutlinePencilSquare className="mr-2 h-5 w-5" />
+                  Edit Profile
+                </Button>
+                {editModal && <EditProfileModal onClose={handleCloseEditClick} />}
+                </>
+              <>
+                <Button onClick={handleOpenModal}>Review Latest Activity</Button>
+                {openModal && <Component onClose={handleCloseModal} />}
+              </>
+            </div>
           )}
           {!isOwnProfile && (
-          <div className={styles.actions}>
-            <Button color="light">Message</Button>
-            <Button>Follow Me</Button>
-          </div>
+            <div className={styles.actions}>
+              <Button color="light">Message</Button>
+              <Button>Follow Me</Button>
+            </div>
           )}
         </div>
       </div>
@@ -112,25 +121,25 @@ const Profile = () => {
 
     <Tabs aria-label="Default tabs" style="default" className="flex justify-center mt-2">
       {isOwnProfile && (
-      <Tabs.Item active title="My Posts" icon={HiUserCircle} className="tabItem">
-            <FeaturedPostsFeed posts={userPosts} showTitle={false} />
-      </Tabs.Item>
+        <Tabs.Item active title="My Posts" icon={HiUserCircle} className="tabItem">
+          <FeaturedPostsFeed posts={userPosts} showTitle={false} />
+        </Tabs.Item>
       )}
       {!isOwnProfile && (
-      <Tabs.Item active title="Posts" icon={HiUserCircle} className="tabItem">
+        <Tabs.Item active title="Posts" icon={HiUserCircle} className="tabItem">
           {/* should change to userPosts also when is ready */}
-      <FeaturedPostsFeed posts={posts} showTitle={false} />
-      </Tabs.Item>
-       )}
+          <FeaturedPostsFeed posts={posts} showTitle={false} />
+        </Tabs.Item>
+      )}
       <Tabs.Item title="Reviews" icon={HiChartSquareBar} className="tabItem">
         This is <span className="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</span>.
 
-       {/*<ReviewsFeed reviews={reviews}/>*/}
+        {/*<ReviewsFeed reviews={reviews}/>*/}
       </Tabs.Item>
 
       <Tabs.Item title="Following" icon={HiClipboardList} className="tabItem">
-        
-       <FriendsTable mode={mode} changeMode={changeMode}/>
+
+        <FriendsTable mode={mode} changeMode={changeMode} />
       </Tabs.Item>
 
     </Tabs>
