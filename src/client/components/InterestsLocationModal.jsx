@@ -39,12 +39,13 @@ const InterestsLocationModal = () => {
 
   return (
     <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Modal size="xl" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>
             <div className={styles.title}>Thank you for joining!</div>
             <div className={styles.subtitle}>To get a more presonalized experience, we would like to know a little more about you</div>
         </Modal.Header>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        
           <Modal.Body>
             <div className={styles.body}>
               <label>
@@ -68,8 +69,8 @@ const InterestsLocationModal = () => {
               Later
             </Button>
           </Modal.Footer>
-        </form>
-      </Modal>
+        </Modal>
+      </form>
     </>
   );
 }
