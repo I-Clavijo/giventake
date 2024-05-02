@@ -6,10 +6,6 @@ import { FaComputer, FaHandHoldingHand } from "react-icons/fa6";
 import { MdOutlinePets } from "react-icons/md";
 import { FaCar , FaHammer, FaStarOfDavid, FaUmbrellaBeach, FaLightbulb} from "react-icons/fa";
 
-
-
-
-
 const interests = [
     { id: 1, icon: <AiOutlineGlobal />, name: 'General' },
     { id: 2, icon: <FaComputer />, name: 'Technology' },
@@ -21,9 +17,6 @@ const interests = [
     { id: 8, icon: <FaLightbulb />, name: 'Advice' },
     { id: 9, icon: <FaHandHoldingHand />, name: 'Lending' }, // Added another interest to fill the 3x3 grid
   ];
-
-
-
 
   const InterestsSelection = ({ selectedInterests, onInterestSelection }) => {
 

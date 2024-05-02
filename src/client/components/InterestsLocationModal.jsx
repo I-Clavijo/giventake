@@ -14,10 +14,9 @@ const InterestsLocationModal = () => {
   const [openModal, setOpenModal] = useState(true);
   const countryCodeUsingIP = useUserCountryCodeUsingIP();
   const countryCodeUsingNavGeo = useUserCountryCodeUsingNavGeo();
-  const [selectedInterests, setSelectedInterests] = useState(['General', 'Technology', 'Pets']);
+  const [selectedInterests, setSelectedInterests] = useState([]);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const displayedCountryCode = countryCodeUsingIP || countryCodeUsingNavGeo;
-
 
   const handleSelectedInterest = (selectedInterest) => {
 
