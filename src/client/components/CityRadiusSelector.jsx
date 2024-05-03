@@ -5,8 +5,9 @@ import CitySelector from "./CitySelector";
 
 export function CityRadiusSelector({ user }) {
   
-  const { country, city } = user;
-  
+  let city = user?.location?.city || "";
+  let country = user?.location?.country || "";
+
   const [showCitySelector, setShowCitySelector] = useState(false);
   const [selectedCity, setSelectedCity] = useState(city || ""); // Initialize with initial city
 
@@ -19,7 +20,6 @@ export function CityRadiusSelector({ user }) {
     console.log(`Selected city: ${cityName}`);
     setShowCitySelector(!showCitySelector);
   };
-
 
   return (
     <div className={styles.wrapper}>
