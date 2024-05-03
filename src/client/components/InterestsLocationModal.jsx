@@ -54,7 +54,7 @@ const InterestsLocationModal = () => {
               </label>
               <p style={{ marginLeft: '5px' }}>Country: {displayedCountryCode}</p>
               <div className={styles.citySelector}>
-                <CitySelector register={register} setValue={setValue}/>
+                <CitySelector setValue={setValue}/>
                 {errors.city && <span className="error">{errors.city.message}</span>}
               </div>
               <label>

@@ -7,7 +7,7 @@ export const showAs = {
   SEARCH: 'Search',
 };
 
-function CitySelector({ register, setValue, styleOrder = showAs.SEARCH, onCitySelected }) {
+function CitySelector({ setValue, styleOrder = showAs.SEARCH, onCitySelected }) {
   const [searchInput, setSearchInput] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
 
@@ -48,7 +48,7 @@ function CitySelector({ register, setValue, styleOrder = showAs.SEARCH, onCitySe
               filteredCities.map((city, index) => (
                 <li
                   key={index}
-                  onMouseEnter={() => handleMouseEnter(city.city)} // Optional functionality
+                 // onMouseEnter={() => handleMouseEnter(city.city)} // Optional functionality
                   onClick={() => handleCitySelect(city.city)}
                 >
                   {city.city}

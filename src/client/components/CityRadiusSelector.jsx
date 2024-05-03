@@ -35,7 +35,7 @@ export function CityRadiusSelector({ user }) {
         </div>
         <div className={styles.citySelector}>
           {showCitySelector && (
-            <CitySelector country={country} onCitySelected={handleCitySelected} />
+            <CitySelector onCitySelected={handleCitySelected} />
           )}
         </div>
       </div>
