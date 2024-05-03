@@ -1,9 +1,11 @@
 import styles from "./PostCreator.module.scss";
 import { Textarea, Button, Datepicker, FileInput, Label, TextInput } from "flowbite-react";
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { date, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreatePost } from '../../api/posts/useCreatePost';
+import { useEffect, useState } from "react";
+import { element } from "prop-types";
 
 
 const categories = [
@@ -17,6 +19,9 @@ const categories = [
 
 const PostCreator = () => {
   const { mutate: createPost } = useCreatePost();
+  const [isAllDay, setIsAllDay] = useState(false);
+  const [isRemote, setRemote] = useState(false);
+  const [isMultipleDay, setIsMultipleDay] = useState(false);
   const createPostSchema = z
     .object({
       category: z.string().min(2),
@@ -42,17 +47,19 @@ const PostCreator = () => {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isSubmitting },
+    watch,
+    getValues // Add getValues function to get form values
   } = useForm({
     defaultValues: {
       startDate: new Date(new Date().setHours(0, 0, 0, 0)),
       endDate: new Date(new Date().setHours(0, 0, 0, 0)),
-      ...formTestValues // should be deleted when complete page development
+      ...formTestValues
     },
     resolver: zodResolver(createPostSchema)
   });
-
+  const dateValue = getValues('date');
+  const endDateValue = getValues('endDate');
 
   return (
     <div className={styles.postCreator}>
@@ -76,41 +83,73 @@ const PostCreator = () => {
           </div>
 
           <div className={styles.helpDates}>
-            <div className="mb-4">
-              <label className={styles.label}>Start date: </label>
-
+            <div className="flex mb-4">  <label className={styles.label}>Date:</label>
               <span className={styles.startDate}>
-                <Datepicker value={watch('startDate').toDateString()} onSelectedDateChanged={(value) => { setValue('startDate', value); setValue('endDate', value) }} showClearButton={false} showTodayButton={false} id="startDate" minDate={new Date()} {...register('startDate')} />
+                <Datepicker value={dateValue?.toDateString()} onSelectedDateChanged={(value) => setValue('date', value)} showClearButton={false} showTodayButton={false} id="date" minDate={new Date()} {...register('date')} />
               </span>
-              <span className={styles.startTime}>
-                <TextInput placeholder='14:00 (24h)' {...register('startTime')} />
-              </span>
+
+              {!isAllDay && (
+                <>
+                  <label className={styles.label}>From:</label>
+                  <span className={styles.startTime}>
+                    <TextInput placeholder='Start time (24h)' {...register('startTime')} />
+                  </span>
+                </>
+              )}
+
+              {!isAllDay && !isMultipleDay && (
+                <>
+                  <label className={styles.label}>To:</label>
+                  <span className={styles.endTime}>
+                    <TextInput placeholder='End time (24h)' {...register('endTime')} />
+                  </span>
+                </>
+              )}
             </div>
 
-            <div className="mb-4">
-              <label className={styles.label}>End date: </label>
+            <div className="mb-4 flex items-center">  <label>
+              <input type="checkbox" checked={isAllDay} onChange={(e) => setIsAllDay(e.target.checked)} />
+              All day
+            </label>
 
-              <span className={styles.endDate}>
-                <Datepicker value={watch('endDate').toDateString()} showClearButton={false} showTodayButton={false} onSelectedDateChanged={(value) => setValue('endDate', value)} id="endDate" minDate={watch('startDate')} {...register('endDate', {
-                  // onBlur: (e) => console.log(e.target.value) // setValue('endDate', e.target.value),
-                })} />
-              </span>
-              <span className={styles.endTime}>
-                <TextInput placeholder='14:00 (24h)' {...register('endTime')} />
-              </span>
+              <label className="ml-4">  <input type="checkbox" checked={isMultipleDay} onChange={(e) => setIsMultipleDay(e.target.checked)} />
+                Multiple days  
+              </label>
             </div>
 
+            {isMultipleDay && (
+              <div className="mb-4">
+                <label className={styles.label}>End date:</label>
+                <span className={styles.endDate}>
+                  <Datepicker value={watch('endDate').toDateString()} showClearButton={false} showTodayButton={false} onSelectedDateChanged={(value) => setValue('endDate', value)} id="endDate" minDate={watch('startDate')} {...register('endDate')} />
+                </span>
+                <label className={styles.label}>To:</label>
+                  <span className={styles.endTime}>
+                    <TextInput placeholder='End time (24h)' {...register('endTime')} />
+                  </span>
+              </div>
+            )}
           </div>
 
 
+
+
           <div className={styles.voluPlace}>
-            <label className={styles.label} htmlFor="city">Place of volunteering:</label>
-            <span>
-              <TextInput placeholder='Address' {...register('address')} />
-            </span>
-            <span>
-              <TextInput placeholder='City' {...register('city')} />
-            </span>
+            <label className={styles.label} htmlFor="city">Location:</label>
+            {!isRemote && (
+              <div>  {/* Wrap the following elements */}
+                <span>
+                  <TextInput placeholder='Address' {...register('address')} />
+                </span>
+                <span>
+                  <TextInput placeholder='City' {...register('city')} />
+                </span>
+              </div>
+            )}
+            <label>
+              <input type="checkbox" checked={isRemote} onChange={(e) => setRemote(e.target.checked)} />
+              Remote Help
+            </label>
           </div>
 
           <div className="mb-4">
@@ -126,9 +165,9 @@ const PostCreator = () => {
                           <span className="font-semibold">Click to upload</span> or drag and drop
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                      </>:
+                      </> :
                       <span className="font-semibold">File loaded</span>
-                  }
+                    }
 
 
                   </div>

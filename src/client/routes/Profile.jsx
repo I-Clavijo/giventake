@@ -34,12 +34,13 @@ const Profile = () => {
       {interest} {index < user.interests.length - 1 ? '•' : ''}
     </span>
   ));
-
-  let txtLocation = '';
-  if (user.location.city) {
-    txtLocation = user.location.city;
+ 
+  let txtLocation = 'Location not available';
+  if (user && user.location) {
+    txtLocation = user.location.city ?? '';
     if (user.location.country) txtLocation += `, ${user.location.country}`;
   }
+
   
 
   return <>

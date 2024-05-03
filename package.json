@@ -44,6 +44,7 @@
     "react-router-dom": "^6.22.3",
     "sharp": "^0.33.3",
     "styled-components": "^6.1.8",
+    "tabbable": "^6.2.0",
     "uuid": "^9.0.1",
     "vite-express": "*",
     "zod": "^3.22.4"
