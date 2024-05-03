@@ -35,17 +35,18 @@ const InterestsLocationModal = () => {
     const formDataWithInterests = { ...data, interests: selectedInterests };
     console.log('Form data with interests:', formDataWithInterests);
     setOpenModal(false);
+    
   }
 
   return (
     <>
-    <form onSubmit={handleSubmit(onSubmit)}>
+   
       <Modal size="xl" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Modal.Header>
             <div className={styles.title}>Thank you for joining!</div>
             <div className={styles.subtitle}>To get a more presonalized experience, we would like to know a little more about you</div>
         </Modal.Header>
-        
           <Modal.Body>
             <div className={styles.body}>
               <label>
@@ -69,8 +70,9 @@ const InterestsLocationModal = () => {
               Later
             </Button>
           </Modal.Footer>
+          </form>
         </Modal>
-      </form>
+      
     </>
   );
 }
