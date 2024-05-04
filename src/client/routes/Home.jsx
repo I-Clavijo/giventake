@@ -4,21 +4,28 @@ import { usePosts } from "../api/posts/usePosts.jsx";
 import { useUser } from "../api/user/useUser.jsx";
 import { Spinner } from "flowbite-react";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 import InterestsLocationModal from "../components/InterestsLocationModal.jsx";
 import CityRadiusSelector from "../components/CityRadiusSelector.jsx";
 
 export default function Home() {
 
-  const { id: userId } = useParams();
+  const [radius, setRadius] = useState(100); // Default radius is 100 km
   const { data: posts, isLoading } = usePosts();
+  const { id: userId } = useParams();
   const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser({ userId });
   if (isErrorUser) throw new PageError('Page not found.', 'Are you sure you are in the right page?');
 
+
+  const handleRadiusChange = (radius) => {
+    setRadius(radius);
+  };
+  
   return <>
     <InterestsLocationModal />
-    <CityRadiusSelector user={user} />
+    <CityRadiusSelector user={user} onRadiusChange={handleRadiusChange}/>
     {posts && !isLoading ?
-        <Feed {...{ posts }} />
+        <Feed posts={posts} radius={radius} />
         :
         <Spinner />
     }
