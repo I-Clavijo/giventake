@@ -27,8 +27,10 @@ const interests = [
     return (
       <div className={styles.interestsSelection}>
         <div className= {styles.gridContainer}>
-            {interests.map((interest) => (
-                <Button color="lightgrey" onClick={() => handleClick(interest.name)}
+            {interests.map((interest, index) => (
+                <Button key={index}
+                color="lightgrey" 
+                onClick={() => handleClick(interest.name)}
                 className={`${styles.interestButton} ${
                     selectedInterests.includes(interest.name) ? styles.selectedButton : ''}`}
                 > 
