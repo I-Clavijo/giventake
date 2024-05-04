@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Tabs } from "flowbite-react";
-import Stars from '../components/Stars';
+import Stars from '../components/Reviews/Stars';
 import { useUser } from '../api/users/useUser.jsx';
-import { HiChartSquareBar, HiClipboardList, HiUserCircle } from "react-icons/hi";
+import { HiChartSquareBar, HiUserCircle } from "react-icons/hi";
 import styles from './Profile.module.scss';
 import ProfileImg from '../assets/images/profile-img.jpeg';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
@@ -31,7 +31,7 @@ const Profile = ({ isMyProfile }) => {
     if (userId !== undefined && userId === authUser?._id) navigate('/profile');
   }, [userId, user?._id]);
 
-  const { mutate: friendAction } = useFriendAction({ actions: { follow: userId } });
+  const { mutate: friendAction } = useFriendAction(); // TODO: CONTINUE HERE
 
   const filters = {
     userId: (isMyProfile && user?._id) ? user._id : userId
@@ -50,8 +50,8 @@ const Profile = ({ isMyProfile }) => {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
-  const [showFriendsModal, setShowFriendsModal] = useState(false); // TODO: CONTINUE HERE
-  const [friendsListMode, setFriendsListMode] = useState(); // TODO: CONTINUE HERE
+  const [showFriendsModal, setShowFriendsModal] = useState(false);
+  const [friendsListMode, setFriendsListMode] = useState();
 
 
   const interestsSepByDots = user?.interests?.map((interest, index) => (
@@ -66,6 +66,17 @@ const Profile = ({ isMyProfile }) => {
     if (user.location.country) txtLocation += `, ${user.location.country}`;
   }
 
+  const onFollowersClickHandler = () => {
+    setShowFriendsModal(true); 
+    setFriendsListMode(modes.FOLLOWERS);
+  };
+  const onFollowingClickHandler = () => {
+    setShowFriendsModal(true); 
+    setFriendsListMode(modes.FOLLOWING);
+  };
+  const onFriendHandler = () => {
+    friendAction({ actions: { follow: userId } });
+  };
 
   return <>
     {user && <>
@@ -90,11 +101,11 @@ const Profile = ({ isMyProfile }) => {
               <p className={styles.statNumber}>{posts?.length || '-'}</p>
               <p className={styles.statText}>Posts</p>
             </div>
-            <div className={styles.stat} onClick={() => { setShowFriendsModal(true); setFriendsListMode(modes.FOLLOWERS) }} style={{ cursor: 'pointer' }}>
+            <div className={styles.stat} onClick={onFollowersClickHandler} style={{ cursor: 'pointer' }}>
               <p className={styles.statNumber}>10</p>
               <p className={styles.statText}>Followers</p>
             </div>
-            <div className={styles.stat} onClick={() => { setShowFriendsModal(true); setFriendsListMode(modes.FOLLOWING) }} style={{ cursor: 'pointer' }}>
+            <div className={styles.stat} onClick={onFollowingClickHandler} style={{ cursor: 'pointer' }}>
               <p className={styles.statNumber}>20</p>
               <p className={styles.statText}>Following</p>
             </div>
@@ -118,7 +129,7 @@ const Profile = ({ isMyProfile }) => {
               <Link to="/messages">
                 <Button size='xs' color="light" style={{ padding: '5px' }}>Message</Button>
               </Link>
-              <Button size='xs' className='button' style={{ padding: '5px' }} onClick={friendAction}>Follow</Button>
+              <Button size='xs' className='button' style={{ padding: '5px' }} onClick={onFriendHandler}>Follow</Button>
             </div>
           )}
         </div>

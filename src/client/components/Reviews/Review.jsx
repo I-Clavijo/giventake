@@ -1,4 +1,4 @@
-import Stars from '../Stars';
+import Stars from './Stars';
 import styles from './Review.module.scss';
 import ProfileImg from '../../assets/images/profile-img.jpeg';
 
