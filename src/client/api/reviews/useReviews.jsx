@@ -1,19 +1,20 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { useSnackbar } from 'notistack';
 import { QUERY_KEY } from "../constants";
 import useAxiosPrivate from "../user/useAxiosPrivate";
 import { isObjectEmpty } from "../../utils/lib";
 
-export const usePosts = ({ filters={}, enabled }={}) => {
+export const useReviews = ({ filters={}, enabled }={}) => {
     const { enqueueSnackbar } = useSnackbar();
     const axiosPrivate = useAxiosPrivate();
     const filtersKeys = isObjectEmpty(filters) ? [] : [filters];
 
     return useQuery({
-        queryKey: [QUERY_KEY.posts, ...(filtersKeys)],
+        queryKey: [QUERY_KEY.reviews, ...(filtersKeys)],
         queryFn: async ({ queryKey }) => {
             const [_, filters] = queryKey;
-            const { data } = await axiosPrivate.get('/posts', { params: { filters } });
+            const { data } = await axiosPrivate.get('/reviews', { params: { filters } });
             return data;
         },
         onError: (err) => {

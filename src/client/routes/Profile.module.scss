@@ -20,10 +20,10 @@
 }
 .stats .stat {
   align-items: center;
-   
   text-align: center;
-  
- 
+  &:hover{
+    color: var(--secondary-font-color);
+  }
 }
 .statNumber{
   font-weight: bold;

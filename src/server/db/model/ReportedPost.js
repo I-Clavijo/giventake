@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { MODEL_KEY, REPORTS_KEYS } from "./constants.js";
 import mongooseUniqueValidator from "mongoose-unique-validator";
 
+
 const reportedPostSchema = new mongoose.Schema({
     post: { type: mongoose.Schema.ObjectId, required: true, ref: MODEL_KEY.Post, unique: true },
     reports: [{

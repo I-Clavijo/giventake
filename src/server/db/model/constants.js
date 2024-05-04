@@ -1,7 +1,8 @@
 export const MODEL_KEY = {
   User: 'User',
   Post: 'Post',
-  ReportedPost: 'ReportedPost'
+  ReportedPost: 'ReportedPost',
+  UserFollowing: 'UserFollowing'
 };
 
 

@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { MODEL_KEY } from "./constants.js";
+const ObjectId = mongoose.Schema.ObjectId;
 
 const postSchema = new mongoose.Schema({
-	user: { type: mongoose.Schema.ObjectId, required: true, ref: MODEL_KEY.User },
+	user: { type: ObjectId, required: true, ref: MODEL_KEY.User },
     category: { type: String, required: true },
     city: String,
     address: String,
@@ -15,9 +16,9 @@ const postSchema = new mongoose.Schema({
     },
     imgName: String,
     description: String,
-    usersSaved: [{ type: mongoose.Schema.ObjectId, ref: MODEL_KEY.User }],
-    usersInterested: [{ type: mongoose.Schema.ObjectId, ref: MODEL_KEY.User }],
-    usersReported: [{ type: mongoose.Schema.ObjectId, ref: MODEL_KEY.User }],
+    usersSaved: [{ type: ObjectId, ref: MODEL_KEY.User }],
+    usersInterested: [{ type: ObjectId, ref: MODEL_KEY.User }],
+    usersReported: [{ type: ObjectId, ref: MODEL_KEY.User }],
 }, { timestamps: true });
 
 export default mongoose.model(MODEL_KEY.Post, postSchema);

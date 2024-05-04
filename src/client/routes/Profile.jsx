@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Link, useLocation, useNavigate, useParams, useSearchParams, json } from 'react-router-dom';
-import { Card, Button, Tabs } from "flowbite-react";
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Button, Tabs } from "flowbite-react";
 import Stars from '../components/Stars';
 import { useUser } from '../api/user/useUser';
 import { HiChartSquareBar, HiClipboardList, HiUserCircle } from "react-icons/hi";
@@ -8,25 +8,47 @@ import styles from './Profile.module.scss';
 import ProfileImg from '../assets/images/profile-img.jpeg';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import Feed, { showAs } from "../components/Posts/Feed.jsx";
-import ReviewsFeed from "../components/Profile/Reviews.jsx";
-import { FriendsTable } from '../components/Profile/ListOfFriends.jsx';
+import ReviewsFeed from "../components/Reviews/ReviewsFeed.jsx";
 import { EditProfileModal } from '../components/Profile/EditProfileModal.jsx';
-import { Rate } from "../components/Profile/Rate.jsx";
 import { usePosts } from '../api/posts/usePosts.jsx';
 import PageError from '../utils/PageError.js';
+import { ReviewAskModal } from '../components/Reviews/ReviewAskModal.jsx';
+import { useReviews } from '../api/reviews/useReviews.jsx';
+import { FriendsListModal, modes } from '../components/Profile/FriendsListModal.jsx';
 
 
-const Profile = () => {
+const Profile = ({ isMyProfile }) => {
   let { id: userId } = useParams();
-  const isMyProfile = !userId;
+  const navigate = useNavigate();
 
-  const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser({ userId });
-  if (isErrorUser) throw new PageError('Profile page not found.', 'Are you sure you are in the right page?');
+  const { data: authUser } = useUser();
+  const { data: user, isLoading: isLoadingUser, isError: isErrorUser, isSuccess: isSuccessUser } = useUser({ userId, enabled: isMyProfile ? true : !!userId });
+  if (!isMyProfile && isErrorUser && !user) throw new PageError('Profile page not found.', 'Are you sure you are in the right page?');
 
-  const { data: posts, isLoading: isLoadingPosts } = usePosts({ userId });
+  // navigate the user to his own profile page if he visit it as a guest.
+  useEffect(() => {
+    if (userId !== undefined && userId === authUser?._id) navigate('/profile');
+  }, [userId, user?._id]);
+
+  const filters = {
+    userId: (isMyProfile && user?._id) ? user._id : userId
+  };
+  const { data: posts, isLoading: isLoadingPosts } = usePosts({
+    filters,
+    enabled: isMyProfile ? true : (!!userId && isSuccessUser)
+  });
+
+  const { data: reviews } = useReviews({
+    filters,
+    enabled: isMyProfile ? true : (!!userId && isSuccessUser)
+  });
+  console.log(reviews);
 
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+
+  const [showFriendsModal, setShowFriendsModal] = useState(false); // TODO: CONTINUE HERE
+  const [friendsListMode, setFriendsListMode] = useState(); // TODO: CONTINUE HERE
 
 
   const interestsSepByDots = user?.interests?.map((interest, index) => (
@@ -36,11 +58,11 @@ const Profile = () => {
   ));
 
   let txtLocation = '';
-  if (user.location.city) {
+  if (user?.location?.city) {
     txtLocation = user.location.city;
     if (user.location.country) txtLocation += `, ${user.location.country}`;
   }
-  
+
 
   return <>
     {user && <>
@@ -48,6 +70,8 @@ const Profile = () => {
       <div className={styles.profileInfo}>
         <div className={styles.profileLeft}>
           <img className="w-28 h-28 mb-2  rounded-full shadow-lg" src={user.imgUrl ? user.imgUrl : ProfileImg} alt="Profile image" />
+        </div>
+        <div className={styles.profileLeft}>
           <h5 className="ml-2 text-xxl font-large text-gray-900 dark:text-white">{user.firstName} {user.lastName}</h5>
           <span className="text-sm ml-2 text-gray-500 dark:text-gray-400">{txtLocation}</span>
           <div className="pb-1 ml-2 extra">
@@ -60,17 +84,18 @@ const Profile = () => {
         <div className={styles.profileRight}>
           <div className={styles.stats}>
             <div className={styles.stat}>
-              <p className={styles.statNumber}>3</p>
+              <p className={styles.statNumber}>{posts?.length || '-'}</p>
               <p className={styles.statText}>Posts</p>
             </div>
-            <div className={styles.stat}>
+            <div className={styles.stat} onClick={() => { setShowFriendsModal(true); setFriendsListMode(modes.FOLLOWERS) }} style={{ cursor: 'pointer' }}>
               <p className={styles.statNumber}>10</p>
               <p className={styles.statText}>Followers</p>
             </div>
-            <div className={styles.stat}>
+            <div className={styles.stat} onClick={() => { setShowFriendsModal(true); setFriendsListMode(modes.FOLLOWING) }} style={{ cursor: 'pointer' }}>
               <p className={styles.statNumber}>20</p>
               <p className={styles.statText}>Following</p>
             </div>
+            <FriendsListModal show={showFriendsModal} onClose={() => setShowFriendsModal(false)} mode={friendsListMode} />
           </div>
 
           {isMyProfile && (
@@ -81,16 +106,16 @@ const Profile = () => {
               </Button>
               <EditProfileModal show={showEditModal} onClose={() => setShowEditModal(false)} />
 
-              <Button onClick={() => setShowReviewModal(true)} className='button'>Review Latest Activity</Button>
-              <Rate show={showReviewModal} onClose={() => setShowReviewModal(false)} />
+              {/* <Button onClick={() => setShowReviewModal(true)} className='button'>Review Latest Activity</Button> */}
+              <ReviewAskModal show={showReviewModal} onClose={() => setShowReviewModal(false)} />
             </div>
           )}
           {!isMyProfile && (
             <div className={styles.actions}>
               <Link to="/messages">
-                <Button color="light">Message</Button>
+                <Button size='xs' color="light" style={{ padding: '5px' }}>Message</Button>
               </Link>
-              <Button>Follow Me</Button>
+              <Button size='xs' className='button' style={{ padding: '5px' }}>Follow</Button>
             </div>
           )}
         </div>
@@ -101,19 +126,16 @@ const Profile = () => {
 
         <Tabs.Item active title="Posts" icon={HiUserCircle} className="tabItem">
           {posts &&
-            // FIXME: add property to Feed 'showTitle={false}'
-            <Feed posts={posts} styleOrder={showAs.MASONRY} isLoading={isLoadingPosts} />
+            <Feed posts={posts} styleOrder={showAs.MASONRY} isLoading={isLoadingPosts} noTitle {...(isMyProfile && { noActions: true })} />
           }
-
         </Tabs.Item>
 
         <Tabs.Item title="Reviews" icon={HiChartSquareBar} className="tabItem">
-          This is <span className="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</span>.
-          {/*<ReviewsFeed reviews={reviews}/>*/}
+          <ReviewsFeed reviews={reviews} />
         </Tabs.Item>
-        <Tabs.Item title="Following" icon={HiClipboardList} className="tabItem">
+        {/* <Tabs.Item title="Following" icon={HiClipboardList} className="tabItem">
           <FriendsTable />
-        </Tabs.Item>
+        </Tabs.Item> */}
       </Tabs>
     </>
     }

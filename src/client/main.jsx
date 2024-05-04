@@ -48,7 +48,7 @@ const router = createBrowserRouter([
 					{ 
 						element: <RequireAuth allowedRoles={[ROLES.User]} />, 
 						children: [
-							{ path: "/profile", element: <Profile /> },
+							{ path: "/profile", element: <Profile isMyProfile={true} /> },
 							{ path: "/create", element: <Create />},
 							{ path: "/messages", element: <Messages /> },
 						] 

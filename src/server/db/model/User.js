@@ -4,7 +4,7 @@ import { MODEL_KEY } from "./constants.js";
 const ObjectId = mongoose.Schema.ObjectId;
 
 const userSchema = new mongoose.Schema({
-	firstName: { type: String, required: true },
+    firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, minlength: 5 },
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         city: String,
         address: String,
     },
-    
+
     bio: String,
     roles: {
         User: {
@@ -28,11 +28,23 @@ const userSchema = new mongoose.Schema({
         Admin: Number
     },
     refreshToken: String,
-    savedPosts: [ObjectId],
-    interestedPosts: [ObjectId],
-    reportedPosts: [ObjectId]
+    savedPosts: [{ type: ObjectId, ref: MODEL_KEY.Post }],
+    interestedPosts: [{ type: ObjectId, ref: MODEL_KEY.Post }],
+    reportedPosts: [{ type: ObjectId, ref: MODEL_KEY.Post }],
+    reviews: [{
+        postId: { type: ObjectId, ref: MODEL_KEY.Post },
+        fromUser: { type: ObjectId, ref: MODEL_KEY.User },
+        rating: {
+            type: Number,
+            required: true,
+            min: 1,
+            max: 5
+        },
+        description: { type: String },
+        createdAt: { type: Date },
+    }]
 }, { timestamps: true });
 
-userSchema.plugin(uniqueValidator); 
+userSchema.plugin(uniqueValidator);
 
 export default mongoose.model(MODEL_KEY.User, userSchema);

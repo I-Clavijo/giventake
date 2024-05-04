@@ -20,3 +20,11 @@ export const getFormData = (dataObject, fileListPropertyName) => {
 
     return formData;
 };
+
+
+// Example objects
+// const obj1 = { a: null, b: undefined, c: null };    // true
+// const obj2 = {};                                    // true
+export function isObjectEmpty(obj) {
+    return Object.keys(obj).length === 0 ? true : Object.values(obj).every(val => val == null);
+}

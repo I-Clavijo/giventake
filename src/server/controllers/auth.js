@@ -1,18 +1,10 @@
 import bcrypt from 'bcrypt';
-import User from '../model/User.js';
+import User from '../db/model/User.js';
 import jwt from 'jsonwebtoken';
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET, S3_BUCKET } from '../config.js';
-import { GetObjectCommand } from '@aws-sdk/client-s3';
-import { s3Client } from '../config/s3Client.js';
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import AppError from '../utils/AppError.js';
-
-// mutable!!
-const removePropsFromArray = (obj, propertiesToRemove) => {
-    propertiesToRemove.forEach(prop => {
-        delete obj[prop];
-    });
-}
+import { removePropsMutable } from '../utils/lib.js';
+import { getImageUrl } from '../utils/S3.js';
 
 
 const generateAccessToken = (data) => jwt.sign(
@@ -54,7 +46,7 @@ export const signUp = async (req, res) => {
 
     // Delete keys from the user object
     userDB = userDB.toObject();
-    removePropsFromArray(userDB, ['password', 'refreshToken', '__v']);
+    removePropsMutable(userDB, ['password', 'refreshToken', '__v']);
     const roles = Object.values(userDB.roles).filter(Boolean);
     userDB.roles = roles;
     const accessToken = generateAccessToken({ _id: userDB._id, email, roles });
@@ -92,19 +84,12 @@ export const login = async (req, res) => {
         await foundUser.save()
         foundUser = foundUser.toObject();
         foundUser.roles = roles;
-        removePropsFromArray(foundUser, ['password', 'refreshToken', '__v']);
+        removePropsMutable(foundUser, ['password', 'refreshToken', '__v']);
         const accessToken = generateAccessToken({ _id: foundUser._id, email, roles });
 
         // get profile image url from S3
-        let url = '';
-        if (foundUser.imgName) {
-            const getObjectParams = {
-                Bucket: S3_BUCKET,
-                Key: foundUser.imgName
-            };
-            const command = new GetObjectCommand(getObjectParams);
-            url = await getSignedUrl(s3Client, command, { expiresIn: 60 * 1000 });
-        }
+        const imgName = foundUser.imgName;
+        const url = imgName ? await getImageUrl(imgName) : '';
         foundUser.imgUrl = url;
 
         // Creates Secure Cookie with refresh token and sends to client
@@ -119,7 +104,7 @@ export const login = async (req, res) => {
         res.json({ accessToken, ...foundUser });
 
     } else {
-        res.sendStatus(401);
+        throw new AppError('Unauthorized', 401);
     }
 }
 
@@ -138,18 +123,11 @@ export const handleRefreshToken = async (req, res) => {
             if (err || foundUser.email !== decoded.email) return res.sendStatus(403);
             const roles = Object.values(foundUser.roles);
             const accessToken = generateAccessToken({ _id: foundUser._id, email: decoded.username, roles });
-            removePropsFromArray(foundUser, ['password', 'refreshToken', '__v']);
+            removePropsMutable(foundUser, ['password', 'refreshToken', '__v']);
 
             // get profile image url from S3
-            let url = '';
-            if (foundUser.imgName) {
-                const getObjectParams = {
-                    Bucket: S3_BUCKET,
-                    Key: foundUser.imgName
-                };
-                const command = new GetObjectCommand(getObjectParams);
-                url = await getSignedUrl(s3Client, command, { expiresIn: 60 * 1000 });
-            }
+            const imgName = foundUser.imgName;
+            const url = imgName ? await getImageUrl(imgName) : '';
             foundUser.imgUrl = url;
 
             res.status(200).json({ accessToken, ...foundUser });

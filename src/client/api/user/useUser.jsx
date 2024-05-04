@@ -1,39 +1,37 @@
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from '../constants';
-import axios from '../axios';
+import axios, { axiosPrivate } from '../axios';
 import { useSnackbar } from 'notistack';
+import PageError from '../../utils/PageError';
 
-export const useUser = (props) => {
+export const useUser = ({ userId, enabled } = {}) => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const { userId } = props || {};
-    if (userId) {
-        return useQuery({
-            queryKey: [QUERY_KEY.user, userId],
-            queryFn: async () => {
-                const { data } = await axios.get('/users', { userId });
+    const query = useQuery({
+        queryKey: [QUERY_KEY.user, ...(userId ? [userId] : [])],
+        queryFn: async ({ queryKey }) => {
+            const [_, userId] = queryKey;
+            if (userId) {
+                const { data } = await axiosPrivate.get('/users', { params: { userId } });
                 return data;
-            },
-            onError: (err) => {
-                let errMessage = err.message || 'Something went wrong. Please try again!';
-                enqueueSnackbar(errMessage, { variant: 'error' });    
-            },
-            retry:false
-        });
+            }
+        },
+        onError: (err) => {
+            let errMessage = err.message || 'Something went wrong. Please try again!';
+            enqueueSnackbar(errMessage, { variant: 'error' });
+        },
+        refetchOnMount: userId ?? false,
+        refetchOnWindowFocus: userId ?? false,
+        refetchOnReconnect: userId ?? false,
+        initialData: {},
+        retry: false,
+        enabled: enabled ?? true
+    });
+    const user = query.data;
 
-    } else {
-        const query = useQuery({
-            queryKey: [QUERY_KEY.user],
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-            initialData: {}
-        });
-        const user = query.data;
-
-        return {
-            ...query,
-            isLoggedIn: !!user?.accessToken || false
-        };
-    }
+    return {
+        ...query,
+        ...(userId ? {} : { isLoggedIn: !!user?.accessToken || false })
+    };
+    // }
 };

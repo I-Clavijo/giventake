@@ -4,7 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
-div{
+*{
   // that is because tailwind side effect
   outline: none;
 }
