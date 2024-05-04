@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from '../constants';
-import axios, { axiosPrivate } from '../axios';
+import { axiosPrivate } from '../axios';
 import { useSnackbar } from 'notistack';
-import PageError from '../../utils/PageError';
 
 export const useUser = ({ userId, enabled } = {}) => {
     const { enqueueSnackbar } = useSnackbar();
@@ -33,5 +32,4 @@ export const useUser = ({ userId, enabled } = {}) => {
         ...query,
         ...(userId ? {} : { isLoggedIn: !!user?.accessToken || false })
     };
-    // }
 };

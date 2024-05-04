@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSnackbar } from 'notistack';
 import { QUERY_KEY } from "../constants";
-import useAxiosPrivate from "../user/useAxiosPrivate";
+import useAxiosPrivate from "../useAxiosPrivate";
 import { isObjectEmpty } from "../../utils/lib";
 
 export const usePosts = ({ filters={}, enabled }={}) => {

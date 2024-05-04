@@ -1,11 +1,11 @@
 import { Label, TextInput, Textarea, Button, Modal, Select, FileInput } from "flowbite-react";
 import { useState } from "react";
 import styles from './EditProfileModal.module.scss';
-import { useUser } from "../../api/user/useUser";
+import { useUser } from "../../api/users/useUser";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useUserUpdate from "../../api/user/useUserUpdate";
+import useUserUpdate from "../../api/users/useUserUpdate";
 
 
 export function EditProfileModal({ show, onClose }) {

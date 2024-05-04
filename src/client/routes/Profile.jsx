@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Tabs } from "flowbite-react";
 import Stars from '../components/Stars';
-import { useUser } from '../api/user/useUser';
+import { useUser } from '../api/users/useUser.jsx';
 import { HiChartSquareBar, HiClipboardList, HiUserCircle } from "react-icons/hi";
 import styles from './Profile.module.scss';
 import ProfileImg from '../assets/images/profile-img.jpeg';
@@ -15,6 +15,7 @@ import PageError from '../utils/PageError.js';
 import { ReviewAskModal } from '../components/Reviews/ReviewAskModal.jsx';
 import { useReviews } from '../api/reviews/useReviews.jsx';
 import { FriendsListModal, modes } from '../components/Profile/FriendsListModal.jsx';
+import { useFriendAction } from '../api/users/useFriendAction.jsx';
 
 
 const Profile = ({ isMyProfile }) => {
@@ -29,6 +30,8 @@ const Profile = ({ isMyProfile }) => {
   useEffect(() => {
     if (userId !== undefined && userId === authUser?._id) navigate('/profile');
   }, [userId, user?._id]);
+
+  const { mutate: friendAction } = useFriendAction({ actions: { follow: userId } });
 
   const filters = {
     userId: (isMyProfile && user?._id) ? user._id : userId
@@ -115,7 +118,7 @@ const Profile = ({ isMyProfile }) => {
               <Link to="/messages">
                 <Button size='xs' color="light" style={{ padding: '5px' }}>Message</Button>
               </Link>
-              <Button size='xs' className='button' style={{ padding: '5px' }}>Follow</Button>
+              <Button size='xs' className='button' style={{ padding: '5px' }} onClick={friendAction}>Follow</Button>
             </div>
           )}
         </div>

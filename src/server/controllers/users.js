@@ -1,4 +1,4 @@
-import User from '../db/model/User.js';
+import { User, UserFollowing } from '../db/model/index.js';
 import AppError from '../utils/AppError.js';
 import { getImageUrl, putImage } from '../utils/S3.js';
 import { removePropsMutable } from '../utils/lib.js';
@@ -13,7 +13,7 @@ export const getUserById = async (req, res) => {
     const user = await User.findOne({ _id: userId }).lean();
     if (!user) throw AppError('User not found', 404);
 
-    removePropsMutable(user, ['password', 'refreshToken', ])
+    removePropsMutable(user, ['password', 'refreshToken',])
 
     res.status(200).json(user);
 };
@@ -55,4 +55,16 @@ export const updateUser = async (req, res) => {
     await User.updateOne(filter, newUser);
 
     res.status(201).json({ imgUrl: profileImgUrl });
+};
+
+export const getAllFriends = async (req, res) => {
+
+};
+
+export const friendAction = async (req, res) => {
+    const { followingTheUser } = req.body;
+    const authUser = req.user._id;
+
+    
+
 };

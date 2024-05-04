@@ -5,7 +5,7 @@ const ObjectId = mongoose.Schema.ObjectId;
 
 const userFollowingSchema = new mongoose.Schema({
 	user: { type: ObjectId, required: true, unique: true, ref: MODEL_KEY.User }, // <- this user 
-    following: { type: ObjectId, required: true, unique: true, ref: MODEL_KEY.User }, // <- is following this user
+    followingTheUser: { type: ObjectId, required: true, unique: true, ref: MODEL_KEY.User }, // <- is following this user
 }, { timestamps: true });
 
 userFollowingSchema.plugin(uniqueValidator);

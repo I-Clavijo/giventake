@@ -5,7 +5,6 @@ import usersRoutes from './users.js';
 import reviewsRoutes from './reviews.js';
 
 
-
 const router = express.Router();
 
 router.use("/auth", authRoutes);

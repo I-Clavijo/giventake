@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getFormData } from "../../utils/lib";
-import useAxiosPrivate from "./useAxiosPrivate";
+import useAxiosPrivate from "../useAxiosPrivate";
 import { enqueueSnackbar } from "notistack";
 import { QUERY_KEY } from "../constants";
 
