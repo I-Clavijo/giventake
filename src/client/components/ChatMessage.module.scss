@@ -1,3 +1,24 @@
+.test {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #00000036;
+    width: fit-content;
+    margin-inline: auto;
+    border-radius: 25px;
+    padding: 5px 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 8px;
+    background-color: #c9c9f357;
+    font-size: 0.875rem;
+
+    &.testHidden {
+        display: none;
+    }
+}
+
+/* Style to hide the div */
+
+
+
 .messageWrapper {
     display: flex;
     column-gap: 4px;
