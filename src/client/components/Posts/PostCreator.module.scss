@@ -1,10 +1,6 @@
 .postCreator {
   max-width: 600px;
   margin: 20px auto;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .header {
@@ -15,10 +11,12 @@
   justify-content: center;
 }
 
-.title {
-  margin: 0;
-  font-size: 20px;
-  color: #333;
+.textBoldOut{
+  background-color: var(--forth-color);
+  border-radius: 1rem;
+  padding: 0.7rem;
+  text-align: center;
+  color: white;
 }
 
 
@@ -28,11 +26,6 @@ form {
     gap: 0.5em;
     width: 95%;
   }
-
-  .voluPlace {
-    display: flex;
-    gap: 1em;
-  }
 }
 
 .label {
@@ -40,6 +33,14 @@ form {
   margin: 2px;
   padding: 4px;
   font-weight: 600;
+}
+.remoteHelp{
+  background-color: #eee;
+  padding: 2px 5px;
+  border-radius: 5px;
+  display:flex;
+  align-items: center;
+  gap:2px;
 }
 
 .submitButton {
