@@ -5,15 +5,14 @@ import { QUERY_KEY } from "../constants";
 import useAxiosPrivate from "../useAxiosPrivate";
 import { isObjectEmpty } from "../../utils/lib";
 
-export const useReviews = ({ filters={}, enabled }={}) => {
+export const useFriends = ({ userId, enabled }={}) => {
     const { enqueueSnackbar } = useSnackbar();
     const axiosPrivate = useAxiosPrivate();
-    const filtersKeys = isObjectEmpty(filters) ? [] : [filters];
 
     return useQuery({
-        queryKey: [QUERY_KEY.reviews, ...(filtersKeys)],
+        queryKey: [QUERY_KEY.friends, userId],
         queryFn: async () => {
-            const { data } = await axiosPrivate.get('/reviews', { params: { filters } });
+            const { data } = await axiosPrivate.get('/friends', { params: { userId } });
             return data;
         },
         onError: (err) => {

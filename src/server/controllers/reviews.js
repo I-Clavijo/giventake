@@ -29,7 +29,6 @@ export const createReview = async (req, res) => {
 export const getReviews = async (req, res) => {
     const { filters } = req.query;
     console.log(filters)
-    // const user = await User.findOne({ _id: filters.userId }).lean();
 
     const user = await User.aggregate([
         { $match: { _id: new ObjectId(filters.userId) } },
@@ -77,38 +76,13 @@ export const getReviews = async (req, res) => {
     const reviews = user[0]?.reviews || [];
     console.log(reviews)
 
-    // get post image from S3 bucket
+    // get profile image from S3 bucket
     for (const review of reviews) {
-        // For each post, generate a signed URL and save it to the post object
+        // For each review, generate a signed URL and save it to the review object
         const imgName = review.fromUser?.imgName;
         const url = imgName ? await getImageUrl(imgName) : '';
         review.fromUser.imgUrl = url;
     }
 
     res.status(200).json(reviews);
-}
-
-export const deleteReview = async (req, res) => {
-    const { _id: reviewId } = req.body || {};
-    //get all reviews from DB
-
-    const review = await Review.findOne({ _id: reviewId }).exec();
-
-    if (!review) {
-        res.status(404).json({ message: 'Review not found.' })
-        return;
-    }
-
-    // delete post image from S3 bucket
-    const getObjectParams = {
-        Bucket: S3_BUCKET,
-        Key: post.img
-    };
-    const command = new DeleteObjectCommand(getObjectParams);
-    const url = await getSignedUrl(s3Client, command, { expiresIn: 60 });
-
-    // delete review from DB
-    await Review.deleteOne({ _id: reviewId });
-
-    res.status(201).send();
 }

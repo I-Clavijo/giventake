@@ -15,7 +15,8 @@ import PageError from '../utils/PageError.js';
 import { ReviewAskModal } from '../components/Reviews/ReviewAskModal.jsx';
 import { useReviews } from '../api/reviews/useReviews.jsx';
 import { FriendsListModal, modes } from '../components/Profile/FriendsListModal.jsx';
-import { useFriendAction } from '../api/users/friends/useFriendAction.jsx';
+import { useFriendAction } from '../api/friends/useFriendAction.jsx';
+import { useFriends } from '../api/friends/useFriends.jsx';
 
 
 const Profile = ({ isMyProfile }) => {
@@ -45,7 +46,11 @@ const Profile = ({ isMyProfile }) => {
     filters,
     enabled: isMyProfile ? true : (!!userId && isSuccessUser)
   });
-  console.log(reviews);
+
+  const { data: friends, isLoading: friendsIsLoading } = useFriends({
+    userId: (isMyProfile && user?._id) ? user._id : userId,
+    enabled: isMyProfile ? true : (!!userId && isSuccessUser)
+  });
 
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -67,11 +72,11 @@ const Profile = ({ isMyProfile }) => {
   }
 
   const onFollowersClickHandler = () => {
-    setShowFriendsModal(true); 
+    setShowFriendsModal(true);
     setFriendsListMode(modes.FOLLOWERS);
   };
   const onFollowingClickHandler = () => {
-    setShowFriendsModal(true); 
+    setShowFriendsModal(true);
     setFriendsListMode(modes.FOLLOWING);
   };
   const onFriendHandler = () => {
@@ -109,7 +114,7 @@ const Profile = ({ isMyProfile }) => {
               <p className={styles.statNumber}>20</p>
               <p className={styles.statText}>Following</p>
             </div>
-            <FriendsListModal show={showFriendsModal} onClose={() => setShowFriendsModal(false)} mode={friendsListMode} />
+            <FriendsListModal show={showFriendsModal} onClose={() => setShowFriendsModal(false)} mode={friendsListMode} isLoading={friendsIsLoading} {...{friends}} />
           </div>
 
           {isMyProfile && (

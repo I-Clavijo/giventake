@@ -8,8 +8,7 @@ export const useUser = ({ userId, enabled } = {}) => {
 
     const query = useQuery({
         queryKey: [QUERY_KEY.user, ...(userId ? [userId] : [])],
-        queryFn: async ({ queryKey }) => {
-            const [_, userId] = queryKey;
+        queryFn: async () => {
             if (userId) {
                 const { data } = await axiosPrivate.get('/users', { params: { userId } });
                 return data;
