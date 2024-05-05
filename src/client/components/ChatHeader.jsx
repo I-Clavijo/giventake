@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from "./ChatHeader.module.scss";
-import CloseIcon from "../assets/images/close-icon.svg"
+import CloseIcon from "../assets/images/CloseIcon.svg"
 
 function ChatHeader({setOpenChat}) {
   return (
