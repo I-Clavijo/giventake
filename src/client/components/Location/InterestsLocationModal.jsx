@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import InterestsSelection from './InterestsSelection.jsx';
 import CitySelector from './CitySelector.jsx';
+import CountrySelector from './CountrySelector.jsx';
 import useUserCountryCodeUsingIP from '../../hooks/useUserCountryCodeUsingIP.jsx';
 import useUserCountryCodeUsingNavGeo from '../../hooks/useUserCountryCodeUsingNavGeo.jsx';
 
@@ -51,11 +52,14 @@ const InterestsLocationModal = () => {
               <label>
                 Where are you located?
               </label>
-              <p style={{ marginLeft: '5px' }}>Country: {displayedCountryCode}</p>
-              <div className={styles.citySelector}>
+              {/*<p style={{ marginLeft: '5px' }}>Country: {displayedCountryCode}</p>*/}
+                <label>Select your country: </label>
+                <CountrySelector countryCode={displayedCountryCode} setValue={setValue}/>
+                {errors.city && <span className="error">{errors.city.message}</span>}
+
+                <label>Select your city: </label>
                 <CitySelector setValue={setValue}/>
                 {errors.city && <span className="error">{errors.city.message}</span>}
-              </div>
               <label>
                 What are your interests? Select the ones you like
               </label>

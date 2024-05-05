@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './LocationSelector.module.css';
-import countriesData from '../assets/Countries.json';
+import countriesData from '../../assets/Countries.json';
 
 export const showAs = {
   CHANGE: 'Change',
@@ -36,7 +36,7 @@ function CountrySelector({ countryCode, setValue, styleOrder = showAs.SEARCH, on
         <input
           className={styles.searchInput}
           type="text"
-          placeholder = {countryCode? countryCode : 'Search your country here...'}
+          placeholder = {countryCode? "your country: " + countryCode : 'Search your country here...'}
           //placeholder={`${styleOrder === showAs.CHANGE ? showAs.CHANGE : showAs.SEARCH} your country here...`}
           value={searchInput}
           onChange={handleSearchInputChange}
