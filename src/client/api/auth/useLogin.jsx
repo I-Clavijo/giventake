@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from 'notistack';
 import { QUERY_KEY } from '../constants';
 
-
 const login = async (loginData = { email, password, persist }) => {
     return await axios.post('/auth/login', JSON.stringify(loginData), {
         headers: { 'Content-Type': 'application/json' },
@@ -22,6 +21,7 @@ export const useLogin = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     return useMutation({
+        
         mutationFn: login,
         onSuccess: ({data}) => {
             queryClient.setQueryData([QUERY_KEY.user], prev => ({...prev, ...data })) // save the user in the state            

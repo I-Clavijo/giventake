@@ -3,6 +3,9 @@ import uniqueValidator from "mongoose-unique-validator";
 import { MODEL_KEY } from "./constants.js";
 const ObjectId = mongoose.Schema.ObjectId;
 
+/**
+* @type {mongoose.SchemaDefinitionProperty}
+*/
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },

@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import { MODEL_KEY } from "./constants.js";
 const ObjectId = mongoose.Schema.ObjectId;
 
+/**
+* @type {mongoose.SchemaDefinitionProperty}
+*/
 const postSchema = new mongoose.Schema({
 	user: { type: ObjectId, required: true, ref: MODEL_KEY.User },
     category: { type: String, required: true },

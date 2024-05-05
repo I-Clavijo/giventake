@@ -1,4 +1,4 @@
-import { User, UserFollowing } from '../db/model/index.js';
+import { User, Friends } from '../db/model/index.js';
 import AppError from '../utils/AppError.js';
 import { getImageUrl, putImage } from '../utils/S3.js';
 import { removePropsMutable } from '../utils/lib.js';
@@ -62,9 +62,21 @@ export const getAllFriends = async (req, res) => {
 };
 
 export const friendAction = async (req, res) => {
-    const { followingTheUser } = req.body;
+    const { toUser, actions } = req.body;
+    if (!toUser || !actions) throw new AppError('Please specify the action and the user.', 400);
+
     const authUser = req.user._id;
+    console.log('authUser', authUser)
+    console.log('actions', actions)
 
+    let filter, query;
+    filter = { user: authUser, toUser };
     
-
+    if (actions.follow) {
+        query = { user: authUser, toUser }
+        await Friends.updateOne(filter, query, { upsert: true })
+    } else if(actions.unfollow) {
+        await Friends.deleteOne(filter)
+    }
+    res.sendStatus(200);
 };

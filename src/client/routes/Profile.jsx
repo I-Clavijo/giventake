@@ -15,7 +15,7 @@ import PageError from '../utils/PageError.js';
 import { ReviewAskModal } from '../components/Reviews/ReviewAskModal.jsx';
 import { useReviews } from '../api/reviews/useReviews.jsx';
 import { FriendsListModal, modes } from '../components/Profile/FriendsListModal.jsx';
-import { useFriendAction } from '../api/users/useFriendAction.jsx';
+import { useFriendAction } from '../api/users/friends/useFriendAction.jsx';
 
 
 const Profile = ({ isMyProfile }) => {
@@ -31,7 +31,7 @@ const Profile = ({ isMyProfile }) => {
     if (userId !== undefined && userId === authUser?._id) navigate('/profile');
   }, [userId, user?._id]);
 
-  const { mutate: friendAction } = useFriendAction(); // TODO: CONTINUE HERE
+  const { mutate: friendAction } = useFriendAction();
 
   const filters = {
     userId: (isMyProfile && user?._id) ? user._id : userId
@@ -75,7 +75,7 @@ const Profile = ({ isMyProfile }) => {
     setFriendsListMode(modes.FOLLOWING);
   };
   const onFriendHandler = () => {
-    friendAction({ actions: { follow: userId } });
+    friendAction({ toUser: userId, actions: { follow: 1 } });
   };
 
   return <>
