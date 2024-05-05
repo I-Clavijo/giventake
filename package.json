@@ -47,7 +47,8 @@
     "styled-components": "^6.1.8",
     "uuid": "^9.0.1",
     "vite-express": "*",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "@react-email/components": "^0.0.17"
 
   },
   "devDependencies": {
