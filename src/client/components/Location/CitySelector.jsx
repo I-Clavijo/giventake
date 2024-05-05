@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CitySelector.module.css';
-import citiesData from '../assets/Cities_il.json';
+import citiesData from '../../assets/Cities_il.json';
 
 export const showAs = {
   CHANGE: 'Change',

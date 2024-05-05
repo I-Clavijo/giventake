@@ -5,8 +5,8 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import InterestsSelection from './InterestsSelection.jsx';
 import CitySelector from './CitySelector.jsx';
-import useUserCountryCodeUsingIP from './useUserCountryCodeUsingIP.jsx';
-import useUserCountryCodeUsingNavGeo from './useUserCountryCodeUsingNavGeo.jsx';
+import useUserCountryCodeUsingIP from '../../hooks/useUserCountryCodeUsingIP.jsx';
+import useUserCountryCodeUsingNavGeo from '../../hooks/useUserCountryCodeUsingNavGeo.jsx';
 
 
 const InterestsLocationModal = () => {
@@ -32,6 +32,7 @@ const InterestsLocationModal = () => {
   
   const onSubmit = (data) => {
     // Combine form data with selected interests
+    console.log('onSubmit')
     const formDataWithInterests = { ...data, interests: selectedInterests };
     console.log('Form data with interests:', formDataWithInterests);
     setOpenModal(false);
@@ -40,7 +41,7 @@ const InterestsLocationModal = () => {
 
   return (
     <>
-   <form onSubmit={handleSubmit(onSubmit)}>
+   <form>
       <Modal size="xl" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>
             <div className={styles.title}>Thank you for joining!</div>
@@ -64,7 +65,7 @@ const InterestsLocationModal = () => {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={handleSubmit(onSubmit)}>Update</Button>
+            <Button onClick={handleSubmit(onSubmit)} className='button'>Save</Button>
             <Button color="gray" onClick={() => setOpenModal(false)}>
               Later
             </Button>
