@@ -32,7 +32,6 @@ const InterestsLocationModal = () => {
   
   const onSubmit = (data) => {
     // Combine form data with selected interests
-    console.log('onSubmit')
     const formDataWithInterests = { ...data, interests: selectedInterests };
     console.log('Form data with interests:', formDataWithInterests);
     setOpenModal(false);
@@ -41,7 +40,7 @@ const InterestsLocationModal = () => {
 
   return (
     <>
-   <form>
+   <form onSubmit={handleSubmit(onSubmit)}>
       <Modal size="xl" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>
             <div className={styles.title}>Thank you for joining!</div>
@@ -65,7 +64,7 @@ const InterestsLocationModal = () => {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={handleSubmit(onSubmit)} className='button'>Save</Button>
+            <Button onClick={handleSubmit(onSubmit)}>Update</Button>
             <Button color="gray" onClick={() => setOpenModal(false)}>
               Later
             </Button>

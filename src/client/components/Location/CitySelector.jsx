@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './CitySelector.module.css';
+import styles from './LocationSelector.module.css';
 import citiesData from '../../assets/Cities_il.json';
 
 export const showAs = {
