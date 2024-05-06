@@ -9,7 +9,6 @@ import errorHandler from './middleware/errorHandler.js';
 import authRoutes from "./routes/auth.js";
 import apiRoutes from './routes/api.js';
 import { API_VERSION } from "./config.js";
-
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import AppError from './utils/AppError.js';
@@ -29,7 +28,7 @@ export default function createApp() {
 	app.use(credentials);
 
 	// Cross Origin Resource Sharing
-	app.use(cors(corsOptions));
+	app.use(cors(corsOptions)); 
 
 	// built-in middleware to handle urlencoded form data
 	app.use(express.urlencoded({ extended: false }));

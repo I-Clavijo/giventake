@@ -22,6 +22,15 @@ export default function Home() {
   };
   
   return <>
+    <button onClick={async () =>{
+      await fetch('/api/emails', { method: 'POST', bost: JSON.stringify({
+        email: "blabla@test.com",
+        firstname= "pepe",
+      });
+    }}
+    >
+      send
+    </button>
     <InterestsLocationModal />
     <CityRadiusSelector user={user} onRadiusChange={handleRadiusChange}/>
     {posts && !isLoading ?
