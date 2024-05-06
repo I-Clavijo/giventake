@@ -14,7 +14,7 @@ import ReportModal from './ReportModal';
 import PostSkeleton from './PostSkeleton';
 
 
-const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported, postInModal = false, openModalHandler, isLoading }) => {
+const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported, postInModal = false, openModalHandler, isLoading, noTitle, noActions }) => {
   const { mutate: postAction } = usePostAction();
 
   const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
@@ -75,7 +75,7 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
 
   const postTag = <div className={`${styles.post} ${isUserReported ? styles.reportedPost : ''}`}>
     <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
-      <div className={styles.postHeader}>
+      {(!noTitle || postInModal) && <div className={styles.postHeader}>
         <div>
           {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
           <div>
@@ -83,15 +83,15 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
             <p>{timeAgo} • {location}</p>
           </div>
         </div>
-        {!postInModal &&
+        {/* {!postInModal &&
           <div className={styles.btnOpenModal} onClick={openModalHandler}>
             <FaExpandAlt />
           </div>
-        }
+        } */}
+      </div>}
 
-      </div>
       <div className={styles.postBody}>
-        <div className={styles.imgCrop}>
+        <div className={styles.imgCrop} {...(!postInModal && { onClick: openModalHandler, style: { cursor: 'pointer' } })}>
           <img src={postPic} alt="Post" />
         </div>
         <p>
@@ -106,40 +106,42 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
           )}
         </p>
       </div>
-      <div className={styles.postFooter}>
-        <div style={{ width: 'fit-content', display: 'flex', alignItems: 'center' }}>
-          <div className={styles.likes}>
+      {!noActions &&
+        <div className={styles.postFooter}>
+          <div style={{ width: 'fit-content', display: 'flex', alignItems: 'center' }}>
+            <div className={styles.likes}>
+              <img
+                className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''}`} // Add CSS class for styling
+                src={isSavedByUser ? BookmarkIconFilled : BookmarkIcon}
+                onClick={toggleSaveForLater}
+                alt="Save for Later"
+              />
+            </div>
+
+            <div className={styles.hand}>
+              <Tooltip content={isUserInterested ? 'Press to cancel help' : 'Press to help'}>
+                <div style={{ display: 'flex' }}>
+                  <img
+                    className={styles.wavingHand}
+                    src={isUserInterested ? FilledHandWaving : HandWaving}
+                    onClick={toggleHelp}
+                    alt="Help"
+                  />
+                  <span className={styles.likeCount}>{wantToHelpCount}</span>
+                </div>
+              </Tooltip>
+            </div>
+          </div>
+
+          <div className={styles.report}>
             <img
-              className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''}`} // Add CSS class for styling
-              src={isSavedByUser ? BookmarkIconFilled : BookmarkIcon}
-              onClick={toggleSaveForLater}
-              alt="Save for Later"
+              src={isUserReported ? FilledFlagIcon : FlagIcon}
+              onClick={() => setShowReportModal(true)}
+              alt="Report"
             />
           </div>
-
-          <div className={styles.hand}>
-            <Tooltip content={isUserInterested ? 'Press to cancel help' : 'Press to help'}>
-              <div style={{ display: 'flex' }}>
-                <img
-                  className={styles.wavingHand}
-                  src={isUserInterested ? FilledHandWaving : HandWaving}
-                  onClick={toggleHelp}
-                  alt="Help"
-                />
-                <span className={styles.likeCount}>{wantToHelpCount}</span>
-              </div>
-            </Tooltip>
-          </div>
         </div>
-
-        <div className={styles.report}>
-          <img
-            src={isUserReported ? FilledFlagIcon : FlagIcon}
-            onClick={() => setShowReportModal(true)}
-            alt="Report"
-          />
-        </div>
-      </div>
+      }
     </div>
 
     {isUserReported && <div className={styles.overlay}>

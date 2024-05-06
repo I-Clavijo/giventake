@@ -1,34 +1,23 @@
-import { Post, ReportedPost, User } from '../model/index.js';
-import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
-import { S3_BUCKET } from '../config.js';
+import { Post, ReportedPost, User } from '../db/model/index.js';
 import sharp from 'sharp';
 import AppError from '../utils/AppError.js';
 import { runInTransaction } from '../utils/runInTransaction.js';
-import { REPORTS_KEYS } from '../model/constants.js';
+import { REPORTS_KEYS } from '../db/model/constants.js';
 import mongoose from 'mongoose';
-import { generateFileName } from '../utils/lib.js';
-import { s3Client } from '../config/s3Client.js';
+import { deleteImage, getImageUrl, putImage } from '../utils/S3.js';
+import { getAllPostsQuery } from '../db/queries/posts.js';
 
 
 export const createPost = async (req, res) => {
     const file = req.file;
     const { category, startDate, endDate, description, startTime, endTime, city, address } = req.body;
 
-    const fileBuffer = await sharp(file.buffer)
+    file.buffer = await sharp(file.buffer)
         .resize({ height: 1920, width: 1080, fit: "contain" })
         .toBuffer();
-    const fileName = generateFileName();
-    const params = {
-        Bucket: S3_BUCKET,
-        Key: fileName,
-        Body: fileBuffer,
-        ContentType: file.mimetype,
-    };
 
-    const command = new PutObjectCommand(params);
-    await s3Client.send(command);
-    console.log('File uploaded successfully');
+    // upload image to S3
+    const fileName = await putImage(file);
 
     const newPost = {
         user: req.user._id,
@@ -52,72 +41,18 @@ export const createPost = async (req, res) => {
 }
 
 export const getPosts = async (req, res) => {
-    //get all posts from DB
-    const userIdObjectId = req.user ? new mongoose.Types.ObjectId(req.user._id) : null;
-    let posts = await Post.aggregate([
-        {
-            "$lookup": {
-                from: User.collection.name,
-                localField: "user",
-                foreignField: "_id",
-                as: "user",
-                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
-            },
-        },
-        { $unwind: '$user' },
-        {
-            $project: {
-                _id: 1, user: 1, category: 1, city: 1, address: 1, helpDate: 1, imgName: 1, description: 1, usersSaved: 1, createdAt: 1, updatedAt: 1, usersInterested: 1, usersReported: 1,
-                ...(req.user && {
-                    isSavedByUser: { $in: [userIdObjectId, '$usersSaved'] },
-                    isUserInterested: { $in: [userIdObjectId, '$usersInterested'] },
-                    isUserReported: { $in: [userIdObjectId, '$usersReported'] },
-                }),
+    const { filters } = req.query || {};
+    console.log('filters', filters);
 
-            },
-        },
-        {
-            "$lookup": {
-                from: User.collection.name,
-                localField: "usersSaved",
-                foreignField: "_id",
-                as: "usersSaved",
-                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
-            }
-        },
-        {
-            "$lookup": {
-                from: User.collection.name,
-                localField: "usersInterested",
-                foreignField: "_id",
-                as: "usersInterested",
-                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
-            }
-        },
-        {
-            "$lookup": {
-                from: User.collection.name,
-                localField: "usersReported",
-                foreignField: "_id",
-                as: "usersReported",
-                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
-            }
-        },
-    ]);
+    //get all posts from DB
+    const auth_userId = req.user?._id;
+    let posts = await getAllPostsQuery(auth_userId, filters);
 
     // get post image from S3 bucket
     for (const post of posts) {
         // For each post, generate a signed URL and save it to the post object
-        let url = '';
-        if (post.imgName) {
-            const getObjectParams = {
-                Bucket: S3_BUCKET,
-                Key: post.imgName
-            };
-            const command = new GetObjectCommand(getObjectParams);
-            url = await getSignedUrl(s3Client, command, { expiresIn: 60 * 1000 });
-        }
-
+        const imgName = post.imgName;
+        const url = imgName ? await getImageUrl(imgName) : '';
         post.imgUrl = url;
     }
 
@@ -131,12 +66,8 @@ export const deletePost = async (req, res) => {
     if (!post) throw AppError('Post not found', 404);
 
     // delete post image from S3 bucket
-    const getObjectParams = {
-        Bucket: S3_BUCKET,
-        Key: post.img
-    };
-    const command = new DeleteObjectCommand(getObjectParams);
-    await s3Client.send(command)
+    const imgName = post.img;
+    await deleteImage(imgName)
 
     // delete post from DB
     await Post.deleteOne({ _id: postId });
@@ -213,7 +144,7 @@ export const postAction = async (req, res) => {
             // First, check if the document exists
             const existingDocument = await ReportedPost.findOne({ post: postId }, null, { session });
             const reportObj = { user: req.user._id, reasonKey: errorKey, description: actions.report.description || '' };
-            
+
             // BEHAVIOR: if a user has already reported a post, his old report will remain and the new one will NOT be inserted
             if (existingDocument) {
                 // If the document exists, update it

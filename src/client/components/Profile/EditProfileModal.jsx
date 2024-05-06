@@ -1,16 +1,16 @@
 import { Label, TextInput, Textarea, Button, Modal, Select, FileInput } from "flowbite-react";
 import { useState } from "react";
 import styles from './EditProfileModal.module.scss';
-import { useUser } from "../../api/user/useUser";
+import { useUser } from "../../api/users/useUser";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useUserUpdate from "../../api/user/useUserUpdate";
+import useUserUpdate from "../../api/users/useUserUpdate";
 
 
 export function EditProfileModal({ show, onClose }) {
   const { data: user } = useUser();
-  const { mutateAsync: updateProfile, isSuccess } = useUserUpdate();
+  const { mutateAsync: updateProfile, isSuccess, isPending } = useUserUpdate();
 
   const editProfileSchema = z
     .object({
@@ -26,16 +26,16 @@ export function EditProfileModal({ show, onClose }) {
 
   const defaultValues = {
     ...user,
-    country: user.location.country,
-    city: user.location.city,
-    address: user.location.address,
+    country: user?.location?.country ?? '',
+    city: user?.location?.city ?? '',
+    address: user?.location?.address ?? '',
   };
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({ resolver: zodResolver(editProfileSchema), defaultValues });
 
   const [location, setLocation] = useState("");
@@ -118,7 +118,7 @@ export function EditProfileModal({ show, onClose }) {
               <TextInput id="address" type="text" className="mb-4 block" {...register('address')} color={errors.address ? 'failure' : 'gray'} helperText={errors.address ? errors.address.message : ''} />
 
             <div className={styles.formActions}>
-              <Button type='submit' className="button">Save changes</Button>
+              <Button type='submit' className="button" disabled={isPending}>Save changes</Button>
               <Button color="light" onClick={onClose}>Dismiss</Button>
             </div>
           </form>

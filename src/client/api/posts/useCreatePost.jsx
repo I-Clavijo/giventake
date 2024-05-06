@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useSnackbar } from 'notistack';
-import useAxiosPrivate from '../user/useAxiosPrivate';
+import useAxiosPrivate from '../useAxiosPrivate';
 import { getFormData } from "../../utils/lib";
 
 
