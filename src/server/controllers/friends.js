@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { Friends, User } from '../db/model/index.js';
 import AppError from '../utils/AppError.js';
 import { getImageUrl } from '../utils/S3.js';
+import { getFollowersListQuery, getFollowingListQuery, getFollowingUsersIdQuery } from '../db/queries/friends.js';
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -9,13 +10,8 @@ const ObjectId = mongoose.Types.ObjectId;
 export const getFriends = async (req, res) => {
     const { userId } = req.query;
     console.log(req.query)
-
-    const following = (await Friends.aggregate([
-        { $match: { user: new ObjectId(userId) } },
-        { $group: { _id: "$user", following: { $addToSet: "$toUser" } } },
-        { $lookup: { from: User.collection.name, localField: "following", foreignField: "_id", as: "followingDetails", pipeline: [{ $project: { firstName: 1, lastName: 1, imgName: 1 } }] } },
-        { $project: { _id: 0, following: "$followingDetails" } }
-    ]))[0]?.following || [];
+        
+    const following = await getFollowingListQuery(userId);
     // attach a image url to each user I am following
     for (const item of following) {
         const imgName = item?.imgName;
@@ -23,13 +19,15 @@ export const getFriends = async (req, res) => {
         item.imgUrl = url;
     }
 
-    const followers = (await Friends.aggregate([
-        { $match: { toUser: new ObjectId(userId) } },
-        { $group: { _id: "$toUser", followers: { $addToSet: "$user" } } },
-        { $lookup: { from: User.collection.name, localField: "followers", foreignField: "_id", as: "followersDetails", pipeline: [{ $project: { firstName: 1, lastName: 1, imgName: 1 } }] } },
-        { $project: { _id: 0, followers: "$followersDetails" } }
-    ]))[0]?.followers || [];
+    const auth_userId = req.user?._id; // undefined if the user is unauthenticated
+    let isAuthUserIsFollowing; 
+    if (auth_userId && auth_userId !== userId) {
+        const authUser_following = await getFollowingUsersIdQuery(auth_userId);
+        console.log('authUser_following',authUser_following )
+        isAuthUserIsFollowing = authUser_following.includes(userId);
+    }
 
+    const followers = await getFollowersListQuery(userId);
     // attach a image url to each follower of mine
     for (const follower of followers) {
         const imgName = follower?.imgName;
@@ -37,9 +35,8 @@ export const getFriends = async (req, res) => {
         follower.imgUrl = url;
     }
 
-    const friends = { user: userId, following, followers };
-
-    console.log(friends);
+    const friends = { user: userId, following, followers, isAuthUserIsFollowing };
+    console.log(friends)
     res.status(200).json(friends);
 };
 
@@ -53,7 +50,7 @@ export const friendAction = async (req, res) => {
 
     let filter, query;
     filter = { user: authUser, toUser };
-
+    console.log('friendAction: filter=',filter)
     if (actions.follow) {
         query = { user: authUser, toUser }
         await Friends.updateOne(filter, query, { upsert: true })

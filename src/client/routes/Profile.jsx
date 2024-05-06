@@ -23,7 +23,7 @@ const Profile = ({ isMyProfile }) => {
   let { id: userId } = useParams();
   const navigate = useNavigate();
 
-  const { data: authUser } = useUser();
+  const { data: authUser, isLoggedIn } = useUser();
   const { data: user, isLoading: isLoadingUser, isError: isErrorUser, isSuccess: isSuccessUser } = useUser({ userId, enabled: isMyProfile ? true : !!userId });
   if (!isMyProfile && isErrorUser && !user) throw new PageError('Profile page not found.', 'Are you sure you are in the right page?');
 
@@ -80,7 +80,13 @@ const Profile = ({ isMyProfile }) => {
     setFriendsListMode(modes.FOLLOWING);
   };
   const onFriendHandler = () => {
-    friendAction({ toUser: userId, actions: { follow: 1 } });
+    if (friends) {
+      let actions;
+      if (friends.isAuthUserIsFollowing) actions = { unfollow: 1 };
+      else actions = { follow: 1 };
+
+      friendAction({ toUser: userId, actions });
+    }
   };
 
   return <>
@@ -107,34 +113,40 @@ const Profile = ({ isMyProfile }) => {
               <p className={styles.statText}>Posts</p>
             </div>
             <div className={styles.stat} onClick={onFollowersClickHandler} style={{ cursor: 'pointer' }}>
-              <p className={styles.statNumber}>10</p>
+              <p className={styles.statNumber}>{friends?.followers?.length ?? '-'}</p>
               <p className={styles.statText}>Followers</p>
             </div>
             <div className={styles.stat} onClick={onFollowingClickHandler} style={{ cursor: 'pointer' }}>
-              <p className={styles.statNumber}>20</p>
+              <p className={styles.statNumber}>{friends?.following?.length ?? '-'}</p>
               <p className={styles.statText}>Following</p>
             </div>
-            <FriendsListModal show={showFriendsModal} onClose={() => setShowFriendsModal(false)} mode={friendsListMode} isLoading={friendsIsLoading} {...{friends}} />
+            <FriendsListModal show={showFriendsModal} onClose={() => setShowFriendsModal(false)} mode={friendsListMode} isLoading={friendsIsLoading} {...{ friends, isMyProfile }} />
           </div>
 
           {isMyProfile && (
             <div className={styles.actions}>
-              <Button color="light" className={styles.btnEdit} onClick={() => setShowEditModal(true)}>
+              <Button size='sm' color="light" onClick={() => setShowEditModal(true)}>
                 <HiOutlinePencilSquare className="mr-2 h-5 w-5" />
                 Edit Profile
               </Button>
               <EditProfileModal show={showEditModal} onClose={() => setShowEditModal(false)} />
-
-              {/* <Button onClick={() => setShowReviewModal(true)} className='button'>Review Latest Activity</Button> */}
               <ReviewAskModal show={showReviewModal} onClose={() => setShowReviewModal(false)} />
             </div>
           )}
           {!isMyProfile && (
             <div className={styles.actions}>
               <Link to="/messages">
-                <Button size='xs' color="light" style={{ padding: '5px' }}>Message</Button>
+                <Button size='xs' color="gray" style={{ padding: '5px' }}>Message</Button>
               </Link>
-              <Button size='xs' className='button' style={{ padding: '5px' }} onClick={onFriendHandler}>Follow</Button>
+              {friends &&
+                <Button
+                  size='xs'
+                  {...(friends.isAuthUserIsFollowing ? {color: 'gray'} : { className: 'button' })}
+                  style={{ padding: '5px' }}
+                  onClick={onFriendHandler}>
+                  {friends.isAuthUserIsFollowing ? 'Unfollow' : 'Follow'}
+                </Button>
+              }
             </div>
           )}
         </div>

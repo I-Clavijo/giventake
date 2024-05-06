@@ -4,7 +4,7 @@ import { getFriends, friendAction } from "../controllers/friends.js";
 
 const router = express.Router();
 
-router.get('/', getFriends);
-router.post('/friend-action', enforceAuth, friendAction)
+router.get('/', verifyAuth, getFriends);
+router.post('/action', enforceAuth, friendAction)
 
 export default router;

@@ -8,12 +8,13 @@ export const useUser = ({ userId, enabled } = {}) => {
 
     const query = useQuery({
         queryKey: [QUERY_KEY.user, ...(userId ? [userId] : [])],
-        queryFn: async () => {
-            if (userId) {
+        ...(userId && {
+            queryFn: async () => {
                 const { data } = await axiosPrivate.get('/users', { params: { userId } });
                 return data;
             }
-        },
+        }),
+
         onError: (err) => {
             let errMessage = err.message || 'Something went wrong. Please try again!';
             enqueueSnackbar(errMessage, { variant: 'error' });

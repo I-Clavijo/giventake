@@ -43,7 +43,7 @@ export default function Root({ children }) {
     return (
         <>
             <ScrollToTop />
-            <AppSideBar icon={<TbHeartHandshake size={70} stroke="#fff" />} title="given'take" nav={navlinks}>
+            <AppSideBar icon={<TbHeartHandshake size={70} />} title="given'take" nav={navlinks}>
                 {children}
                 <SnackbarProvider autoHideDuration={5000} anchorOrigin={{ horizontal: 'center', vertical: 'top' }}>
                     <Outlet />

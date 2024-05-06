@@ -5,19 +5,17 @@
 }
 
 
-
-.btnEdit {
-  width: fit-content;
-}
-
 .actions {
   display: flex;
   gap: 0.5rem;
+
+  button{
+    display: flex;
+    align-items: center;
+    width: fit-content;
+  }
 }
 
-.actions button {
-  padding: 0.5rem 1rem;
-}
 .stats .stat {
   align-items: center;
   text-align: center;

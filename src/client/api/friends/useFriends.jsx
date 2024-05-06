@@ -19,6 +19,7 @@ export const useFriends = ({ userId, enabled }={}) => {
             let errMessage = err.message || 'Something went wrong. Please try again!';
             enqueueSnackbar(errMessage, { variant: 'error' });
         },
-        enabled: enabled ?? true
+        enabled: enabled ?? true,
+        staleTime: 0
     })
 };
