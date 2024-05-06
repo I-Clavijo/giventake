@@ -33,7 +33,7 @@ export default function Root({ children }) {
         { icon: HomeIcon, title: "Home", link: "/" },
         { icon: ExploreIcon, title: "Explore", link: "/explore" },
         { icon: MessagesIcon, title: "Messages", link: "/messages" },
-        { icon: BookmarkIcon, title: "Saved for Later", link: "/saved", showOnTop: true },
+        { icon: BookmarkIcon, title: "Saved", link: "/saved", showOnTop: true },
         { icon: CreateIcon, title: "Create", link: "/create", showOnTop: true },
         isLoggedIn
             ? { icon: ProfileIcon, title: `${user.firstName} ${user.lastName}`, popover: profilePopover }

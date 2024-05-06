@@ -31,7 +31,7 @@ export function FriendsListModal({ show, onClose, mode, friends, isLoading, isMy
 
   return (
     <Modal dismissible {...{ show, onClose }} size='sm'>
-      {isLoading ?
+      {isLoading || !list?
         <LoadingSpinner /> : <>
           <h6 className={styles.modalTitle}>{mode === modes.FOLLOWERS ? 'Followers' : 'Following'}</h6>
           <div className={styles.modalBody}>
