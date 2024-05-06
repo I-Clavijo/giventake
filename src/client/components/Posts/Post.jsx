@@ -14,7 +14,7 @@ import ReportModal from './ReportModal';
 import PostSkeleton from './PostSkeleton';
 
 
-const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported, postInModal = false, openModalHandler, isLoading, noTitle, noActions }) => {
+const Post = ({ MAX_DESCRIPTION_LENGTH_W_PHOTO = 150, MAX_DESCRIPTION_LENGTH_NO_PHOTO = 450, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported, postInModal = false, openModalHandler, isLoading, noTitle, noActions }) => {
   const { mutate: postAction } = usePostAction();
 
   const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
@@ -73,6 +73,14 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
   }, [createdAt]);
 
 
+  //control description length
+  let postDescription = description;
+  const descriptionMaxLength = postPic ? MAX_DESCRIPTION_LENGTH_W_PHOTO : MAX_DESCRIPTION_LENGTH_NO_PHOTO;
+  let cutDescription = postDescription.length > descriptionMaxLength
+    ? <>{postDescription.substring(0, descriptionMaxLength)}<u> Read More</u></>
+    : postDescription;
+
+
   const postTag = <div className={`${styles.post} ${isUserReported ? styles.reportedPost : ''}`}>
     <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
       {(!noTitle || postInModal) && <div className={styles.postHeader}>
@@ -83,28 +91,28 @@ const Post = ({ MAX_DESCRIPTION_LENGTH = 30, postId, fullName, profilePic = '', 
             <p>{timeAgo} • {location}</p>
           </div>
         </div>
-        {/* {!postInModal &&
-          <div className={styles.btnOpenModal} onClick={openModalHandler}>
-            <FaExpandAlt />
-          </div>
-        } */}
       </div>}
 
       <div className={styles.postBody}>
-        <div className={styles.imgCrop} {...(!postInModal && { onClick: openModalHandler, style: { cursor: 'pointer' } })}>
-          <img src={postPic} alt="Post" />
-        </div>
-        <p>
-          {showMoreActive
-            ? description
-            : (description.length > MAX_DESCRIPTION_LENGTH ? description.substring(0, MAX_DESCRIPTION_LENGTH) + '...' : description)
+        <div {...(!postInModal && { onClick: openModalHandler, style: { cursor: 'pointer' } })}>
+          {postPic &&
+            <div className={styles.imgCrop}>
+              <img src={postPic} alt="Post" />
+            </div>
           }
-          {!showMoreActive && !postInModal && description.length > MAX_DESCRIPTION_LENGTH && (
-            <button className={styles.readMore} onClick={toggleShowMore}>
-              Read More
-            </button>
-          )}
-        </p>
+          <p>
+            {postInModal ? postDescription : cutDescription}
+
+            {/* DO we need the read more button? now that we have modal */}
+            
+            {/* {!showMoreActive && !postInModal && description.length > MAX_DESCRIPTION_LENGTH && ( */}
+            {/* <button className={styles.readMore} onClick={toggleShowMore}> */}
+            {/* <u> Read More</u> */}
+            {/* </button> */}
+            {/* )} */}
+          </p>
+        </div>
+
       </div>
       {!noActions &&
         <div className={styles.postFooter}>

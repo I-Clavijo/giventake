@@ -10,26 +10,34 @@ import { getAllPostsQuery } from '../db/queries/posts.js';
 
 export const createPost = async (req, res) => {
     const file = req.file;
-    const { category, startDate, endDate, description, startTime, endTime, city, address } = req.body;
+    const { category, startDate, startTime, endTime, endDate, isAllDay, isEndDate, city, address, isRemoteHelp, description } = req.body;
 
-    file.buffer = await sharp(file.buffer)
-        .resize({ height: 1920, width: 1080, fit: "contain" })
-        .toBuffer();
+    // only if file uploaded
+    let fileName = '';
+    if (file) {
+        // transform image
+        file.buffer = await sharp(file.buffer)
+            .resize({ height: 600, width: 600, fit: "contain" })
+            .toBuffer();
 
-    // upload image to S3
-    const fileName = await putImage(file);
+        // upload image to S3
+        fileName = await putImage(file);
+    }
 
     const newPost = {
         user: req.user._id,
         category,
         helpDate: {
             startDate,
-            endDate,
             startTime,
-            endTime
+            endTime,
+            endDate,
+            isAllDay,
+            isEndDate
         },
         imgName: fileName,
         description,
+        isRemoteHelp,
         city,
         address
     };

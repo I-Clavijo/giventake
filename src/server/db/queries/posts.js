@@ -5,10 +5,10 @@ const ObjectId = mongoose.Types.ObjectId;
 
 export const getAllPostsQuery = async (auth_userId, filters) => {
     const userIdObjectId = auth_userId ? new ObjectId(auth_userId) : null;
-    
+
     return await Post.aggregate([
         ...(filters?.userId ? [{  // get ONLY posts that the user with userId created. 
-            $match: { user: new ObjectId(filters.userId) } 
+            $match: { user: new ObjectId(filters.userId) }
         }] : []),
         {
             "$lookup": {
@@ -58,5 +58,8 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
                 pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
             }
         },
+        {
+            $sort: { createdAt: -1 } // Sort by createdAt field in descending order (newest first)
+        }
     ]);
 };

@@ -5,21 +5,22 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import InterestsSelection from './InterestsSelection.jsx';
 import CitySelector from './CitySelector.jsx';
-import useUserCountryCodeUsingIP from '../../hooks/useUserCountryCodeUsingIP.jsx';
-import useUserCountryCodeUsingNavGeo from '../../hooks/useUserCountryCodeUsingNavGeo.jsx';
+import useUserCountryUsingIP from '../../hooks/useUserCountryUsingIP.jsx';
+import useUserCountryUsingNavGeo from '../../hooks/useUserCountryUsingNavGeo.jsx';
 
 
 const InterestsLocationModal = () => {
 
   const [openModal, setOpenModal] = useState(true);
-  const countryCodeUsingIP = useUserCountryCodeUsingIP();
-  const countryCodeUsingNavGeo = useUserCountryCodeUsingNavGeo();
+
+  const countryUsingIP = useUserCountryUsingIP();
+  const countryCodeUsingNavGeo = useUserCountryUsingNavGeo();
+
   const [selectedInterests, setSelectedInterests] = useState([]);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
-  const displayedCountryCode = countryCodeUsingIP || countryCodeUsingNavGeo;
+  const displayedCountryCode = countryUsingIP || countryCodeUsingNavGeo;
 
   const handleSelectedInterest = (selectedInterest) => {
-
     const newSelectedInterests = [...selectedInterests]; // Create a copy
 
     if (newSelectedInterests.includes(selectedInterest)) {
@@ -36,7 +37,6 @@ const InterestsLocationModal = () => {
     const formDataWithInterests = { ...data, interests: selectedInterests };
     console.log('Form data with interests:', formDataWithInterests);
     setOpenModal(false);
-    
   }
 
   return (

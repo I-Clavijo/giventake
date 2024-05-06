@@ -1,8 +1,11 @@
+import axios from "axios";
+
 export const getFormData = (dataObject, fileListPropertyName) => {
     const formData = new FormData();
     const dataObjectClone = { ...dataObject };
     const fileList = dataObjectClone[fileListPropertyName];
 
+    //add attachments only if they exist
     if (!!fileList.length) {
         for (const item of fileList) {
             console.log(item);
