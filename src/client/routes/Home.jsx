@@ -1,7 +1,7 @@
 import styles from "./Home.module.scss";
 import Feed, { showAs } from "../components/Posts/Feed.jsx";
 import { usePosts } from "../api/posts/usePosts.jsx";
-import { useUser } from "../api/user/useUser.jsx";
+import { useUser } from "../api/users/useUser.jsx";
 import { Spinner } from "flowbite-react";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
