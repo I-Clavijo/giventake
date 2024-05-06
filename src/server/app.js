@@ -13,6 +13,7 @@ import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import AppError from './utils/AppError.js';
 import User from './model/User.js';
+import sendWelcomeEmail from './utils/sendEmail.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -44,6 +45,18 @@ export default function createApp() {
 
 	// handle errors
 	app.use(errorHandler);
+
+	app.get('/send-welcome-email', async (req, res) => {
+		try {
+		console.log('Sending welcome email...');
+		  await sendWelcomeEmail();
+		  res.send('Email sent successfully!');
+		} catch (error) {
+		  console.error('Error sending email:', error);
+		  res.status(500).send('Failed to send email');
+		}
+	  });
+	  
 
 	return app;
 }
