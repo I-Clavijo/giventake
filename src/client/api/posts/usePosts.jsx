@@ -11,8 +11,7 @@ export const usePosts = ({ filters={}, enabled }={}) => {
 
     return useQuery({
         queryKey: [QUERY_KEY.posts, ...(filtersKeys)],
-        queryFn: async ({ queryKey }) => {
-            const [_, filters] = queryKey;
+        queryFn: async () => {
             const { data } = await axiosPrivate.get('/posts', { params: { filters } });
             return data;
         },
