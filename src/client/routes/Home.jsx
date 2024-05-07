@@ -6,6 +6,7 @@ import { Spinner } from "flowbite-react";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import RenderEmail from '../emails/renderEmail.jsx';
+import PostEmail from '../emails/PostEmail.jsx';
 import InterestsLocationModal from "../components/Location/InterestsLocationModal.jsx";
 import CityRadiusSelector from "../components/Location/CityRadiusSelector.jsx";
 export default function Home() {
@@ -24,36 +25,13 @@ export default function Home() {
 
   const handleClick = async () => {
     const emailHTML = RenderEmail();
-    
-    const response = await fetch('http://your-server.com/endpoint', { // replace with your actual server URL and endpoint
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ emailHTML }),
-  });
-
-  if (!response.ok) {
-    console.error('Server response was not ok');
-  } else {
-    const responseData = await response.json();
-    console.log(responseData);
-  }
-  
+    const userName = "pepe";
+    const userEmail = "test@test.com"
+    PostEmail( emailHTML, userName, userEmail);
   };
 
   
   return <>
-  {/*  <button onClick={async () =>{
-      await fetch('/api/emails', { method: 'POST', bost: JSON.stringify({
-        email: "blabla@test.com",
-        firstname= "pepe",
-      });
-    }}
-  > 
-      send
-    </button>
-    */}
     <button onClick={handleClick}>Send email</button>
     <InterestsLocationModal />
     <CityRadiusSelector user={user} onRadiusChange={handleRadiusChange}/>
