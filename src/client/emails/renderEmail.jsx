@@ -3,7 +3,7 @@ import React from 'react';
 import GiventakeWelcome from './GiventakeWelcome.jsx';
 
 const RenderEmail = () => {
-  const html = render(<GiventakeWelcome />);
+  const html = render(<GiventakeWelcome userName="Ivan"/>);
   return html;
 };
 

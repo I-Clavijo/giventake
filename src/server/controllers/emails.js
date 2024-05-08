@@ -1,18 +1,19 @@
+import { Resend } from "resend";
 
-
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (req, res) => {
 
+    console.log(resend.apiKeys);
     const { emailHTML, userEmail, userName } = req.body;
-    console.log("userEmail: ", userEmail);
-/*
-    console.log('req.body: ', req.body);
-    const userEmail = req.body.email || req.params.email; 
-    const userName = req.body.name || req.params.name;  
 
+    await resend.emails.send({
+        from: "noreply@giventake.org",
+        to: userEmail,
+        subject: "Welcome " + userName + " to given'take",
+        html: emailHTML,
+    }); 
 
-    sendEmail(userEmail, userName)
-        .then(() => res.send("Email sent successfully!")) 
-        .catch(error => res.status(500).send("Error sending email")) 
-*/
+    console.log("Email sent!");
+
 }

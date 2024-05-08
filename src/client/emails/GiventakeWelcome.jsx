@@ -9,7 +9,7 @@ const baseUrl = process.env.GIVENTAKE_URL
   ? `https://${process.env.GIVENTAKE_URL}`
   : "";*/
 
-const baseUrl = "https://giventake.vercel.app";
+const baseUrl = "https://giventake.org";
 
 const GiventakeWelcomeEmail = ({userName}) => {
   return (
@@ -47,7 +47,7 @@ const GiventakeWelcomeEmail = ({userName}) => {
                         <strong>
                             Best,
                             <br />
-                            The given'take team
+                            given'take team
                         </strong>
                     </Text>
                 </Section>

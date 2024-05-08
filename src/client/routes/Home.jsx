@@ -24,10 +24,13 @@ export default function Home() {
   };
 
   const handleClick = async () => {
-    const emailHTML = RenderEmail();
-    const userName = "pepe";
-    const userEmail = "test@test.com"
-    PostEmail( emailHTML, userName, userEmail);
+    const emailData = {
+      emailHTML : RenderEmail(),
+      userEmail : "eilatcasa@gmail.com",
+      userName : "Ivan",
+  };
+
+    PostEmail(emailData);
   };
 
   

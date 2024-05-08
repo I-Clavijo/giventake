@@ -9,7 +9,6 @@ export default async function PostEmail( {emailHTML, userName, userEmail}) {
         userEmail,
         userName
     };
-    console.log(emailData.userName);
     
     const response = await axios.post('/emails/welcome', emailData);
     console.log(response.data);
