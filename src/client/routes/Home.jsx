@@ -5,8 +5,8 @@ import { useUser } from "../api/user/useUser.jsx";
 import { Spinner } from "flowbite-react";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import RenderEmail from '../emails/renderEmail.jsx';
-import PostEmail from '../emails/PostEmail.jsx';
+import RenderEmail from '../api/emails/renderEmail.jsx';
+import PostEmail from '../api/emails/PostEmail.jsx';
 import InterestsLocationModal from "../components/Location/InterestsLocationModal.jsx";
 import CityRadiusSelector from "../components/Location/CityRadiusSelector.jsx";
 export default function Home() {

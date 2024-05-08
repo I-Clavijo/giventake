@@ -10,7 +10,7 @@
     "dev": "nodemon src/server/main.js -w src/server",
     "start": "NODE_ENV=production node src/server/main.js",
     "build": "vite build",
-    "email": "email dev --dir src/server/emails"
+    "email": "email dev --dir src/client/emails"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.563.0",

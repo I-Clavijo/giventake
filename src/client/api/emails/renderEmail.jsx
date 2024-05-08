@@ -1,6 +1,6 @@
 import { render } from '@react-email/render';
 import React from 'react';
-import GiventakeWelcome from './GiventakeWelcome.jsx';
+import GiventakeWelcome from '../../emails/GiventakeWelcome.jsx';
 
 const RenderEmail = () => {
   const html = render(<GiventakeWelcome userName="Ivan"/>);

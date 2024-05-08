@@ -1,4 +1,5 @@
 import { Body, Button, Column, Container, Head, Heading, Html, Img, Link, Preview, Row, Section, Text, Tailwind } from "@react-email/components";
+import { space } from "postcss/lib/list";
 import React from "react";
 
 
@@ -26,11 +27,11 @@ const GiventakeWelcomeEmail = ({userName}) => {
             </section>
             <Container style={container}>
                 <Heading style={title}>
-                    <h1>Hi {userName},</h1>
+                    <h2>Hi {userName},</h2>
                     <h2>Welcome to given'take </h2>
                 </Heading>
-                <Section>
-                    <Text>
+                <Section> 
+                    <Text style= {bodyText}>
                         <strong>Explore our community built on the principles of mutual aid,
                              where giving and receiving help is at the heart of everything we do.
                               Help us create a space where kindness thrives and support is freely given,
@@ -43,7 +44,7 @@ const GiventakeWelcomeEmail = ({userName}) => {
                     </Button>
                 </Section>
                 <Section style={footer}>
-                    <Text>
+                    <Text style= {footerText}>
                         <strong>
                             Best,
                             <br />
@@ -121,10 +122,18 @@ const main = {
     backgroundColor: "#5F51E8",
     borderRadius: "3px",
     color: "#fff",
-    fontSize: "16px",
+    fontSize: "20px",
     textDecoration: "none",
     textAlign: "center",
     display: "block",
     padding: "12px",
   };
   
+  const bodyText = { 
+    fontSize: "20px",
+    lineHeight: "1.5",
+  }
+
+  const footerText = {
+    fontSize: "18px",
+  }
