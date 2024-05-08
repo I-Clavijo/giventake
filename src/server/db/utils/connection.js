@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DB_ATLAS_URI } from '../config.js';
+import { DB_ATLAS_URI } from '../../config.js';
 
 const connectionString = DB_ATLAS_URI || ''
 

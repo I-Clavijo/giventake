@@ -10,7 +10,6 @@ export const useFriendAction = () => {
     const axiosPrivate = useAxiosPrivate();
     const { data: authUser } = useUser();
     const auth_userId = authUser._id;
-    const queryClient = useQueryClient();
 
     return useOptimisticMutation({
         mutationFn: async (variables) => {

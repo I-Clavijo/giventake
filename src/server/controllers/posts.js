@@ -1,7 +1,7 @@
 import { Post, ReportedPost, User } from '../db/model/index.js';
 import sharp from 'sharp';
 import AppError from '../utils/AppError.js';
-import { runInTransaction } from '../utils/runInTransaction.js';
+import { runInTransaction } from '../db/utils/runInTransaction.js';
 import { REPORTS_KEYS } from '../db/model/constants.js';
 import mongoose from 'mongoose';
 import { deleteImage, getImageUrl, putImage } from '../utils/S3.js';
@@ -50,7 +50,6 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
     const { filters } = req.query || {};
-    console.log('filters', filters);
 
     //get all posts from DB
     const auth_userId = req.user?._id;

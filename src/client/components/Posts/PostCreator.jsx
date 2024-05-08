@@ -1,11 +1,13 @@
 import styles from "./PostCreator.module.scss";
-import { Textarea, Button, Datepicker, FileInput, Label, TextInput, Checkbox, Card, Select } from "flowbite-react";
+import { Textarea, Button, Datepicker, FileInput, Label, TextInput, Checkbox, Card, Select, Spinner } from "flowbite-react";
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreatePost } from '../../api/posts/useCreatePost';
 import { useState } from "react";
 import { CATEGORIES } from "../../utils/staticData";
+import DragNDrop from "../RHF/DragNDrop";
+import LocationSelector from "../RHF/Location/LocationSelector";
 
 
 const PostCreator = () => {
@@ -23,8 +25,12 @@ const PostCreator = () => {
       isAllDay: z.boolean().optional(),
       isEndDate: z.boolean().optional(),
       isRemoteHelp: z.boolean().optional(),
-      address: z.string().optional(),
-      city: z.string().min(2),
+      location: z.object({
+        city: z.string().trim().min(2).max(30),
+        country: z.string().trim().min(2).max(30),
+        lat: z.string(),
+        long: z.string()
+      }),
       img: z.any().optional(),
       description: z.string().min(5).max(700)
     }).refine(({ isAllDay, startTime }) => isAllDay || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(startTime), {
@@ -49,6 +55,7 @@ const PostCreator = () => {
     setValue,
     formState: { errors, isSubmitting },
     watch,
+    control,
   } = useForm({
     defaultValues: {
       startDate: new Date(new Date().setHours(0, 0, 0, 0)),
@@ -134,41 +141,15 @@ const PostCreator = () => {
             </div>
           </div>
 
-          {!watch('isRemoteHelp') && (
-            <div className="flex items-center gap-2">
-              {/* <Label htmlFor="address">Address:</Label> */}
-              <TextInput id="address" placeholder='Address' {...register('address')} />
-              {/* <Label htmlFor="city">City:</Label> */}
-              <TextInput id="city" placeholder='City' {...register('city')} />
-            </div>
-
-          )}
+          {!watch('isRemoteHelp') && <>
+            <Label value="Address" className="mb-2 block" />
+            <LocationSelector {...{ control }} names={{ city: 'location.city', country: 'location.country', lat: 'location.lat', long: 'location.long' }} />
+          </>}
         </div>
 
-        <div className="mb-4">
-          <Label className={styles.label}>Picture of your post (optional)</Label>
-          <div>
-            <div className="flex w-full items-center justify-center">
-              <Label htmlFor="dropzone-file" className="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600" >
-                <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                  {!watch('img')?.length ?
-                    <>
-                      <svg className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16" > <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" /> </svg>
-                      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span className="font-semibold">Click to upload</span> or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                    </> :
-                    <span className="font-semibold">File loaded</span>
-                  }
+        <Label className={styles.label} value="Picture of your post (optional)" />
+        <DragNDrop {...{ register, watch }} name='img' txtFileType='SVG, PNG, JPG or GIF (MAX. 800x400px)' />
 
-
-                </div>
-                <FileInput id="dropzone-file" className="hidden" accept="image/*" {...register('img')} />
-              </Label>
-            </div>
-          </div>
-        </div>
 
         <div className="mb-4">
           <Label className={styles.label} htmlFor="description"> Description * </Label>

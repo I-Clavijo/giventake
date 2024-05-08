@@ -3,6 +3,9 @@ import { QUERY_KEY } from '../constants';
 import { axiosPrivate } from '../axios';
 import { useSnackbar } from 'notistack';
 
+// to get the authenticated user call useUser()
+// to get a specific user call useUser({ userId })
+
 export const useUser = ({ userId, enabled } = {}) => {
     const { enqueueSnackbar } = useSnackbar();
 

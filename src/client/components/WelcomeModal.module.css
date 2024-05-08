@@ -12,6 +12,7 @@
 .body {
     display: flex;
     flex-direction: column;
+    gap: 0.8em;
 }
 
 label {
@@ -19,8 +20,4 @@ label {
     font-weight: bold;  
     margin-bottom: 5px;
     margin-top: 5px;
-}
-
-.citySelector {
-    margin-bottom: 10px;
 }

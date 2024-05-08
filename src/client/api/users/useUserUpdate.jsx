@@ -31,15 +31,16 @@ export const useUserUpdate = () => {
             return { previousUser };
         },
         // specificaly here we need to get back the img Url.
-        onSuccess: ({ data }, { closeModal }) => {
+        onSuccess: ({ data }, { onSuccess }) => {
             queryClient.setQueryData([QUERY_KEY.user], prev => ({ ...prev, ...data }));
 
-            closeModal();
+            onSuccess?.();
             enqueueSnackbar("User has been updated successfully.", { variant: 'success' });
         },
         // If the mutation fails,
         // use the context returned from onMutate to roll back
         onError: (err, newUser, context) => {
+            console.log(err)
             queryClient.setQueryData([QUERY_KEY.user], context.previousUser);
             enqueueSnackbar("User not updated. Error occured", { variant: 'error' });
         },

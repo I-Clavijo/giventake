@@ -8,7 +8,19 @@ const useCountries = () => {
     const fetchCountries = async () => {
       try {
         const { data } = await axios.get('https://restcountries.com/v3.1/all');
-        return data;
+        const sortedCountries = data.sort((a, b) => {
+          const nameA = a.name.common.toUpperCase();
+          const nameB = b.name.common.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        });
+        return sortedCountries;
+
       } catch (error) {
         console.error('Error fetching countries:', error);
       }

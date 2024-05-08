@@ -1,6 +1,6 @@
 .locationSelection {
     position: relative;
-    margin-left: 5px;
+    /* margin-left: 5px; */
     display: flex;
     flex-wrap: wrap;
   }
@@ -37,8 +37,8 @@
   
   .searchInput {
     width: 250px;
-    padding: 10px;
-    border: 2px solid #ccc;
+    /* padding: 10px; */
+    /* border: 2px solid #ccc; */
     border-radius: 10px;
     font-size: 16px;
   }

@@ -46,6 +46,9 @@ const userSchema = new mongoose.Schema({
         description: { type: String },
         createdAt: { type: Date },
     }],
+    flags: {
+        hideWelcomeModal: { type: Boolean }
+    }
 }, { timestamps: true });
 
 userSchema.plugin(uniqueValidator);

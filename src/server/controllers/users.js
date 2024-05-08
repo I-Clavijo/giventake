@@ -20,39 +20,55 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     const file = req.file;
-    const { firstName, lastName, bio, country, city, address, interests } = req.body;
+    const { firstName, lastName, bio, location, interests, flags } = req.body;
     const userId = req.user._id;
-
+    console.log(req.body)
     const user = await User.findOne({ _id: userId });
     if (!user) throw AppError('User not found', 404);
 
-    let profileImgName = user.imgName;
+    //update image if requested to update
+    let imgName, imgUrl;
     if (file) {
         file.buffer = await sharp(file.buffer)
             .resize({ height: 200, width: 200, fit: "fill" })
             .toBuffer();
 
-        profileImgName = await putImage(file);
+        imgName = await putImage(file);
+        imgUrl = await getImageUrl(imgName);
     }
 
-    const profileImgUrl = profileImgName ? await getImageUrl(profileImgName) : '';
 
     const filter = { _id: userId }
     const newUser = {
-        imgName: profileImgName,
-        firstName,
-        lastName,
-        bio,
-        location: {
-            country,
-            city,
-            address
-        },
-        interests,
+        ...(imgName && { imgName }),
+        ...(firstName && { firstName }),
+        ...(lastName && { lastName }),
+        ...(bio && { bio }),
+        ...(location && {
+            location: {
+                lat: location.lat,
+                long: location.long,
+                country: location.country,
+                city: location.city,
+                address: location.address,
+            }
+        }),
+        ...(interests && { interests }),
+        ...(flags && {
+            flags: {
+                ...user.flags,
+                ...(flags.hideWelcomeModal && { hideWelcomeModal: flags.hideWelcomeModal })
+            }
+        }),
+
     };
     console.log(newUser)
 
     await User.updateOne(filter, newUser);
 
-    res.status(201).json({ imgUrl: profileImgUrl });
+    const returnedData = {
+        ...(imgUrl && { imgUrl })
+    };
+
+    res.status(201).json(returnedData);
 };

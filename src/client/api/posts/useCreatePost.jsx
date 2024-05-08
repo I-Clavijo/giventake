@@ -12,7 +12,6 @@ export const useCreatePost = () => {
 
     return useMutation({
         mutationFn: async (data) => {
-            console.log(data);
             const formData = getFormData(data, 'img');
 
             return await axiosPrivate.put('/posts',formData, {
@@ -21,6 +20,7 @@ export const useCreatePost = () => {
 
         onSuccess: ({data}) => {
             navigate('/');
+            enqueueSnackbar('Post created successfully', { variant: 'info' });
         },
 
         onError: (error) => {

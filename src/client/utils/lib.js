@@ -6,23 +6,26 @@ export const getFormData = (dataObject, fileListPropertyName) => {
     const fileList = dataObjectClone[fileListPropertyName];
 
     //add attachments only if they exist
-    if (!!fileList.length) {
+    if (!!fileList?.length) {
         for (const item of fileList) {
             console.log(item);
             formData.append('attachment', item, item.name);
         }
     }
 
+    // delete file property from the object
     delete dataObjectClone[fileListPropertyName];
 
     //append all other properties
-    for (const key in dataObjectClone) {
-        const value = dataObjectClone[key];
-        formData.append(key, value);
-    }
+    formData.append('json', JSON.stringify(dataObjectClone));
 
     return formData;
 };
+
+// Function to check if the input is an object
+function isObject(input) {
+    return input && typeof input === 'object' && input.constructor === Object;
+  }
 
 
 // Example objects
