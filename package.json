@@ -16,6 +16,7 @@
     "@aws-sdk/client-s3": "^3.563.0",
     "@aws-sdk/s3-request-presigner": "^3.563.0",
     "@hookform/resolvers": "^3.3.4",
+    "@smastrom/react-rating": "^1.5.0",
     "@react-email/components -E": "0.0.17",
     "@tanstack/react-query": "^5.28.14",
     "@tanstack/react-query-devtools": "^5.29.2",
@@ -48,6 +49,7 @@
     "resend": "^3.2.0",
     "sharp": "^0.33.3",
     "styled-components": "^6.1.8",
+    "tabbable": "^6.2.0",
     "uuid": "^9.0.1",
     "vite-express": "*",
     "zod": "^3.22.4"
