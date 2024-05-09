@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 import { MODEL_KEY } from "./constants.js";
+import { pointSchema } from "../utils/lib.js";
 const ObjectId = mongoose.Schema.ObjectId;
 
 /**
@@ -14,8 +15,7 @@ const userSchema = new mongoose.Schema({
     imgName: String,
     interests: [String],
     location: {
-        lat: String,
-        long: String,
+        geometry: { type: pointSchema },
         country: String,
         city: String,
         address: String,

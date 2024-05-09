@@ -2,15 +2,15 @@ import { Post, ReportedPost, User } from '../db/model/index.js';
 import sharp from 'sharp';
 import AppError from '../utils/AppError.js';
 import { runInTransaction } from '../db/utils/runInTransaction.js';
-import { REPORTS_KEYS } from '../db/model/constants.js';
 import mongoose from 'mongoose';
 import { deleteImage, getImageUrl, putImage } from '../utils/S3.js';
 import { getAllPostsQuery } from '../db/queries/posts.js';
+import { convertToUpperCase } from '../db/utils/lib.js';
 
 
 export const createPost = async (req, res) => {
     const file = req.file;
-    const { category, startDate, startTime, endTime, endDate, isAllDay, isEndDate, city, address, isRemoteHelp, description } = req.body;
+    const { category, startDate, startTime, endTime, endDate, isAllDay, isEndDate, location, isRemoteHelp, description } = req.body;
 
     // only if file uploaded
     let fileName = '';
@@ -38,8 +38,19 @@ export const createPost = async (req, res) => {
         imgName: fileName,
         description,
         isRemoteHelp,
-        city,
-        address
+        ...(location &&
+        {
+            location: {
+                geometry: {
+                    type: 'Point',
+                    coordinates: [+location.lat, +location.long]
+                },
+                country: location.country,
+                city: location.city,
+                address: location.address,
+            }
+        }
+        )
     };
     console.log(newPost)
 
@@ -50,6 +61,8 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
     const { filters } = req.query || {};
+    filters.category = filters?.category ? convertToUpperCase(filters?.category) : ''; //convert the category to key
+
     console.log(filters)
     //get all posts from DB
     const auth_userId = req.user?._id;
