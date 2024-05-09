@@ -61,7 +61,8 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
     const { filters } = req.query || {};
-    filters.category = filters?.category ? convertToUpperCase(filters?.category) : ''; //convert the category to key
+    if(filters)
+        filters.category = filters?.category ? convertToUpperCase(filters?.category) : ''; //convert the category to key
 
     console.log(filters)
     //get all posts from DB
