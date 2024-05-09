@@ -1,33 +1,52 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styles from './FeaturedCategories.module.css';
+import s from './FeaturedCategories.module.scss';
 import { CATEGORIES } from '../../utils/staticData';
+import { ScrollMenu } from 'react-horizontal-scrolling-menu';
+import { LeftArrow, RightArrow } from './Arrows';
+import { useMediaQuery } from "@uidotdev/usehooks";
+
+import "react-horizontal-scrolling-menu/dist/styles.css";
 
 
 const FeaturedCategories = () => {
+  const isWideDevice = useMediaQuery("only screen and (min-width: 1100px)");
 
   return (
-    <div >
-        <div className={styles.gridHeader}>
-            <h6>Featured categories</h6>
-        </div>
-        <div className={styles.categoriesGrid}>
-          {Object.entries(CATEGORIES).map((item) => {
-            const categoryId = item[0];
-            const category = item[1];
+    <div className={s.categoriesWrap}>
+      {/* <div className={s.gridHeader}>
+        <h6 className='font-normal'>Featured categories</h6>
+      </div> */}
 
-            return <Link key={categoryId} to={category.to} className={styles.categoryItem}>
-              <div className={styles.categoryContent}> 
-                <img className="h-auto max-w-full rounded-lg" src={category.obj} alt={category.name} />
-                <div className={styles.categoryOverlay}>
-                  <h3 className={styles.categoryName}>{category.name}</h3>
+      {isWideDevice
+        ? <div className={s.categoriesGrid}>
+          {Object.entries(CATEGORIES).map(([k, v]) => {
+            if (k === 'ALL_CATEGORIES') return;
+
+            const to = `?category=${k.toLowerCase()}`;
+            return <Link key={k} to={to} className={s.categoryItem}>
+              <div className={s.categoryContent}>
+                <img className="h-auto max-w-full rounded-lg" src={v.obj} alt={v.name} />
+                <div className={s.categoryOverlay}>
+                  <h3 className={s.categoryName}>{v.name}</h3>
                 </div>
               </div>
             </Link>
-          })}     
-      </div>
-    </div>
+          })}
+        </div>
 
+        : <div className={s.scrollWrap}>
+          <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
+            {Object.entries(CATEGORIES).map(([key, v]) => {
+              if (key === 'ALL_CATEGORIES') return;
+
+              const to = `?category=${key.toLowerCase()}`;
+              return <Link {...{ key, to }}>{v.name}</Link>;
+            })}
+          </ScrollMenu>
+        </div>
+      }
+    </div>
   );
 };
 

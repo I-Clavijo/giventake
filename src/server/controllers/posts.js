@@ -50,7 +50,7 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
     const { filters } = req.query || {};
-
+    console.log(filters)
     //get all posts from DB
     const auth_userId = req.user?._id;
     let posts = await getAllPostsQuery(auth_userId, filters);

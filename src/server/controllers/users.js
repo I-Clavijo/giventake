@@ -30,7 +30,7 @@ export const updateUser = async (req, res) => {
     let imgName, imgUrl;
     if (file) {
         file.buffer = await sharp(file.buffer)
-            .resize({ height: 200, width: 200, fit: "fill" })
+            .resize({ height: 200, width: 200, fit: "cover" })
             .toBuffer();
 
         imgName = await putImage(file);

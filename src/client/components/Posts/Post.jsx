@@ -88,7 +88,7 @@ const Post = ({ MAX_DESCRIPTION_LENGTH_W_PHOTO = 150, MAX_DESCRIPTION_LENGTH_NO_
           {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
           <div>
             <h6>{fullName}</h6>
-            <p>{timeAgo} • {location}</p>
+            <p>{timeAgo} {location?.city && location?.country && `• ${location.city}, ${location.country}`}</p>
           </div>
         </div>
       </div>}

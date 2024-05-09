@@ -5,6 +5,7 @@ import { useUser } from "../../api/users/useUser";
 import styles from './Root.module.scss';
 import ScrollToTop from '../../hooks/ScrollToTop';
 import HomeIcon from "../../assets/images/home-icon.svg";
+import NewsIcon from "../../assets/images/newspaper-icon.svg";
 import SearchIcon from "../../assets/images/search-icon.svg";
 import ExploreIcon from "../../assets/images/explore-icon.svg";
 import MessagesIcon from "../../assets/images/messages-icon.svg";
@@ -30,7 +31,7 @@ export default function Root({ children }) {
         return <Popover trigger="click" aria-labelledby="profile-popover" {...{ content, children }} />;
     }
     const navlinks = [
-        { icon: HomeIcon, title: "Home", link: "/" },
+        { icon: NewsIcon, title: "Feed", link: "/" },
         { icon: ExploreIcon, title: "Explore", link: "/explore" },
         { icon: MessagesIcon, title: "Messages", link: "/messages" },
         { icon: BookmarkIcon, title: "Saved", link: "/saved", showOnTop: true },

@@ -47,7 +47,7 @@ export default function AppSideBar({ children, icon, title, search, nav }) {
 			<div className={styles.pageWrap}>
 				{!isSmallDevice && <div className={styles.secondaryNav}>
 					<h1 className={styles.logo}>{title}</h1>
-					<div className={styles.searchWrap}><TextInput icon={MdSearch} placeholder="Search..." color='light'  /></div>
+					<div className={styles.searchWrap}><TextInput icon={MdSearch} placeholder="Search..." color='light' /></div>
 				</div>}
 				<div className={styles.innerWrap}>{children}</div>
 			</div>

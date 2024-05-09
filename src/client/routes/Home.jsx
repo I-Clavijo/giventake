@@ -4,27 +4,20 @@ import { usePosts } from "../api/posts/usePosts.jsx";
 import { useUser } from "../api/users/useUser.jsx";
 import { Spinner } from "flowbite-react";
 import { useState } from "react";
-import InterestsLocationModal from "../components/WelcomeModal.jsx";
-import CityRadiusSelector from "../components/RHF/Location/CityRadiusSelector.jsx";
+import WelcomeModal from "../components/WelcomeModal.jsx";
+import FeedFilters from "../components/Posts/FeedFilters.jsx";
 
-export default function Home() {  
+export default function Home() {
   const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser();
   const { data: posts, isLoading: isLoadingPosts } = usePosts();
 
-  const [radius, setRadius] = useState(100); // Default radius is 100 km
-
-  const handleRadiusChange = (radius) => {
-    setRadius(radius);
-  };
-  
   return <>
-    {!user?.flags?.hideWelcomeModal && <InterestsLocationModal />}
-    
-    <CityRadiusSelector user={user} onRadiusChange={handleRadiusChange}/>
+    {!user?.flags?.hideWelcomeModal && <WelcomeModal />}
+
     {posts && !isLoadingPosts ?
-        <Feed posts={posts} radius={radius} />
-        :
-        <Spinner />
+      <Feed posts={posts} />
+      :
+      <Spinner />
     }
   </>;
 }
