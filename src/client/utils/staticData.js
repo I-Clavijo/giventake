@@ -42,4 +42,4 @@ export const REPORTS_REASONS = {
     OTHER: 'Other reason (please specify)'
 };
 
-export const RADIUS_LIST = ['∞', 3, 10, 30, 60, 100];
+export const RADIUS_LIST = [3, 10, 30, 60, 100];

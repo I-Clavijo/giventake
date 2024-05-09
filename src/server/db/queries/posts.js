@@ -10,6 +10,42 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
         ...(filters?.userId ? [{  // get ONLY posts that the user with userId created. 
             $match: { user: new ObjectId(filters.userId) }
         }] : []),
+        ...(filters?.category ? [{  // get ONLY posts from a specific category only if asked
+            $match: { category: filters.category }
+        }] : []),
+        // {
+        //     $geoNear: {
+        //         near: {
+        //             type: "Point",
+        //             coordinates: [-81.093699, 32.074673]
+        //         },
+        //         maxDistance: 500 * 1609,
+        //         key: "location.point",
+        //         spherical: true,
+        //         distanceField: "distance",
+        //         distanceMultiplier: 0.000621371 //Km
+        //     }
+        // },
+        ...(filters?.location && +filters?.radius > 0 ? [{
+            $match: {
+                $or: [
+                  { remoteHelp: true },  // Include documents without location
+                  { 'location.geometry': { $geoWithin: { $centerSphere: [ [+filters.location.lat || 0, +filters.location.long || 0], +filters?.radius / 6371 ] } } } // Perform geospatial query only if location exists
+                ]
+              }
+        }] : []),
+        // {
+            
+        //   },
+        // {
+        //     $geoNear: {
+        //         near: { type: "Point", coordinates: [-81.093699, 32.074673] },
+        //         distanceField: "distance",
+        //         maxDistance: 500 * 1609, // in meters
+        //         spherical: true,
+        //         query: { location: { $exists: true } }
+        //     }
+        // },
         {
             "$lookup": {
                 from: User.collection.name,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dropdown, TextInput } from "flowbite-react";
+import { Button, Dropdown, TextInput } from "flowbite-react";
 import s from "./FeedFilters.module.scss";
 import CitySelector from "../RHF/Location/CitySelector";
 import { IoIosClose } from "react-icons/io";
@@ -8,31 +8,50 @@ import LocationSelector from "../RHF/Location/LocationSelector";
 import { useForm } from "react-hook-form";
 import { CATEGORIES, RADIUS_LIST } from "../../utils/staticData";
 import { Link, useSearchParams } from "react-router-dom";
+import { FaEarthAmericas } from "react-icons/fa6";
 
 
-export function FeedFilters({ filters, setFilters }) {
-  const [searchParams, setSearchParams] = useSearchParams();
+export function FeedFilters({ defaultValues, onChange }) {
+  const [searchParams] = useSearchParams();
   const category = searchParams.get('category');
 
-  const getCategoryNameFromHandle = category ? CATEGORIES[category.toUpperCase()].name : 'All Categories';
+  const isLocationOfUserExist = defaultValues?.location?.lat && defaultValues?.location?.long;
+  const [isAllLocations, setIsAllLocations] = useState(!isLocationOfUserExist);
 
-  const { control, setValue, watch } = useForm({
-    defaultValues: {
-      ...filters,
-      category: getCategoryNameFromHandle,
-      radius: RADIUS_LIST[0]
-    }
-  });
+  const getCategoryNameFromHandle = category ? CATEGORIES[category.toUpperCase()].name : null;
+
+  const defaultFormValues = {
+    ...defaultValues,
+    category: getCategoryNameFromHandle,
+    radius: RADIUS_LIST[2]
+  };
+
+  const { control, setValue, watch, reset } = useForm({ defaultValues: defaultFormValues });
+
+  const resetForm = () => {
+    setIsAllLocations(false);
+    reset(defaultFormValues)
+  };
 
   useEffect(() => {
-      const changedFilters = {
-        category: watch('category'),
-        location: watch('location'),
-        radius: watch('radius')
-      };
-      setFilters(changedFilters);
-  }, [watch('category'), watch('location.city'), watch('location.country'), watch('radius')]);
+    setIsAllLocations(false);
 
+  }, [watch('location.city'), watch('location.country')]);
+
+  // for every filters change update the parent component that filters has been changed
+  useEffect(() => {
+
+    const filters = {
+      category: watch('category'),
+      ...(!isAllLocations && { location: watch('location') }),
+      radius: watch('radius')
+    };
+    onChange(filters);
+
+  }, [watch('category'), watch('location.lat'), watch('location.long'), watch('radius'), isAllLocations]);
+
+
+  // in case of url changing
   useEffect(() => {
     setValue('category', getCategoryNameFromHandle);
   }, [category]);
@@ -40,13 +59,15 @@ export function FeedFilters({ filters, setFilters }) {
   return (
     <form className={s.wrapper}>
       <div className={s.filtersWrap}>
-        <FiFilter size={25} color='#333' />
+        <Link to='' onClick={() => resetForm()}>
+          <FiFilter size={25} color='#333' />
+        </Link>
         <span>
           <span>
             Show me
           </span>
           <div className={s.filterBox}>
-            <Dropdown className={s.dropdown} label={watch('category')} inline>
+            <Dropdown className={s.dropdown} label={watch('category') || 'All Categories'} inline>
               <div className={s.categoriesList}>
                 {Object.entries(CATEGORIES).map(([k, v]) => {
                   const to = k === 'ALL_CATEGORIES' ? '' : `?category=${k.toLowerCase()}`;
@@ -67,30 +88,45 @@ export function FeedFilters({ filters, setFilters }) {
           </span>
 
           <div className={s.filterBox}>
-            <Dropdown className={s.dropdown} label={watch('location') ? watch('location.city') + ", " + watch('location.country') : watch('location.country')} inline>
+            <Dropdown className={s.dropdown} label={isAllLocations ? 'Earth' : watch('location.city') + ", " + watch('location.country')} inline>
               <div style={{ padding: '.2em' }}>
                 <LocationSelector
                   {...{ control }}
                   names={{ city: 'location.city', country: 'location.country', lat: 'location.lat', long: 'location.long' }}
                   style={{ flexDirection: 'column', gap: '0', minWidth: '200px' }}
                   onKeyDown={(e) => e.stopPropagation()}
-                  withLabels={true}
+                // withLabels
                 />
+                <div className='flex '>
+                  <Button className="w-full mt-1 mr-1" color='gray' onClick={() => setIsAllLocations(false)}>
+                    <span>Set Location</span>
+                  </Button>
+                  <Button className="button w-full mt-1 align-center justify-center w-33" onClick={() => setIsAllLocations(true)}>
+                    <FaEarthAmericas color="#fff" />
+                  </Button>
+                </div>
+
+
               </div>
             </Dropdown>
           </div>
         </span>
-
-        <span>
+        {!isAllLocations &&
           <span>
-            in radius of
+            <span>
+              in radius of
+            </span>
+            <div className={s.filterBox}>
+              <Dropdown className={s.dropdown} label={`${watch('radius') > 0 ? watch('radius') : '∞'} Km`} inline>
+                {RADIUS_LIST.map((val) => {
+                  let key = val;
+                  if (val === -1) val = '∞';
+                  return <Dropdown.Item key={key} className={s.item} onClick={() => setValue('radius', key)}>{val} Km</Dropdown.Item>
+                })}
+              </Dropdown>
+            </div>
           </span>
-          <div className={s.filterBox}>
-            <Dropdown className={s.dropdown} label={`${watch('radius')} Km`} inline>
-              {RADIUS_LIST.map((val) => <Dropdown.Item key={val} className={s.item} onClick={() => setValue('radius', val)}>{val} Km</Dropdown.Item>)}
-            </Dropdown>
-          </div>
-        </span>
+        }
       </div>
     </form>
   );

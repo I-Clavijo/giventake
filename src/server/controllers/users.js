@@ -46,8 +46,10 @@ export const updateUser = async (req, res) => {
         ...(bio && { bio }),
         ...(location && {
             location: {
-                lat: location.lat,
-                long: location.long,
+                geometry: {
+                    type: 'Point',
+                    coordinates: [+location.lat, +location.long]
+                },
                 country: location.country,
                 city: location.city,
                 address: location.address,

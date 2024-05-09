@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { MODEL_KEY } from "./constants.js";
+import { pointSchema } from "../utils/lib.js";
 const ObjectId = mongoose.Schema.ObjectId;
 
 /**
@@ -10,8 +11,7 @@ const postSchema = new mongoose.Schema({
     category: { type: String, required: true },
     isRemoteHelp: Boolean,
     location: {
-        lat: String,
-        long: String,
+        geometry: { type: pointSchema },
         country: String,
         city: String,
         address: String,

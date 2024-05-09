@@ -13,12 +13,18 @@ export default function Explore() {
   const [filters, setFilters] = useState({
     location: user.location,
   });
-  const { data: posts, isLoading } = usePosts({ filters });
+
+  const { data: posts, isLoading, refetch: refetchPosts } = usePosts({ filters });
+
+  const onFiltersChange = (filters) => {
+    setFilters(filters)
+    refetchPosts();
+  };
 
   return <>
     <div className={styles.feedWrap}>
       <FeaturedCategories />
-      <FeedFilters {...{ filters, setFilters }} />
+      <FeedFilters defaultValues={{ location: user.location }} onChange={onFiltersChange} />
       <hr />
       <h4 className='mb-0 font-normal'>Explore</h4>
       {posts && !isLoading
