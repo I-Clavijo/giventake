@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { useSnackbar } from 'notistack';
-import useAxiosPrivate from '../user/useAxiosPrivate';
+import useAxiosPrivate from '../useAxiosPrivate';
 import { getFormData } from "../../utils/lib";
 
 
@@ -12,7 +12,6 @@ export const useCreatePost = () => {
 
     return useMutation({
         mutationFn: async (data) => {
-            console.log(data);
             const formData = getFormData(data, 'img');
 
             return await axiosPrivate.put('/posts',formData, {
@@ -21,6 +20,7 @@ export const useCreatePost = () => {
 
         onSuccess: ({data}) => {
             navigate('/');
+            enqueueSnackbar('Post created successfully', { variant: 'info' });
         },
 
         onError: (error) => {

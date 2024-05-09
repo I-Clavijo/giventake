@@ -4,17 +4,8 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostAction } from '../../api/posts/usePostAction';
 import styles from "./ReportModal.module.scss";
+import { REPORTS_REASONS } from '../../utils/staticData';
 
-// I am just a lazy person and need to get this data from server.
-export const REPORTS_REASONS = {
-    SPAM: 'Spam',
-    INAPPROPRIATE_CONTENT: 'Inappropriate content',
-    OFFENSIVE_LANGUAGE: 'Offensive language',
-    COPYRIGHT_VIOLATION: 'Copyright violation',
-    FALSE_INFORMATION: 'False information',
-    PERSONAL_ATTACK: 'Personal attack',
-    OTHER: 'Other reason (please specify)'
-  };
   
   const ReportModal = ({ show, onClose, postId, isUserReported }) => {
     const { mutate: postAction } = usePostAction();

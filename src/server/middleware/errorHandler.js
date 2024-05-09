@@ -24,7 +24,9 @@ const productionError = (err, res) => {
 // Handles development errore
 // sends back the error message, and additional information about the error
 const developmentError = (err, res) => {
-    console.error(err.stack)
+    if(!err?.isOperational) console.error(err.stack);
+    else console.error('[Error] ', err.message);
+    
 
     res.status(err.statusCode).json({
         status: err.status,

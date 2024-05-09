@@ -1,4 +1,4 @@
-import { connectDB } from "./utils/connection.js"
+import { connectDB } from "./db/utils/connection.js"
 import createApp from "./app.js"
 import ViteExpress from "vite-express";
 
