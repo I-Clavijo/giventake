@@ -1,49 +1,52 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styles from './FeaturedCategories.module.css';
+import s from './FeaturedCategories.module.scss';
+import { CATEGORIES } from '../../utils/staticData';
+import { ScrollMenu } from 'react-horizontal-scrolling-menu';
+import { LeftArrow, RightArrow } from './Arrows';
+import { useMediaQuery } from "@uidotdev/usehooks";
 
-import Car from '../../assets/images/categories_grid/car.jpg';
-import Elderly from '../../assets/images/categories_grid/elderly.jpg';
-import Home from '../../assets/images/categories_grid/home_fix.jpg';
-import Moving from '../../assets/images/categories_grid/moving.jpg';
-import Pets from '../../assets/images/categories_grid/pets.jpg';
-import Photography from '../../assets/images/categories_grid/photography.jpg';
-import Sports from '../../assets/images/categories_grid/sports.jpg';
-import Travel from '../../assets/images/categories_grid/travel.jpg';
-
-const categories = [
-  { id: 1, name: 'Road Assistance', obj: Car, to: '/feed/road-assistance' },
-  { id: 3, name: 'Home Repair', obj: Home, to: '/feed/home-repair' },
-  { id: 4, name: 'Moving', obj: Moving, to: '/feed/moving' },
-  { id: 5, name: 'Pets', obj: Pets, to: '/feed/pets' },
-  { id: 6, name: 'Photography', obj: Photography, to: '/feed/photography' },
-  { id: 7, name: 'Sports', obj: Sports, to: '/feed/sports' },
-  { id: 8, name: 'Travel', obj: Travel, to: '/feed/travel' },
-  { id: 9, name: 'Elderly Care', obj: Elderly, to: '/feed/elderly-care' },
-];
+import "react-horizontal-scrolling-menu/dist/styles.css";
 
 
 const FeaturedCategories = () => {
+  const isWideDevice = useMediaQuery("only screen and (min-width: 1100px)");
 
   return (
-    <div >
-        <div className={styles.gridHeader}>
-            <h6>Featured categories</h6>
-        </div>
-        <div className={styles.categoriesGrid}>
-          {categories.map((category) => (
-            <Link key={category.id} to={category.to} className={styles.categoryItem}>
-              <div className={styles.categoryContent}> 
-                <img className="h-auto max-w-full rounded-lg" src={category.obj} alt={category.name} />
-                <div className={styles.categoryOverlay}>
-                  <h3 className={styles.categoryName}>{category.name}</h3>
+    <div className={s.categoriesWrap}>
+      {/* <div className={s.gridHeader}>
+        <h6 className='font-normal'>Featured categories</h6>
+      </div> */}
+
+      {isWideDevice
+        ? <div className={s.categoriesGrid}>
+          {Object.entries(CATEGORIES).map(([k, v]) => {
+            if (k === 'ALL_CATEGORIES') return;
+
+            const to = `?category=${k.toLowerCase()}`;
+            return <Link key={k} to={to} className={s.categoryItem}>
+              <div className={s.categoryContent}>
+                <img className="h-auto max-w-full rounded-lg" src={v.obj} alt={v.name} />
+                <div className={s.categoryOverlay}>
+                  <h3 className={s.categoryName}>{v.name}</h3>
                 </div>
               </div>
             </Link>
-          ))}     
-      </div>
-    </div>
+          })}
+        </div>
 
+        : <div className={s.scrollWrap}>
+          <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
+            {Object.entries(CATEGORIES).map(([key, v]) => {
+              if (key === 'ALL_CATEGORIES') return;
+
+              const to = `?category=${key.toLowerCase()}`;
+              return <Link {...{ key, to }}>{v.name}</Link>;
+            })}
+          </ScrollMenu>
+        </div>
+      }
+    </div>
   );
 };
 

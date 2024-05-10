@@ -8,13 +8,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import RequireAuth from './components/Auth/RequireAuth';
 import PersistLogin from './components/Auth/PersistLogin';
-import Root from "./routes/Root";
+import Root from "./components/Layout/Root";
 import ErrorPage from "./routes/ErrorPage";
 import Home from "./routes/Home";
 import Explore from "./routes/Explore";
 import Auth from "./routes/Auth";
 import Profile from "./routes/Profile";
-import EditProfile from "./routes/EditProfile";
 import Messages from "./routes/Messages";
 import Missing from "./routes/Missing";
 import Editor from "./routes/Editor";
@@ -49,9 +48,8 @@ const router = createBrowserRouter([
 					{ 
 						element: <RequireAuth allowedRoles={[ROLES.User]} />, 
 						children: [
-							{ path: "/profile", element: <Profile /> },
+							{ path: "/profile", element: <Profile isMyProfile={true} /> },
 							{ path: "/create", element: <Create />},
-							{ path: "/account/edit", element: <EditProfile /> },
 							{ path: "/messages", element: <Messages /> },
 						] 
 					},

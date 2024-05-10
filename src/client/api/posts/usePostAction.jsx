@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from 'notistack';
-import useAxiosPrivate from '../user/useAxiosPrivate';
+import useAxiosPrivate from '../useAxiosPrivate';
 import { QUERY_KEY } from "../constants";
 
 
@@ -11,7 +11,7 @@ export const usePostAction = () => {
 
     return useMutation({
         mutationFn: async (data) => {
-            console.log(data);
+
             // ### EXAMPLE:
             // data = {
             //     postId: ObjectId,
@@ -29,7 +29,7 @@ export const usePostAction = () => {
         },
 
         onMutate: (data) => {
-            console.log('onMutate: ', data);
+
             const posts = queryClient.getQueryData([QUERY_KEY.posts]);
 
             // Find the index of the post with the specific ID

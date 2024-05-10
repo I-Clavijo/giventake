@@ -8,7 +8,11 @@ export const showAs = {
     MASONRY: 'masonry'
 }
 
-const Feed = ({ posts, styleOrder = showAs.LIST, isLoading }) => {
+
+const Feed = ({ posts, radius=0, styleOrder = showAs.LIST, isLoading, noTitle=false, noActions=false }) => {
+    const selectedRadius = radius; // The selected radius in km
+    // filter posts by radius- to do ***
+
     let postsWrapperClass = styles.list;
     if (styleOrder === showAs.GRID) postsWrapperClass = styles.grid;
     else if (styleOrder === showAs.MASONRY) postsWrapperClass = styles.masonry;
@@ -29,7 +33,7 @@ const Feed = ({ posts, styleOrder = showAs.LIST, isLoading }) => {
             isSavedByUser={post.isSavedByUser}
             isUserInterested={post.isUserInterested}
             isUserReported={post.isUserReported}
-            {...{isLoading}}
+            {...{isLoading, noTitle, noActions}}
         />;
 
         return postTag;

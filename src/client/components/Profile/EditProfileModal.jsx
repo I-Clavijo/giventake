@@ -1,62 +1,95 @@
-import React from 'react';
-import { Button, Modal } from "flowbite-react";
-import { useState } from "react";
+import { Label, TextInput, Textarea, Button, Modal, Select, FileInput, Spinner } from "flowbite-react";
+import { useEffect, useState } from "react";
+import styles from './EditProfileModal.module.scss';
+import { useUser } from "../../api/users/useUser";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useUserUpdate from "../../api/users/useUserUpdate";
+import useCountries from "../../hooks/useCountries";
+import InterestsSelection from "../RHF/Location/InterestsSelection";
+import LocationSelector from "../RHF/Location/LocationSelector";
+import DragNDrop from "../RHF/DragNDrop";
 
-export function EditProfileModal() {
-  const [openModal, setOpenModal] = useState(true);
-  const [location, setLocation] = useState("");
-  const [interests, setInterests] = useState([]); // Array to store selected interests
 
-  const handleLocationChange = (event) => {
-    setLocation(event.target.value);
+export function EditProfileModal({ show, onClose }) {
+  const { data: user } = useUser();
+  const { mutateAsync: updateProfile, isSuccess, isPending } = useUserUpdate();
+
+  const editProfileSchema = z
+    .object({
+      firstName: z.string().trim().min(2).max(30),
+      lastName: z.string().trim().min(2).max(30),
+      img: z.any().optional(),
+      bio: z.string().optional(),
+      location: z.object({
+        city: z.string().trim().min(2).max(30),
+        country: z.string().trim().min(2).max(30),
+        lat: z.string(),
+        long: z.string()
+      }),
+      interests: z.string().array(),
+    });
+
+  const defaultValues = {
+    ...user,
+  };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(editProfileSchema), defaultValues });
+
+  const onSubmit = (data) => {
+    updateProfile({ data, onSuccess: onClose });
   };
 
-  const handleInterestChange = (event) => {
-    const isChecked = event.target.checked;
-    const interest = event.target.value;
-
-    if (isChecked) {
-      setInterests([...interests, interest]);
-    } else {
-      setInterests(interests.filter((i) => i !== interest));
-    }
-  };
 
   return (
     <>
-      <Modal size="xl" position="center" dismissible show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>
-          <div>Edit Profile</div>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            <label>
-              where are you located?
-            </label>
-            <input type="text" value={location} onChange={handleLocationChange} />
-            <br/>
-            <label>
-              what are your interests? select the ones you like
-            </label>
-            {/* Replace with your actual interests */}
-            <div>
-              <input type="checkbox" id="interest1" value="Sports" onChange={handleInterestChange} />
-              <label htmlFor="interest1">Sports</label>
+      <form>
+
+        <Modal size="xl" position="center" {...{ show, onClose }}>
+          <Modal.Header>
+            <div>Edit Profile</div>
+          </Modal.Header>
+          <Modal.Body>
+
+            <Label htmlFor="fname" value="First Name" className="mb-2 block" />
+            <TextInput id="fname" type="text" className="mb-4 block" {...register('firstName')} color={errors.firstName ? 'failure' : 'gray'} helperText={errors.firstName?.message} />
+
+            <Label htmlFor="lname" value="Last Name" className="mb-2 block" />
+            <TextInput id="lname" type="text" className="mb-4 block" {...register('lastName')} color={errors.lastName ? 'failure' : 'gray'} helperText={errors.lastName?.message} />
+
+            <Label htmlFor="bio" value="Bio" className="mb-2 block" />
+            <Textarea id="bio" placeholder="Write description here..." className="mb-4 block" {...register('bio')} rows={4} color={errors.bio ? 'failure' : 'gray'} helperText={errors.bio?.message} />
+
+            <Label value="Interests" className="mb-2 block" />
+            <InterestsSelection {...{ control }} name='interests' />
+
+            <Label value="Profile picture:" className="mb-2 block" />
+            <DragNDrop {...{ register, watch }} name='img' txtFileType='SVG, PNG, JPG or GIF (MAX. 800x400px)' />
+
+            <Label value="Address" className="mb-2 block" />
+            <LocationSelector {...{ control }} names={{ city: 'location.city', country: 'location.country', lat: 'location.lat', long: 'location.long' }} />
+
+          </Modal.Body>
+          <Modal.Footer>
+            <div className={styles.formActions}>
+              <Button type='submit' className="button" disabled={isPending} onClick={handleSubmit(onSubmit)}>
+                {isPending ? <Spinner /> :
+                  <>Save changes</>
+                }
+              </Button>
+              <Button color="light" onClick={() => { onClose(); reset(); }}>Dismiss</Button>
             </div>
-            <div>
-              <input type="checkbox" id="interest2" value="Music" onChange={handleInterestChange} />
-              <label htmlFor="interest2">Music</label>
-            </div>
-            {/* Add more interest checkboxes as needed */}
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setOpenModal(false)}>Update</Button>
-          <Button color="gray" onClick={() => setOpenModal(false)}>
-            Later
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </Modal.Footer>
+        </Modal>
+      </form>
+
     </>
   );
 }

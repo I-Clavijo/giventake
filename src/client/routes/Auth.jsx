@@ -6,8 +6,8 @@ import {
 import { Button, Checkbox, Label, TextInput, Card } from 'flowbite-react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSignUp } from '../api/user/useSignUp'
-import { useLogin } from "../api/user/useLogin";
+import { useSignUp } from '../api/auth/useSignUp'
+import { useLogin } from "../api/auth/useLogin";
 import LoginImg from '../assets/images/login-photo.png';
 import styles from "./Auth.module.scss";
 

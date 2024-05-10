@@ -6,14 +6,11 @@ import corsOptions from './config/corsOptions.js';
 import { logger } from './middleware/logEvents.js';
 import credentials from './middleware/credentials.js';
 import errorHandler from './middleware/errorHandler.js';
-import authRoutes from "./routes/auth.js";
 import apiRoutes from './routes/api.js';
 import { API_VERSION } from "./config.js";
 
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
-import AppError from './utils/AppError.js';
-import User from './model/User.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

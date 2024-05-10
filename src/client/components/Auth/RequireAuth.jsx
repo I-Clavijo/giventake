@@ -1,5 +1,5 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { useUser } from "../../api/user/useUser";
+import { useUser } from "../../api/users/useUser";
 import { jwtDecode } from "jwt-decode";
 
 const RequireAuth = ({ allowedRoles }) => {
