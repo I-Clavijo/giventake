@@ -18,11 +18,12 @@ import { MdOutlinePerson, MdOutlineLogout, MdLockOutline } from "react-icons/md"
 import { TbHeartHandshake } from "react-icons/tb";
 import useLogout from "../../api/auth/useLogout";
 import { MdOutlineNewspaper } from "react-icons/md";
-import { FaRegCompass, FaRegBookmark } from "react-icons/fa";
+import { FaRegCompass } from "react-icons/fa";
 import { LuMessagesSquare } from "react-icons/lu";
 import { TbSquareRoundedPlus } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 import { HiOutlineLockClosed } from "react-icons/hi";
+import { BiBookmark } from "react-icons/bi";
 
 
 
@@ -41,7 +42,7 @@ export default function Root({ children }) {
         { icon: MdOutlineNewspaper, title: "Feed", link: "/" },
         { icon: FaRegCompass, title: "Explore", link: "/explore" },
         { icon: LuMessagesSquare, title: "Messages", link: "/messages" },
-        { icon: FaRegBookmark, title: "Saved", link: "/saved", showOnTop: true },
+        { icon: BiBookmark, title: "Saved", link: "/saved", showOnTop: true },
         { icon: TbSquareRoundedPlus, title: "Create", link: "/create", showOnTop: true },
         isLoggedIn
             ? { icon: CgProfile, title: `${user.firstName} ${user.lastName}`, popover: profilePopover }
