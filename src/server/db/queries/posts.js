@@ -101,9 +101,6 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
         ...(filters?.category ? [{  // get ONLY posts from a specific category only if asked
             $match: { category: filters.category }
         }] : []),
-        // ...(filters?.PeopleIFollow ? [{  // get ONLY posts from people that the auth user is following
-        //     $match: { category: filters.category }
-        // }] : []),
         ...(filters?.location && +filters?.radius > 0 ? [{
             $match: {
                 $or: [
