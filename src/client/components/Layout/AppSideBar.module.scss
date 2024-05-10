@@ -237,4 +237,34 @@
           display: block; /* Show the overlay when the visible class is applied */
         }
       }
+    .searchResult {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+        cursor: pointer;
+        z-index: 1002; /* Ensure it's above the overlay */
+        border: 1px solid black;
+        border-radius: 5px;
+        
+    }
+    
+    .searchLink {
+        text-decoration: none;
+    }
+    
+    .userInfo {
+        display: flex;
+        align-items: center;
+    }
+    
+    .profilePic {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        border-radius: 50%;
+    }
+    
+    .userName {
+        font-size: 14px;
+    }
 }
