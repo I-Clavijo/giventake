@@ -220,4 +220,21 @@
             display: none;
         }
 	}
+    .searchWrap {
+        cursor: pointer; 
+    }
+    .overlay {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 80px);
+        background-color: rgba(0, 0, 0, 0.7); /* Dark grey with 50% opacity */
+        z-index: 1000; /* Ensure overlay is above other elements */
+        display: none; /* Initially hidden */
+      
+        &.visible {
+          display: block; /* Show the overlay when the visible class is applied */
+        }
+      }
 }

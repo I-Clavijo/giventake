@@ -5,12 +5,22 @@ import { NavLink } from "react-router-dom";
 import { TextInput, Tooltip } from "flowbite-react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { MdSearch } from "react-icons/md";
+import { useState } from "react";
 
 
 export default function AppSideBar({ children, icon, title, search, nav }) {
 
 	const isSmallDevice = useMediaQuery("only screen and (max-width: 767px)");
 	const isWideDevice = useMediaQuery("only screen and (min-width: 1264px)");
+
+	//overlay varibels
+	const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+	const handleSearchClick = () => {
+		setIsOverlayVisible(true);
+	  };
+	const handleOverlayClick = () => {
+	  setIsOverlayVisible(false);
+	};
 
 	//sidebar/ bottom buttons
 	const navLinksMapped = nav.map((item, index) => {
@@ -47,9 +57,10 @@ export default function AppSideBar({ children, icon, title, search, nav }) {
 			<div className={styles.pageWrap}>
 				{!isSmallDevice && <div className={styles.secondaryNav}>
 					<h1 className={styles.logo}>{title}</h1>
-					<div className={styles.searchWrap}><TextInput icon={MdSearch} placeholder="Search..." color='light'  /></div>
+					<div className={styles.searchWrap}><TextInput icon={MdSearch}  onClick={handleSearchClick} placeholder="Search..." color='light'  /></div>
 				</div>}
 				<div className={styles.innerWrap}>{children}</div>
+				<div className={`${styles.overlay} ${isOverlayVisible ? styles.visible : ''}`} onClick={handleOverlayClick} />
 			</div>
 			<div className={styles.topBar}>
 				<div className={styles.logo}>{icon}<span>{title}</span></div>
