@@ -76,7 +76,7 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
             },
             {
                 "$lookup": {
-                    from: "posts",
+                    from: Post.collection.name,
                     as: "posts",
                     localField: "following",
                     foreignField: "user",

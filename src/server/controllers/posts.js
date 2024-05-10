@@ -64,7 +64,6 @@ export const getPosts = async (req, res) => {
     if (filters)
         filters.category = filters?.category ? convertToUpperCase(filters?.category) : ''; //convert the category to key
 
-    console.log(filters)
     //get all posts from DB
     const auth_userId = req.user?._id;
     let posts = await getAllPostsQuery(auth_userId, filters);
@@ -184,4 +183,6 @@ export const postAction = async (req, res) => {
             }
         });
     }
+
+    res.sendStatus(201);
 }
