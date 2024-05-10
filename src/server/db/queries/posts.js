@@ -1,10 +1,98 @@
 import mongoose from "mongoose";
-import { Post, User } from "../model/index.js";
+import { Friends, Post, User } from "../model/index.js";
 const ObjectId = mongoose.Types.ObjectId;
 
 
 export const getAllPostsQuery = async (auth_userId, filters) => {
     const userIdObjectId = auth_userId ? new ObjectId(auth_userId) : null;
+
+    const populate = [{
+        "$lookup": {
+            from: User.collection.name,
+            localField: "user",
+            foreignField: "_id",
+            as: "user",
+            pipeline: [{ $project: { firstName: 1, lastName: 1, imgName: 1 } }]
+        },
+    },
+    { $unwind: '$user' },
+    {
+        $project: {
+            _id: 1, user: 1, category: 1, city: 1, address: 1, helpDate: 1, imgName: 1, description: 1, usersSaved: 1, createdAt: 1, updatedAt: 1, usersInterested: 1, usersReported: 1,
+            ...(userIdObjectId && {
+                isSavedByUser: { $in: [userIdObjectId, '$usersSaved'] },
+                isUserInterested: { $in: [userIdObjectId, '$usersInterested'] },
+                isUserReported: { $in: [userIdObjectId, '$usersReported'] },
+            }),
+
+        },
+    },
+    {
+        "$lookup": {
+            from: User.collection.name,
+            localField: "usersSaved",
+            foreignField: "_id",
+            as: "usersSaved",
+            pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
+        }
+    },
+    {
+        "$lookup": {
+            from: User.collection.name,
+            localField: "usersInterested",
+            foreignField: "_id",
+            as: "usersInterested",
+            pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
+        }
+    },
+    {
+        "$lookup": {
+            from: User.collection.name,
+            localField: "usersReported",
+            foreignField: "_id",
+            as: "usersReported",
+            pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
+        }
+    },
+    {
+        $sort: { createdAt: -1 } // Sort by createdAt field in descending order (newest first)
+    }];
+
+
+    if (userIdObjectId && filters?.onlyPeopleIFollow) {   //  get ONLY posts from people that the auth user is following
+        return await Friends.aggregate([
+            {
+                $match: {
+                    user: userIdObjectId
+                }
+            },
+            {
+                $group: {
+                    _id: "$user",
+                    following: {
+                        "$addToSet": "$toUser"
+                    }
+                },
+            },
+            {
+                "$lookup": {
+                    from: "posts",
+                    as: "posts",
+                    localField: "following",
+                    foreignField: "user",
+                }
+            },
+            {
+                $unwind: "$posts"
+            },
+            {
+                $replaceRoot: {
+                    newRoot: "$posts"
+                }
+            },
+            ...populate
+        ]);
+    }
 
     return await Post.aggregate([
         ...(filters?.userId ? [{  // get ONLY posts that the user with userId created. 
@@ -19,61 +107,11 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
         ...(filters?.location && +filters?.radius > 0 ? [{
             $match: {
                 $or: [
-                  { remoteHelp: true },  // Include documents without location
-                  { 'location.geometry': { $geoWithin: { $centerSphere: [ [+filters.location.lat || 0, +filters.location.long || 0], +filters?.radius / 6371 ] } } } // Perform geospatial query only if location exists
+                    { remoteHelp: true },  // Include documents without location
+                    { 'location.geometry': { $geoWithin: { $centerSphere: [[+filters.location.lat || 0, +filters.location.long || 0], +filters?.radius / 6371] } } } // Perform geospatial query only if location exists
                 ]
-              }
+            }
         }] : []),
-        {
-            "$lookup": {
-                from: User.collection.name,
-                localField: "user",
-                foreignField: "_id",
-                as: "user",
-                pipeline: [{ $project: { firstName: 1, lastName: 1, imgName: 1 } }]
-            },
-        },
-        { $unwind: '$user' },
-        {
-            $project: {
-                _id: 1, user: 1, category: 1, city: 1, address: 1, helpDate: 1, imgName: 1, description: 1, usersSaved: 1, createdAt: 1, updatedAt: 1, usersInterested: 1, usersReported: 1,
-                ...(userIdObjectId && {
-                    isSavedByUser: { $in: [userIdObjectId, '$usersSaved'] },
-                    isUserInterested: { $in: [userIdObjectId, '$usersInterested'] },
-                    isUserReported: { $in: [userIdObjectId, '$usersReported'] },
-                }),
-
-            },
-        },
-        {
-            "$lookup": {
-                from: User.collection.name,
-                localField: "usersSaved",
-                foreignField: "_id",
-                as: "usersSaved",
-                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
-            }
-        },
-        {
-            "$lookup": {
-                from: User.collection.name,
-                localField: "usersInterested",
-                foreignField: "_id",
-                as: "usersInterested",
-                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
-            }
-        },
-        {
-            "$lookup": {
-                from: User.collection.name,
-                localField: "usersReported",
-                foreignField: "_id",
-                as: "usersReported",
-                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
-            }
-        },
-        {
-            $sort: { createdAt: -1 } // Sort by createdAt field in descending order (newest first)
-        }
+        ...populate
     ]);
 };
