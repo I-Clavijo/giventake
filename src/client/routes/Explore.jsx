@@ -9,11 +9,13 @@ import { useState } from 'react';
 import { usePostAction } from '../api/posts/usePostAction.jsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '../api/constants.js';
+import { useSnackbar } from 'notistack';
 
 
 export default function Explore() {
   const queryClient = useQueryClient();
-  const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser();
+  const { enqueueSnackbar } = useSnackbar();
+  const { data: user, isLoading: isLoadingUser, isError: isErrorUser, isLoggedIn } = useUser();
   const [filters, setFilters] = useState({
     location: user.location,
   });
@@ -29,11 +31,11 @@ export default function Explore() {
   return <>
     <div className={styles.feedWrap}>
       <FeaturedCategories />
-      <FeedFilters defaultValues={{ location: user.location }} onChange={onFiltersChange} />
+      <FeedFilters defaultValues={isLoggedIn ? { location: user.location } : {}} onChange={onFiltersChange}  />
       <hr />
       <h4 className='mb-0 font-normal'>Explore</h4>
       {posts && !isLoading
-        ? <Feed {...{ posts }} styleOrder={showAs.MASONRY} onPostAction={postAction} />
+        ? <Feed {...{ posts, isLoggedIn }} styleOrder={showAs.MASONRY}  onPostAction={isLoggedIn ? postAction : () =>enqueueSnackbar("You need to login to perfom this action.", { variant: 'info' })}  />
         : <Spinner />
       }
     </div>
