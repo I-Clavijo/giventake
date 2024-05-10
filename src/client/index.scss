@@ -4,7 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
+*{
+  // that is because tailwind side effect
+  outline: none;
+}
 :root {
   font-family: Poppins, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -42,6 +45,7 @@
   //navbar
   --logo-color: var(--forth-color);
   --nav-bg-color: var(--primary-color);
+  --nav-top-bg-color: #fff;
   --nav-secondary-bg-color: var(--main-bg-color);
   --nav-font-color: var(--inverse-link-color);
   --nav-item-bg-hover-color: var(--secondary-color);
@@ -50,7 +54,7 @@
   --btn-bg-color: #38a3a5;
   --btn-bg-hover-color: #229193;
   --btn-font-color: var(--inverse-font-color);
-  --btn-border-color: var(--forth-color);
+  --btn-border-color: #4eb1b2;
 
 
 }

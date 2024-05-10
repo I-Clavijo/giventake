@@ -1,3 +1,6 @@
 export const QUERY_KEY = {
-  user: 'user'
+  user: 'user',
+  posts: 'posts',
+  reviews: 'reviews',
+  friends: 'friends'
 };

@@ -1,32 +1,36 @@
-import styles from "./Explore.module.scss";
-import FeaturedCategories from "../components/FeaturedCategories.jsx";
-import FeaturedPostsFeed from "../components/FeaturedPostsFeed.jsx";
-
-const posts = [
-  {
-    name: 'John Doe',
-    profilePic: 'profile-picture-example.jpg',
-    date: '2024-04-05T23:30:00',
-    location: 'New York',
-    postPic: 'picture-example.jpg',
-    postText: 'Hello, My sweet grandmother is sick and needs someone to take care of her dog for a few days. Unfortunately, I\'m not in the city at the moment. We would be very grateful if someone could help.',
-    likes: '23'
-  }
-
-];
-
-// adds more posts to the posts array
-const postExample = posts[0];
-for (let i = 0; i < 10; i++) {
-  posts.push(postExample);
-}
+import styles from './Explore.module.scss';
+import FeaturedCategories from "../components/Posts/FeaturedCategories.jsx";
+import Feed, { showAs } from "../components/Posts/Feed.jsx";
+import { usePosts } from "../api/posts/usePosts.jsx";
+import { Spinner } from "flowbite-react";
+import FeedFilters from '../components/Posts/FeedFilters.jsx';
+import { useUser } from '../api/users/useUser.jsx';
+import { useState } from 'react';
 
 
 export default function Explore() {
-  return (
-    <>
+  const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser();
+  const [filters, setFilters] = useState({
+    location: user.location,
+  });
+
+  const { data: posts, isLoading, refetch: refetchPosts } = usePosts({ filters });
+
+  const onFiltersChange = (filters) => {
+    setFilters(filters)
+    refetchPosts();
+  };
+
+  return <>
+    <div className={styles.feedWrap}>
       <FeaturedCategories />
-      <FeaturedPostsFeed posts={posts} />
-    </>
-  );
+      <FeedFilters defaultValues={{ location: user.location }} onChange={onFiltersChange} />
+      <hr />
+      <h4 className='mb-0 font-normal'>Explore</h4>
+      {posts && !isLoading
+        ? <Feed {...{ posts }} styleOrder={showAs.MASONRY} />
+        : <Spinner />
+      }
+    </div>
+  </>;
 }
