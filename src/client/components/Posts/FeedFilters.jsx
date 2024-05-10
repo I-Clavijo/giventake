@@ -16,7 +16,7 @@ export function FeedFilters({ defaultValues, onChange }) {
   const category = searchParams.get('category');
 
   const isLocationOfUserExist = defaultValues?.location?.lat && defaultValues?.location?.long;
-  const [isAllLocations, setIsAllLocations] = useState(!isLocationOfUserExist);
+  const [isAllLocations, setIsAllLocations] = useState(isLocationOfUserExist === false);
 
   const getCategoryNameFromHandle = category ? CATEGORIES[category.toUpperCase()].name : null;
 

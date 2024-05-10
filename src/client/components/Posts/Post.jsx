@@ -14,26 +14,25 @@ import ReportModal from './ReportModal';
 import PostSkeleton from './PostSkeleton';
 
 
-const Post = ({ MAX_DESCRIPTION_LENGTH_W_PHOTO = 150, MAX_DESCRIPTION_LENGTH_NO_PHOTO = 450, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported, postInModal = false, openModalHandler, isLoading, noTitle, noActions }) => {
-  const { mutate: postAction } = usePostAction();
-
+const Post = ({ onPostAction, MAX_DESCRIPTION_LENGTH_W_PHOTO = 150, MAX_DESCRIPTION_LENGTH_NO_PHOTO = 450, postId, fullName, profilePic = '', createdAt, helpDate, location = '', postPic = '', description = '', interested = 0, isSavedByUser, isUserInterested, isUserReported, postInModal = false, openModalHandler, isLoading, noTitle, noActions }) => {
+  
   const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
-  const [showMoreActive, setShowMoreActive] = useState(postInModal);
+  // const [showMoreActive, setShowMoreActive] = useState(postInModal);
   const [showReportModal, setShowReportModal] = useState(false);
 
   const toggleSaveForLater = () => {
-    postAction({ postId, actions: { isSavedByUser: !isSavedByUser } });
+    onPostAction({ postId, actions: { isSavedByUser: !isSavedByUser } });
   };
 
   const toggleHelp = () => {
-    postAction({ postId, actions: { isUserInterested: !isUserInterested } });
+    onPostAction({ postId, actions: { isUserInterested: !isUserInterested } });
     setWantToHelpCount(prevCount => !isUserInterested ? prevCount + 1 : prevCount - 1);
   };
 
-  // Show more button
-  const toggleShowMore = () => {
-    setShowMoreActive(prevShowMore => !prevShowMore);
-  };
+  // // Show more button
+  // const toggleShowMore = () => {
+  //   setShowMoreActive(prevShowMore => !prevShowMore);
+  // };
 
   // sets how long ago the post was posted 
   const displayDate = new Date(createdAt);
@@ -84,13 +83,13 @@ const Post = ({ MAX_DESCRIPTION_LENGTH_W_PHOTO = 150, MAX_DESCRIPTION_LENGTH_NO_
   const postTag = <div className={`${styles.post} ${isUserReported ? styles.reportedPost : ''}`}>
     <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
       {(!noTitle || postInModal) && <div className={styles.postHeader}>
-        <div>
+        {/* <div className='flex'> */}
           {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
           <div>
             <h6>{fullName}</h6>
             <p>{timeAgo} {location?.city && location?.country && `• ${location.city}, ${location.country}`}</p>
           </div>
-        </div>
+        {/* </div> */}
       </div>}
 
       <div className={styles.postBody}>

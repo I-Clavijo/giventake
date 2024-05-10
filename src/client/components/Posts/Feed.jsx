@@ -9,7 +9,7 @@ export const showAs = {
 }
 
 
-const Feed = ({ posts, radius=0, styleOrder = showAs.LIST, isLoading, noTitle=false, noActions=false }) => {
+const Feed = ({ posts, radius=0, styleOrder = showAs.LIST, isLoading, noTitle=false, noActions=false, onPostAction }) => {
     const selectedRadius = radius; // The selected radius in km
     // filter posts by radius- to do ***
 
@@ -33,7 +33,7 @@ const Feed = ({ posts, radius=0, styleOrder = showAs.LIST, isLoading, noTitle=fa
             isSavedByUser={post.isSavedByUser}
             isUserInterested={post.isUserInterested}
             isUserReported={post.isUserReported}
-            {...{isLoading, noTitle, noActions}}
+            {...{isLoading, noTitle, noActions, onPostAction}}
         />;
 
         return postTag;

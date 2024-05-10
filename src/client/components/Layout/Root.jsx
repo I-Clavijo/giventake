@@ -17,6 +17,14 @@ import { Button, Popover } from "flowbite-react";
 import { MdOutlinePerson, MdOutlineLogout, MdLockOutline } from "react-icons/md";
 import { TbHeartHandshake } from "react-icons/tb";
 import useLogout from "../../api/auth/useLogout";
+import { MdOutlineNewspaper } from "react-icons/md";
+import { FaRegCompass } from "react-icons/fa";
+import { LuMessagesSquare } from "react-icons/lu";
+import { TbSquareRoundedPlus } from "react-icons/tb";
+import { CgProfile } from "react-icons/cg";
+import { HiOutlineLockClosed } from "react-icons/hi";
+import { BiBookmark } from "react-icons/bi";
+
 
 
 export default function Root({ children }) {
@@ -31,20 +39,20 @@ export default function Root({ children }) {
         return <Popover trigger="click" aria-labelledby="profile-popover" {...{ content, children }} />;
     }
     const navlinks = [
-        { icon: NewsIcon, title: "Feed", link: "/" },
-        { icon: ExploreIcon, title: "Explore", link: "/explore" },
-        { icon: MessagesIcon, title: "Messages", link: "/messages" },
-        { icon: BookmarkIcon, title: "Saved", link: "/saved", showOnTop: true },
-        { icon: CreateIcon, title: "Create", link: "/create", showOnTop: true },
+        { icon: MdOutlineNewspaper, title: "Feed", link: "/" },
+        { icon: FaRegCompass, title: "Explore", link: "/explore" },
+        { icon: LuMessagesSquare, title: "Messages", link: "/messages" },
+        { icon: BiBookmark, title: "Saved", link: "/saved", showOnTop: true },
+        { icon: TbSquareRoundedPlus, title: "Create", link: "/create", showOnTop: true },
         isLoggedIn
-            ? { icon: ProfileIcon, title: `${user.firstName} ${user.lastName}`, popover: profilePopover }
-            : { icon: LockIcon, title: "Sign in/up", link: "/auth?mode=login" }
+            ? { icon: CgProfile, title: `${user.firstName} ${user.lastName}`, popover: profilePopover }
+            : { icon: HiOutlineLockClosed, title: "Sign in/up", link: "/auth?mode=login" }
     ];
 
     return (
         <>
             <ScrollToTop />
-            <AppSideBar icon={<TbHeartHandshake size={70} />} title="given'take" nav={navlinks}>
+            <AppSideBar Icon={TbHeartHandshake} title="given'take" nav={navlinks}>
                 {children}
                 <SnackbarProvider autoHideDuration={5000} anchorOrigin={{ horizontal: 'center', vertical: 'top' }}>
                     <Outlet />
