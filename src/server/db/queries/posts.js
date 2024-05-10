@@ -13,19 +13,9 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
         ...(filters?.category ? [{  // get ONLY posts from a specific category only if asked
             $match: { category: filters.category }
         }] : []),
-        // {
-        //     $geoNear: {
-        //         near: {
-        //             type: "Point",
-        //             coordinates: [-81.093699, 32.074673]
-        //         },
-        //         maxDistance: 500 * 1609,
-        //         key: "location.point",
-        //         spherical: true,
-        //         distanceField: "distance",
-        //         distanceMultiplier: 0.000621371 //Km
-        //     }
-        // },
+        // ...(filters?.PeopleIFollow ? [{  // get ONLY posts from people that the auth user is following
+        //     $match: { category: filters.category }
+        // }] : []),
         ...(filters?.location && +filters?.radius > 0 ? [{
             $match: {
                 $or: [
@@ -34,25 +24,13 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
                 ]
               }
         }] : []),
-        // {
-            
-        //   },
-        // {
-        //     $geoNear: {
-        //         near: { type: "Point", coordinates: [-81.093699, 32.074673] },
-        //         distanceField: "distance",
-        //         maxDistance: 500 * 1609, // in meters
-        //         spherical: true,
-        //         query: { location: { $exists: true } }
-        //     }
-        // },
         {
             "$lookup": {
                 from: User.collection.name,
                 localField: "user",
                 foreignField: "_id",
                 as: "user",
-                pipeline: [{ $project: { firstName: 1, lastName: 1 } }]
+                pipeline: [{ $project: { firstName: 1, lastName: 1, imgName: 1 } }]
             },
         },
         { $unwind: '$user' },

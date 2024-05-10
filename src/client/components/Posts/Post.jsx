@@ -84,13 +84,13 @@ const Post = ({ MAX_DESCRIPTION_LENGTH_W_PHOTO = 150, MAX_DESCRIPTION_LENGTH_NO_
   const postTag = <div className={`${styles.post} ${isUserReported ? styles.reportedPost : ''}`}>
     <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
       {(!noTitle || postInModal) && <div className={styles.postHeader}>
-        <div>
+        {/* <div className='flex'> */}
           {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
           <div>
             <h6>{fullName}</h6>
             <p>{timeAgo} {location?.city && location?.country && `• ${location.city}, ${location.country}`}</p>
           </div>
-        </div>
+        {/* </div> */}
       </div>}
 
       <div className={styles.postBody}>

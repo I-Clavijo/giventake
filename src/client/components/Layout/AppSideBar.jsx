@@ -7,7 +7,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import { MdSearch } from "react-icons/md";
 
 
-export default function AppSideBar({ children, icon, title, search, nav }) {
+export default function AppSideBar({ children, Icon, title, search, nav }) {
 
 	const isSmallDevice = useMediaQuery("only screen and (max-width: 767px)");
 	const isWideDevice = useMediaQuery("only screen and (min-width: 1264px)");
@@ -16,7 +16,8 @@ export default function AppSideBar({ children, icon, title, search, nav }) {
 	const navLinksMapped = nav.map((item, index) => {
 		const topClass = item.showOnTop ? styles.showOnTop : "";
 
-		const content = <><img src={item.icon} className={styles.icon} />
+		const content = <><item.icon size='1.5em' />
+		{/* <img src={item.icon} className={styles.icon} /> */}
 			<div className={styles.title}>{item.title}</div></>;
 
 		let navlink = <NavLink to={item.link} className={styles.linkWrap}>
@@ -32,14 +33,15 @@ export default function AppSideBar({ children, icon, title, search, nav }) {
 	const topNavLinksMapped = nav.map((item, index) => {
 		if (item.showOnTop)
 			return <NavLink to={item.link} className={styles.linkWrap} key={index}>
-				<img src={item.icon} className={styles.icon} />
+				<item.icon size='1.5em' />
+				{/* <img src={item.icon} className={styles.icon} /> */}
 			</NavLink>;
 	});
 
 	return <>
 		<div className={styles.baseCols}>
 			<div className={styles.appSideBarWrap}>
-				<div className={styles.logo}>{icon}</div>
+				<div className={styles.logo}><Icon size={70} color='#fff' /></div>
 				<nav className={styles.navWrap}>
 					{navLinksMapped}
 				</nav>
@@ -52,7 +54,7 @@ export default function AppSideBar({ children, icon, title, search, nav }) {
 				<div className={styles.innerWrap}>{children}</div>
 			</div>
 			<div className={styles.topBar}>
-				<div className={styles.logo}>{icon}<span>{title}</span></div>
+				<div className={styles.logo}><Icon size={70} /><span>{title}</span></div>
 				<div className={styles.searchWrap}>{search}</div>
 				<div className={styles.topNavButtons}>{topNavLinksMapped}</div>
 			</div>

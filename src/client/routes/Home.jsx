@@ -9,15 +9,14 @@ import FeedFilters from "../components/Posts/FeedFilters.jsx";
 
 export default function Home() {
   const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser();
-  const { data: posts, isLoading: isLoadingPosts } = usePosts();
+  const { data: posts, isLoading: isLoadingPosts } = usePosts({ filters: { onlyPeopleIFollow: 1 } });
 
   return <>
-    {!user?.flags?.hideWelcomeModal && <WelcomeModal />}
+    {user?.flags?.hideWelcomeModal === false && <WelcomeModal />}
 
-    {posts && !isLoadingPosts ?
-      <Feed posts={posts} />
-      :
-      <Spinner />
+    {posts && !isLoadingPosts
+      ? <Feed posts={posts} />
+      : <Spinner />
     }
   </>;
 }

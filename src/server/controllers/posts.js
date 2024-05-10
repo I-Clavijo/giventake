@@ -61,7 +61,7 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
     const { filters } = req.query || {};
-    if(filters)
+    if (filters)
         filters.category = filters?.category ? convertToUpperCase(filters?.category) : ''; //convert the category to key
 
     console.log(filters)
@@ -72,9 +72,14 @@ export const getPosts = async (req, res) => {
     // get post image from S3 bucket
     for (const post of posts) {
         // For each post, generate a signed URL and save it to the post object
-        const imgName = post.imgName;
-        const url = imgName ? await getImageUrl(imgName) : '';
-        post.imgUrl = url;
+        const imgNamePost = post.imgName;
+        const urlPost = imgNamePost ? await getImageUrl(imgNamePost) : '';
+        post.imgUrl = urlPost;
+
+        // get profile image of the user 
+        const imgNameProfile = post.user.imgName;
+        const urlProfile = imgNameProfile ? await getImageUrl(imgNameProfile) : '';
+        post.user.imgUrl = urlProfile;
     }
 
     res.status(200).json(posts);
