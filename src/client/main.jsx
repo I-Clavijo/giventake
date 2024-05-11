@@ -21,6 +21,7 @@ import Admin from "./routes/Admin";
 import Unauthorized from "./components/Auth/Unauthorized";
 import SavedPosts from "./routes/SavedPosts";
 import Create from "./routes/Create";
+import VerifyEmail from "./routes/VerifyEmail";
 
 const ROLES = {
 	'User': 2001,
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
 							{ path: "/profile", element: <Profile isMyProfile={true} /> },
 							{ path: "/create", element: <Create />},
 							{ path: "/messages", element: <Messages /> },
+							{ path: "/verify-email", element: <VerifyEmail /> },
 						] 
 					},
 					{ 

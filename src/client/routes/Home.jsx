@@ -23,8 +23,8 @@ export default function Home() {
   const handleClick = async () => {
     const emailData = {
       emailHTML : RenderEmail(),
-      userEmail : "eilatcasa@gmail.com",
-      userName : "Ivan",
+      userEmail : user.email,
+      userName : user.firstName,
   };
 
     PostEmail(emailData);

@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true, minlength: 5 },
     imgName: String,
     interests: [String],
+    isVerified: { type: Boolean, default: false },
+    emailToken: { type: String },
     location: {
         lat: String,
         long: String,
