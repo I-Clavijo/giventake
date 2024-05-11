@@ -1,3 +1,22 @@
+.categoriesWrap{
+  padding: 1em 1em;
+  margin: -20px;
+  margin-bottom: 1em;
+  border: #eee 1px solid;
+}
+.scrollWrap{
+  margin: 0 auto;
+  a{
+    margin: .4em;
+    display: inline-block;
+    width: max-content;
+    color: var(--secondary-link-color);
+    cursor: pointer;
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+}
 
 .grid {
 

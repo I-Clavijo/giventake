@@ -1,3 +1,13 @@
+import { FaCarOn } from "react-icons/fa6";
+import { MdOutlinePets, MdSportsSoccer } from "react-icons/md";
+import { BiSolidPackage } from "react-icons/bi";
+import { MdHomeRepairService } from "react-icons/md";
+import { FaCameraRetro } from "react-icons/fa";
+import { LuPlane } from "react-icons/lu";
+import { MdOutlineFamilyRestroom } from "react-icons/md";
+import { TbBrandStackoverflow } from "react-icons/tb";
+
+
 
 import Car from '../assets/images/categories_grid/car.jpg';
 import Elderly from '../assets/images/categories_grid/elderly.jpg';
@@ -10,14 +20,15 @@ import Travel from '../assets/images/categories_grid/travel.jpg';
 
 // I am just a lazy person and need to get this data from server.
 export const CATEGORIES = {
-    'ROAD_ASSISTANCE': { name: 'Road Assistance', obj: Car, to: '/feed/road-assistance' },
-    'HOME_REPAIR': { name: 'Home Repair', obj: Home, to: '/feed/home-repair' },
-    'MOVING': { name: 'Moving', obj: Moving, to: '/feed/moving' },
-    'PETS': { name: 'Pets', obj: Pets, to: '/feed/pets' },
-    'PHOTOGRAPHY': { name: 'Photography', obj: Photography, to: '/feed/photography' },
-    'SPORTS': { name: 'Sports', obj: Sports, to: '/feed/sports' },
-    'TRAVEL': { name: 'Travel', obj: Travel, to: '/feed/travel' },
-    'ELDERLY_CARE': { name: 'Elderly Care', obj: Elderly, to: '/feed/elderly-care' }
+    // 'ROAD_ASSISTANCE': { name: 'Road Assistance', obj: Car, to: '/feed/road-assistance', icon: FaCarOn },
+    'ALL_CATEGORIES': { name: 'All Categories', icon: TbBrandStackoverflow },
+    'HOME_REPAIR': { name: 'Home Repair', obj: Home, icon: MdHomeRepairService },
+    'MOVING': { name: 'Moving', obj: Moving, icon: BiSolidPackage },
+    'PETS': { name: 'Pets', obj: Pets, icon: MdOutlinePets },
+    'PHOTOGRAPHY': { name: 'Photography', obj: Photography, icon: FaCameraRetro },
+    'SPORTS': { name: 'Sports', obj: Sports, icon: FaCarOn },
+    'TRAVEL': { name: 'Travel', obj: Travel, icon: LuPlane },
+    'ELDERLY_CARE': { name: 'Elderly Care', obj: Elderly, icon: MdOutlineFamilyRestroom }
 }
 
 // I am just a lazy person and need to get this data from server.
@@ -30,3 +41,5 @@ export const REPORTS_REASONS = {
     PERSONAL_ATTACK: 'Personal attack',
     OTHER: 'Other reason (please specify)'
 };
+
+export const RADIUS_LIST = [3, 10, 30, 60, 100];

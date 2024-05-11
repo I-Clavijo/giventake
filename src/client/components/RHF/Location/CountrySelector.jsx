@@ -4,7 +4,7 @@ import useUserCountryUsingNavGeo from '../../../hooks/useUserCountryUsingNavGeo.
 import useCountries from "../../../hooks/useCountries";
 import { useEffect } from "react";
 
-const CountrySelector = ({ field, style, helperText }) => {
+const CountrySelector = ({ field, style, helperText, onChange }) => {
 
     const countryUsingIP = useUserCountryUsingIP();
     const countryUsingNavGeo = useUserCountryUsingNavGeo();
@@ -18,7 +18,7 @@ const CountrySelector = ({ field, style, helperText }) => {
     },[displayedCountry]);
 
 
-    return <Select id="country" label="Select your Country" className="mb-4 block" color='light' {...field} {...{ style, helperText }}>
+    return <Select id="country" label="Select your Country" className="mb-4 block w-full" {...field} onChange={(e) => {field.onChange(e.target.value);onChange()}} {...{ style, helperText }}>
         <option value=''>Choose country</option>
         {countries.map(country => {
             const countryName = country.name.common;

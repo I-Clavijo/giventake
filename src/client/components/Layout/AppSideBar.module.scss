@@ -101,7 +101,7 @@
                 font-weight: bold;
                 font-weight: 600;
                 border-radius: 6px;
-                padding: 10px;
+                padding: .4em;
 
                 &:hover {
                     transition: background-color .3s;
@@ -114,7 +114,6 @@
 
                 .icon {
                     display: block;
-
                 }
 
                 @media screen and (min-width: 768px) and (max-width: 1263px) {
@@ -229,6 +228,7 @@
             svg {
                 height: 30px;
                 width: 30px;
+                color: var(--logo-color);
             }
 
             span {
@@ -239,6 +239,10 @@
         .topNavButtons {
             display: flex;
             flex-direction: row-reverse;
+
+            svg{
+                color: var(--logo-color);
+            }
 
             .linkWrap {
                 padding: 0 5px;

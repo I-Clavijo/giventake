@@ -2,15 +2,15 @@ import { Post, ReportedPost, User } from '../db/model/index.js';
 import sharp from 'sharp';
 import AppError from '../utils/AppError.js';
 import { runInTransaction } from '../db/utils/runInTransaction.js';
-import { REPORTS_KEYS } from '../db/model/constants.js';
 import mongoose from 'mongoose';
 import { deleteImage, getImageUrl, putImage } from '../utils/S3.js';
 import { getAllPostsQuery } from '../db/queries/posts.js';
+import { convertToUpperCase } from '../db/utils/lib.js';
 
 
 export const createPost = async (req, res) => {
     const file = req.file;
-    const { category, startDate, startTime, endTime, endDate, isAllDay, isEndDate, city, address, isRemoteHelp, description } = req.body;
+    const { category, startDate, startTime, endTime, endDate, isAllDay, isEndDate, location, isRemoteHelp, description } = req.body;
 
     // only if file uploaded
     let fileName = '';
@@ -38,8 +38,19 @@ export const createPost = async (req, res) => {
         imgName: fileName,
         description,
         isRemoteHelp,
-        city,
-        address
+        ...(location &&
+        {
+            location: {
+                geometry: {
+                    type: 'Point',
+                    coordinates: [+location.lat, +location.long]
+                },
+                country: location.country,
+                city: location.city,
+                address: location.address,
+            }
+        }
+        )
     };
     console.log(newPost)
 
@@ -50,6 +61,8 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
     const { filters } = req.query || {};
+    if (filters)
+        filters.category = filters?.category ? convertToUpperCase(filters?.category) : ''; //convert the category to key
 
     //get all posts from DB
     const auth_userId = req.user?._id;
@@ -58,9 +71,14 @@ export const getPosts = async (req, res) => {
     // get post image from S3 bucket
     for (const post of posts) {
         // For each post, generate a signed URL and save it to the post object
-        const imgName = post.imgName;
-        const url = imgName ? await getImageUrl(imgName) : '';
-        post.imgUrl = url;
+        const imgNamePost = post.imgName;
+        const urlPost = imgNamePost ? await getImageUrl(imgNamePost) : '';
+        post.imgUrl = urlPost;
+
+        // get profile image of the user 
+        const imgNameProfile = post.user.imgName;
+        const urlProfile = imgNameProfile ? await getImageUrl(imgNameProfile) : '';
+        post.user.imgUrl = urlProfile;
     }
 
     res.status(200).json(posts);
@@ -165,4 +183,6 @@ export const postAction = async (req, res) => {
             }
         });
     }
+
+    res.sendStatus(201);
 }

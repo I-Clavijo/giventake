@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CitySelector.module.css';
-// import citiesData from '../../assets/Cities_il.json';
 import { TextInput } from 'flowbite-react';
 import useCitiesInCountry from '../../../hooks/useCitiesInCountry';
 
@@ -9,10 +8,15 @@ export const showAs = {
   SEARCH: 'Search',
 };
 
-function CitySelector({ field, styleOrder = showAs.SEARCH, countryName, disabled, helperText, onChange }) {
+function CitySelector({ field, styleOrder = showAs.SEARCH, countryName, disabled, helperText, onChange, props }) {
 
   const { cities, loading } = useCitiesInCountry(countryName);
   const [searchInput, setSearchInput] = useState(field.value || '');
+
+  useEffect(() => {
+    if(!field.value)setSearchInput('');
+    
+  },[field.value])
 
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
@@ -31,17 +35,16 @@ function CitySelector({ field, styleOrder = showAs.SEARCH, countryName, disabled
   ).slice(0,10);
 
   return (
-    <div className='mb-2'>
+
       <div className={styles.locationSelection}>
-        <div className={styles.input}>
           <TextInput
             className={styles.searchInput}
             placeholder={`${styleOrder === showAs.CHANGE ? showAs.CHANGE : showAs.SEARCH} your city here...`}
             value={searchInput}
             onChange={handleSearchInputChange}
+            {...props}
             {...{ disabled, helperText }}
-
-            color='light'
+            // color='light'
           />
           {searchInput && (
             <ul className={!field.value ? styles.searchResults : styles.searchResultsAfter}>
@@ -53,8 +56,7 @@ function CitySelector({ field, styleOrder = showAs.SEARCH, countryName, disabled
             </ul>
           )}
         </div>
-      </div>
-    </div>
+
   );
 }
 
