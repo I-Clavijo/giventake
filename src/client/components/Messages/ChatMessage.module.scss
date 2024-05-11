@@ -1,22 +1,21 @@
 .test {
     display: flex;
     justify-content: center;
-    border: 1px solid #00000036;
+    border: 1px solid #ddd;
     width: fit-content;
     margin-inline: auto;
-    border-radius: 25px;
+    border-radius: 8px;
     padding: 5px 10px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 8px;
-    background-color: #c9c9f357;
+    // box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 8px;
+    background-color: #eee;
     font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--secondary-font-color);
 
     &.testHidden {
         display: none;
     }
 }
-
-/* Style to hide the div */
-
 
 
 .messageWrapper {
@@ -25,6 +24,7 @@
     
     .profileImg {
         img{
+            height: 2em;
             border-radius: 50%;
         }
         &.right {
@@ -38,19 +38,19 @@
     }
 
     .message{
-        background-color: #822faf8d;
-        color: black;
+        background-color: var(--third-color);
+        color: #fff;
         position: relative;
         max-width: 50%;
-        border-radius: 20px;
-        padding: 5px 10px;                
+        border-radius: 8px;
+        padding: 5px 10px;      
+        font-size: .9em;          
     
         .time {
             font-size: 12px;
             color: rgba(245, 245, 245, 0.833);
             text-align: right;
-            margin: unset;
-            margin-block: 5px;
+            margin: 0;
         }
     }
 }
