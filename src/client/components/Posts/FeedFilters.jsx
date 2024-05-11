@@ -16,7 +16,7 @@ export function FeedFilters({ defaultValues, onChange }) {
   const category = searchParams.get('category');
 
   const isLocationOfUserExist = defaultValues?.location?.lat && defaultValues?.location?.long;
-  const [isAllLocations, setIsAllLocations] = useState(isLocationOfUserExist === false);
+  const [isAllLocations, setIsAllLocations] = useState(!isLocationOfUserExist);
 
   const getCategoryNameFromHandle = category ? CATEGORIES[category.toUpperCase()].name : null;
 
@@ -34,7 +34,7 @@ export function FeedFilters({ defaultValues, onChange }) {
   };
 
   useEffect(() => {
-    setIsAllLocations(false);
+    if(watch('location.lat') && watch('location.long')) setIsAllLocations(false);
 
   }, [watch('location.city'), watch('location.country')]);
 

@@ -41,13 +41,13 @@ const router = createBrowserRouter([
 			{ 
 				element: <PersistLogin />,
 				children: [
-					{ path: "/", element: <Home /> },
-					{ path: "/explore", element: <Explore /> },
-					{ path: "/saved", element: <SavedPosts />},
+					{ path: "/", element: <Explore /> },
 					{ path: "/profile/:id", element: <Profile /> },
 					{ 
 						element: <RequireAuth allowedRoles={[ROLES.User]} />, 
 						children: [
+							{ path: "/feed", element: <Home /> },
+							{ path: "/saved", element: <SavedPosts />},
 							{ path: "/profile", element: <Profile isMyProfile={true} /> },
 							{ path: "/create", element: <Create />},
 							{ path: "/messages", element: <Messages /> },

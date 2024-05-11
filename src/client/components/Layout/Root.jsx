@@ -39,14 +39,16 @@ export default function Root({ children }) {
         return <Popover trigger="click" aria-labelledby="profile-popover" {...{ content, children }} />;
     }
     const navlinks = [
-        { icon: MdOutlineNewspaper, title: "Feed", link: "/" },
-        { icon: FaRegCompass, title: "Explore", link: "/explore" },
-        { icon: LuMessagesSquare, title: "Messages", link: "/messages" },
-        { icon: BiBookmark, title: "Saved", link: "/saved", showOnTop: true },
-        { icon: TbSquareRoundedPlus, title: "Create", link: "/create", showOnTop: true },
-        isLoggedIn
-            ? { icon: CgProfile, title: `${user.firstName} ${user.lastName}`, popover: profilePopover }
-            : { icon: HiOutlineLockClosed, title: "Sign in/up", link: "/auth?mode=login" }
+        ...(isLoggedIn ? [{ icon: MdOutlineNewspaper, title: "Feed", link: "/feed" }] : []),
+        { icon: FaRegCompass, title: "Explore", link: "/" },
+        ...(isLoggedIn ? [
+            { icon: LuMessagesSquare, title: "Messages", link: "/messages" },
+            { icon: BiBookmark, title: "Saved", link: "/saved", showOnTop: true },
+            { icon: TbSquareRoundedPlus, title: "Create", link: "/create", showOnTop: true },
+            { icon: CgProfile, title: `${user.firstName} ${user.lastName}`, popover: profilePopover }
+        ] : [
+            { icon: HiOutlineLockClosed, title: "Sign in/up", link: "/auth?mode=login" }
+        ]),
     ];
 
     return (
