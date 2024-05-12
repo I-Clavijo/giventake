@@ -8,7 +8,7 @@ export const sendEmail = async (req, res) => {
     const { emailHTML, userEmail, userName } = req.body;
 
     await resend.emails.send({
-        from: "giventake_noreply@giventake.org",
+        from: "noreply@giventake.org",
         to: userEmail,
         subject: "Welcome " + userName + " to given'take",
         html: emailHTML,
