@@ -6,9 +6,9 @@ import { Spinner } from "flowbite-react";
 import WelcomeModal from "../components/WelcomeModal.jsx";
 import { usePostAction } from "../api/posts/usePostAction.jsx";
 import RenderEmail from '../api/emails/renderEmail.jsx';
-import postWelcomeEmail from '../api/emails/PostEmail.jsx';
-import postVerificationEmail from '../api/emails/PostVerificationEmail.jsx';
-import axios from 'axios';
+import PostWelcomeEmail from '../api/emails/PostEmail.jsx';
+import PostVerificationEmail from '../api/emails/PostVerificationEmail.jsx';
+import EmailVerification from "../components/Auth/EmailVerification.jsx";
 
 export default function Home() {
   const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser();
@@ -18,30 +18,37 @@ export default function Home() {
   const { data: posts, isLoading: isLoadingPosts } = usePosts({ filters });
 
 
-  const handleClick = async () => {
+  const sendWelcomeEmail = async () => {
     const emailData = {
       emailHTML : RenderEmail(),
       userEmail : user.email,
       userName : user.firstName,
   };
 
-    postWelcomeEmail(emailData);
+    PostWelcomeEmail(emailData);
   };
 
-  const handleClick2 = async () => {
-    
-      const emailData = {
-        emailHTML : <html><h1>test</h1></html>,
-        userEmail : user.email,
-        userName : user.firstName,
-    };
-    postVerificationEmail(emailData);
-
+  const sendVerificationEmail = async () => {
+    const emailData = {
+      emailHTML : RenderEmail(),
+      userEmail : user.email,
+      userName : user.firstName,
   };
+
+    PostVerificationEmail(emailData);
+  };
+
+
 
   return <>
-    <button onClick={handleClick}>Send email</button>
-    <button onClick={handleClick2}>Send verification email</button>
+    <div>
+      <button onClick={sendWelcomeEmail}>Send Welcome email</button>
+    </div>
+    <div>
+      <button onClick={sendVerificationEmail}>Send verification email</button>
+    </div>
+    <EmailVerification />
+    
     {user?.flags?.hideWelcomeModal === false && <WelcomeModal />}
 
     {posts && !isLoadingPosts
