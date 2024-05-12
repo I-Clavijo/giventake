@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import crypto from "crypto";
 import VerificationCode from '../db/model/VerificationCode.js';
+import User from '../db/model/User.js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -76,22 +77,18 @@ export const sendVerificationEmail = async (req, res) => {
 export const verifyCode = async (req, res) => {
 
     const { email, code } = req.body;
-
     const verificationCode = await VerificationCode.findOne({ email });
 
         if (verificationCode.code === code) {
-            console.log("correct code");
+            const UserDB = await User.findOne({ email });
+            UserDB.isVerified = true;
+            await UserDB.save();
+            console.log("User entered the correct code");
+            console.log("isVerified: ", UserDB.isVerified);
+            res.status(200).json({ message: 'Email verified' });
         }
         else {
-            console.log("wrong code");
+            console.log("User entered the wrong code");
+            res.status(401).json({ error: 'Invalid verification code' });
         }
-/*
-    if (storedCode && storedCode === code) {
-        // Update the user's verification status
-        // ...
-        res.status(200).json({ message: 'Email verified' });
-    } else {
-        res.status(400).json({ error: 'Invalid verification code' });
-    }
-    */
 }
