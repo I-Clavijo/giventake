@@ -49,6 +49,47 @@ const chatHistory = [
     },
 ];
 
+
+const postsConversations = [
+    {
+        post: {
+            _id: '6635f1e045bc959052495dbd',
+            description: `🌟 New Release Alert!📚 Exciting news for all bookworms out there! 📚🎉 We're thrilled to announce the release of our latest novel, "Shadows of Destiny" by acclaimed author, Sarah Johnson. Dive into a world of mystery, suspense, and romance as you follow the captivating journey of our protagonist, Emily, through the twists and turns of fate.📖 Synopsis:In the quaint town of Willow Creek, secrets lurk in the shadows, waiting to be unearthed. When Emily discovers an ancient diary hidden in her grandmother's attic, she sets off on a quest to unravel the mysteries of her family's past. But as she delves deeper, she realizes that some secrets are better left buried. Will Emily uncover the truth before it's too late?🌟 Grab your copy today!Available in paperback, ebook, and audiobook formats. Don't miss out on the adventure that readers are calling "spellbinding" and "unputdownable"!📢 Special offer: Use code SHADOWS15 for 15% off your purchase!#NewRelease #Books #Mystery #Suspense #Romance #MustRead`,
+            createdAt: '2024-05-04T08:29:20.291Z',
+            usersInterested: ['6635f1e045bc959052495dasc', '6635f1e045bc959052495dafgv', '6635f1e045bc959052495da5b'],
+        },
+        conversations: [
+            {
+                _id: '',
+                users: ['66197bc771671388122f52a5', '662a05789d0bc8ab6d4905f2']
+            },
+            {
+                _id: '',
+                users: ['66197bc771671388122f523r', '662a05789d0bc8ab6d4905sv']
+            }
+        ]
+    },
+    {
+        post: {
+            _id: '663cefb1049d7722c1ba148e',
+            description: `Hello everybody, I need your help with traveling with me to Italy to hike in the mountains, and help me with my wheelchair.`,
+            createdAt: '2024-05-04T08:29:20.291Z',
+            usersInterested: ['66197bc771671388122f52a5', '662a05789d0bc8ab6d4905f2']
+        },
+        conversations: [
+            {
+                _id: '',
+                users: ['66197bc771671388122f52a5', '662a05789d0bc8ab6d4905f2']
+            },
+            {
+                _id: '',
+                users: ['66197bc771671388122f523r', '662a05789d0bc8ab6d4905sv']
+            }
+        ]
+    }
+
+];
+
 const contacts = [
     {
         avatar: 'https://via.placeholder.com/50',
@@ -129,35 +170,49 @@ const calcRealtiveDay = (date1, date2) => {
 }
 
 
-export default function ChatContacts({ onContactClick, selectedChatId }) {
+export default function ChatSelector({ onChatChange }) {
     const [selectedTab, setSelectedTab] = useState(TABS.All);
+    const [selectedChat, setSelectedChat] = useState({ post: null, conversation: null });
     const [currentSelected, setCurrentSelected] = useState();
 
     const changeCurrentChat = (index, contact) => {
+        setSelectedChat({ post: null, conversation: null })
         setCurrentSelected(index);
-        // changeChat(contact);
+        onChatChange(contact);
     };
 
 
-    const contactsList = <div className='contacts'>
-        <ul>
-            {contacts.map((contact, index) => <li className={`${index === currentSelected ? "selected" : ""}`} onClick={() => changeCurrentChat(index, contact)} key={index}>
-                <div className='profile-img'>
-                    <img className="rounded-full" src={ProfileImg} alt="Profile Pic" />
-                </div>
-                <div className="details">
+    // const postsList = <ul>
+    //     {posts.map((post, index) => <li onClick={() => changeCurrentChat(index, contact)} key={index}>
+    //         <div className="details">
+    //             <div className="top">
+    //                 <p className="title">{contact.name}</p>
+    //                 <p className="date">{calcRealtiveDay(chatHistory[1].time, chatHistory[0].time)}</p>
+    //             </div>
+    //             <p className="msg-preview">{contact.lastMessage}</p>
+    //         </div>
 
-                    <div className="top">
-                        <p className="title">{contact.name}</p>
-                        <p className="date">{calcRealtiveDay(chatHistory[1].time, chatHistory[0].time)}</p>
-                    </div>
-                    <p className="msg-preview">{contact.lastMessage}</p>
-                </div>
+    //     </li>
+    //     )}
+    // </ul>;
 
-            </li>
-            )}
-        </ul>
-    </div>;
+    const contactsList = <ul>
+        {contacts.map((contact, index) => <li className={`${index === currentSelected ? "selected" : ""}`} onClick={() => changeCurrentChat(index, contact)} key={index}>
+            <div className='profile-img'>
+                <img className="rounded-full" src={ProfileImg} alt="Profile Pic" />
+            </div>
+            <div className="details">
+
+                <div className="top">
+                    <p className="title">{contact.name}</p>
+                    <p className="date">{calcRealtiveDay(chatHistory[1].time, chatHistory[0].time)}</p>
+                </div>
+                <p className="msg-preview">{contact.lastMessage}</p>
+            </div>
+
+        </li>
+        )}
+    </ul>;
 
     return <$Wrapper>
         <$Tabs>
@@ -165,7 +220,11 @@ export default function ChatContacts({ onContactClick, selectedChatId }) {
                 <$TabItem key={currTab} $isActive={selectedTab === currTab} onClick={() => setSelectedTab(currTab)}>{currTab}</$TabItem>
             )}
         </$Tabs>
-        {contactsList}
+        <div className='list'>
+            {/* {postsList} */}
+            {contactsList}
+            {/* {selectedChat.post && } */}
+        </div>
     </$Wrapper>;
 };
 
@@ -174,7 +233,7 @@ const $Wrapper = styled.div`
 display:flex;
 flex-direction:column;
 
-.contacts{
+.list{
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -202,8 +261,11 @@ flex-direction:column;
             }
             .profile-img{
                 padding: .3em;
+                width: fit-content;
                 img{
                     height: 100%;
+                    width: auto;
+
                 }
             }
             .details{
@@ -231,6 +293,8 @@ flex-direction:column;
                     white-space: nowrap;
                     font-size: .9em;
                     white-space: nowrap;
+                    font-size: 0.85em;
+                    font-weight: 300;
 
                     @supports (-webkit-line-clamp: 2) {
                     overflow: hidden;

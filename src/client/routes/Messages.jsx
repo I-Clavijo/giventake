@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Messages.module.scss";
-import ChatContacts from "../components/Messages/ChatContacts";
 import ChatBox from "../components/Messages/ChatBox";
+import { useUser } from '../api/users/useUser';
+import { BASE_URL } from "../api/axios";
+import { io } from 'socket.io-client';
+import ChatSelector from "../components/Messages/ChatSelector";
 
 const chatHistory = [
 	{
@@ -43,21 +46,33 @@ const chatHistory = [
 
 
 
-
-
 export default function Messages() {
+	const { data: user } = useUser();
+	const socket = useRef();
+	const [openChat, setOpenChat] = useState(false);
+	const [currentChat, setCurrentChat] = useState();
 
-	const [openChat, setOpenChat] = useState(false)
 
+	useEffect(() => {
+		if (user) {
+			socket.current = io(BASE_URL);
+			socket.current.emit("add-user", user._id);
+		}
+	}, [user]);
+
+	const chatChangeHandler = (chat) => {
+		setOpenChat(true);
+	};
 
 	return (
 		<>
 			<div className={styles.chatPage}>
 				<div className={`max-w-sm ${styles.cardWrapper}`}>
-					<ChatContacts onContactClick={() => setOpenChat(true)} />
+					<ChatSelector onChatChange={chatChangeHandler} />
+
 				</div>
 				<div className={`${styles.chatBox} ${openChat && styles.show}`}>
-					<ChatBox />
+					<ChatBox {...{ socket }} />
 				</div>
 			</div>
 
