@@ -48,10 +48,11 @@ export const sendWelcomeEmail = async (req, res) => {
 
 export const sendVerificationEmail = async (req, res) => {
 
-    const { emailHTML, email, userName } = req.body;
+    const {email} = req.body;
 
     const code = Math.floor(100000 + Math.random() * 900000); // Generate 6-digit code
 
+    console.log(email);
     
     try {
       await resend.emails.send({
@@ -71,7 +72,7 @@ export const sendVerificationEmail = async (req, res) => {
       console.error(error);
       res.status(500).json({ error: 'Failed to send email' });
     }
-  
+ 
 }
 
 export const verifyCode = async (req, res) => {

@@ -1,13 +1,11 @@
 import React from 'react';
 import axios from '../axios';
 
-export default async function PostVerificationEmail( {emailHTML, userName, email}) {
+export default async function PostVerificationEmail( email) {
 
   try {
     const emailData = {
-        emailHTML,
-        email,
-        userName
+        email : email,
     };
     
     const response = await axios.post('/emails/send-verification-email', emailData);

@@ -1,20 +1,20 @@
 import { useForm } from "react-hook-form";
-import {
-    Link,
-    useSearchParams,
-} from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Checkbox, Label, TextInput, Card } from 'flowbite-react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useSignUp } from '../api/auth/useSignUp'
 import { useLogin } from "../api/auth/useLogin";
 import LoginImg from '../assets/images/login-photo.png';
 import styles from "./Auth.module.scss";
-
+import EmailVerification from "../components/Auth/EmailVerification";
+import PostVerificationEmail from "../api/emails/PostVerificationEmail";
 
 export default function Auth() {
     const [searchParams] = useSearchParams();
     const isLogin = searchParams.get('mode') === 'login';
+    const [verifyEmail, setVerifyEmail] = useState(false);
 
     const loginSchema = z
         .object({
@@ -53,7 +53,14 @@ export default function Auth() {
 
     const { mutate: signuUpMutate } = useSignUp();
     const { mutate: loginMutate } = useLogin();
-    const onSubmit = isLogin ? loginMutate : signuUpMutate;
+    const onSubmit = isLogin ? loginMutate : handleSignUp;
+
+    async function handleSignUp(data) {
+        setVerifyEmail(true);
+        await PostVerificationEmail(data.email);
+
+        //signuUpMutate(data);
+    }
 
     return (
         <div className={styles.pageInnerWrap}>
@@ -131,6 +138,7 @@ export default function Auth() {
                             {isLogin ? 'Create new user' : 'Login'}
                         </Link>
                     </div>
+                    {verifyEmail && <EmailVerification />}
                     <Button type="submit" disabled={isSubmitting} className="button">
                         {btnLoginLabel}
                     </Button>
