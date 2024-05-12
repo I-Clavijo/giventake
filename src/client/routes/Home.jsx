@@ -6,7 +6,9 @@ import { Spinner } from "flowbite-react";
 import WelcomeModal from "../components/WelcomeModal.jsx";
 import { usePostAction } from "../api/posts/usePostAction.jsx";
 import RenderEmail from '../api/emails/renderEmail.jsx';
-import PostEmail from '../api/emails/PostEmail.jsx';
+import postWelcomeEmail from '../api/emails/PostEmail.jsx';
+import postVerificationEmail from '../api/emails/PostVerificationEmail.jsx';
+import axios from 'axios';
 
 export default function Home() {
   const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser();
@@ -23,11 +25,23 @@ export default function Home() {
       userName : user.firstName,
   };
 
-    PostEmail(emailData);
+    postWelcomeEmail(emailData);
+  };
+
+  const handleClick2 = async () => {
+    
+      const emailData = {
+        emailHTML : <html><h1>test</h1></html>,
+        userEmail : user.email,
+        userName : user.firstName,
+    };
+    postVerificationEmail(emailData);
+
   };
 
   return <>
     <button onClick={handleClick}>Send email</button>
+    <button onClick={handleClick2}>Send verification email</button>
     {user?.flags?.hideWelcomeModal === false && <WelcomeModal />}
 
     {posts && !isLoadingPosts

@@ -67,28 +67,6 @@ export const signUp = async (req, res) => {
 
 }
 
-export const verifyEmail = async (req, res) => {
-    try{
-        const emailToken = req.body.emailToken;
-
-        if(!emailToken) return res.sendStatus(404).json({message: 'Email token not found'});
-
-        const user = await User.findOne({emailToken});
-
-        if(user){
-            user.emailToken = null;
-            user.isVerified = true;
-
-            await user.save();
-        } else res.sendStatus(404).json({message: 'User not found'});
-    } catch(err){
-        console.error(err);
-        res.sendStatus(500).json({message: 'Internal server error'});
-    }
-}
-
-
-
 export const login = async (req, res) => {
     const { email, password, persist } = req.body;
 
