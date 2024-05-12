@@ -53,13 +53,21 @@ const AppSideBar = ({ children, icon, title, search, nav }) => {
 
     // Helper functions
     const findUsersByPartialName = (partialName) => {
-        const users = [
-            { name: "John Cena", profilePic: profileImg, id: 1 },
-            { name: "Jane Austen", profilePic: profileImg, id: 2 },
-            { name: "Jack Black", profilePic: profileImg, id: 3 }
-        ];
-        return users.filter(user => user.name.toLowerCase().includes(partialName.toLowerCase()));
-    };
+		const users = [
+		  { name: "John Cena", profilePic: profileImg, id: 1 },
+		  { name: "Jane Austen", profilePic: profileImg, id: 2 },
+		  { name: "Jack Black", profilePic: profileImg, id: 3 }
+		];
+	  
+		const matchingUsers = users.filter(user =>
+		  user.name.toLowerCase().includes(partialName.toLowerCase())
+		);
+	  
+		// If no matching users are found, create a "user not found" entry
+		return matchingUsers.length === 0
+		  ? [...matchingUsers, { name: "User Not Found", profilePic: profileImg, id: 0 }]
+		  : matchingUsers;
+	  };
 
     // Event handlers
     const handleSearchFocus = () => {
@@ -95,7 +103,6 @@ const AppSideBar = ({ children, icon, title, search, nav }) => {
                 }
             }
         }, 300);
-
         setSearchResult(null);
         setTypingTimeout(newTypingTimeout);
     };
