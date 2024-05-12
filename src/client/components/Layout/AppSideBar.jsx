@@ -7,7 +7,7 @@ import { useMediaQuery } from "@uidotdev/usehooks";
 import { MdSearch } from "react-icons/md";
 
 
-export default function AppSideBar({ children, Icon, title, search, nav }) {
+export default function AppSideBar({ children, Icon, title, search, nav, currentPathName }) {
 
 	const isSmallDevice = useMediaQuery("only screen and (max-width: 767px)");
 	const isWideDevice = useMediaQuery("only screen and (min-width: 1264px)");
@@ -16,8 +16,10 @@ export default function AppSideBar({ children, Icon, title, search, nav }) {
 	const navLinksMapped = nav.map((item, index) => {
 		const topClass = item.showOnTop ? styles.showOnTop : "";
 
-		const content = <><item.icon size='1.5em' />
-		{/* <img src={item.icon} className={styles.icon} /> */}
+		const content = <>
+		{(item.link && item.link.startsWith(currentPathName) && currentPathName !== '/') || currentPathName === item.link ? <item.iconActive size='1.5em' /> : <item.icon size='1.5em' />}
+			
+			{/* <img src={item.icon} className={styles.icon} /> */}
 			<div className={styles.title}>{item.title}</div></>;
 
 		let navlink = <NavLink to={item.link} className={styles.linkWrap}>

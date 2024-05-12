@@ -1,7 +1,15 @@
 :root {
-    --nav-wide-width: 200px;
-    --nav-medium-width: 80px;
-    --nav-narrow-height: 50px;
+    // wide - desktop
+    --nav-wide-side-width: 12.5rem;
+    --nav-wide-top-height: 5rem;
+
+    // medium - laptop/tablet
+    --nav-medium-side-width: 5rem;
+    --nav-medium-top-height: 5rem;
+
+    // small - mobile
+    --nav-small-top-height: 3.75rem;
+    --nav-small-bottom-height: 3.75rem;
 }
 
 .baseCols {
@@ -22,7 +30,7 @@
 
         @media screen and (min-width: 1264px) {
             // Large - Desktop
-            width: var(--nav-wide-width);
+            width: var(--nav-wide-side-width);
 
             .logo {
                 font-size: 30px;
@@ -41,18 +49,18 @@
 
         @media screen and (min-width: 768px) and (max-width: 1263px) {
             // Laptop
-            width: 80px;
+            width: var(--nav-medium-side-width);
 
             .logo {
-                padding: 15px;
+                padding: 1em;
                 width: 100%;
                 border-bottom: 1px solid #000;
                 background-color: var(--forth-color);
                 color: #fff;
                 // display: none;
                 svg {
-                    height: 50px;
-                    width: 50px;
+                    height: 3em;
+                    width: 3em;
                     margin: auto;
                 }
             }
@@ -61,7 +69,7 @@
         @media screen and (max-width: 767px) {
             // Mobile
             width: 100%;
-            height: 50px;
+            height: var(--nav-small-top-height);
             padding: 0;
             display: flex;
             justify-content: center;
@@ -148,7 +156,7 @@
 
     .pageWrap {
         background: #fff;
-        min-height: 100vh;
+        // min-height: 100vh;
         height: fit-content;
         width: 100%;
         box-sizing: border-box;
@@ -158,7 +166,7 @@
             background-color: var(--nav-secondary-bg-color);
             border-bottom: 1px solid #ddd;
             box-shadow: #eee 0px 3px 5px 0px;
-            padding: 10px 20px;
+            padding: .6em 1.2em;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -184,31 +192,32 @@
 
         @media screen and (min-width: 1264px) {
             // Large - Desktop
-            width: calc(100% - var(--nav-wide-width));
-            margin-left: var(--nav-wide-width);
+            width: calc(100% - var(--nav-wide-side-width));
+            margin-left: var(--nav-wide-side-width);
         }
 
         @media screen and (min-width: 768px) and (max-width: 1263px) {
             // Laptop
-            width: calc(100% - var(--nav-medium-width));
-            margin-left: var(--nav-medium-width);
+            width: calc(100% - var(--nav-medium-side-width));
+            margin-left: var(--nav-medium-side-width);
         }
 
         @media screen and (max-width: 767px) {
             // Mobile
-            margin: var(--nav-narrow-height) 0;
+            margin-top: var(--nav-small-top-height);
+            margin-bottom: var(--nav-small-bottom-height);
         }
     }
 
     .topBar {
         background: var(--nav-top-bg-color);
-        height: 50px;
+        height: 3em;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
-        padding: 0 20px;
+        padding: 0 .6em;
         position: fixed;
         top: 0;
         width: 100vw;
@@ -226,8 +235,8 @@
             size: 20px;
 
             svg {
-                height: 30px;
-                width: 30px;
+                height: 1.5em;
+                width: 1.5em;
                 color: var(--logo-color);
             }
 
