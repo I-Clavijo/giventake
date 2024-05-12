@@ -1,12 +1,12 @@
 import React from 'react';
 import axios from '../axios';
 
-export default async function PostVerificationEmail( {emailHTML, userName, userEmail}) {
+export default async function PostVerificationEmail( {emailHTML, userName, email}) {
 
   try {
     const emailData = {
         emailHTML,
-        userEmail,
+        email,
         userName
     };
     

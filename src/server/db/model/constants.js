@@ -1,8 +1,10 @@
+
 export const MODEL_KEY = {
   User: 'User',
   Post: 'Post',
   ReportedPost: 'ReportedPost',
-  Friends: 'Friends'
+  Friends: 'Friends',
+  VerificationCode: 'VerificationCode',
 };
 
 

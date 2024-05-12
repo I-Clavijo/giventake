@@ -14,7 +14,6 @@ router.use("/posts", postsRoutes);
 router.use("/users", usersRoutes);
 router.use("/reviews", reviewsRoutes);
 router.use("/friends", friendsRoutes);
-
 router.use("/emails", emailsRoutes);
 
 export default router;

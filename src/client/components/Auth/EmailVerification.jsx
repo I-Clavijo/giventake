@@ -1,50 +1,38 @@
 import { Button, Label, TextInput, Checkbox } from "flowbite-react";
 import PostVerificationEmail from "../../api/emails/PostVerificationEmail";
 import { useState } from "react";
+import PostVerificationCode from "../../api/emails/PostVerificationCode";
 
-const EmailVerification = () => {
-/*
-    const [email, setEmail] = useState('');
+const EmailVerification = ({email}) => {
+
     const [code, setCode] = useState('');
-  
-    const handleSendVerification = async () => {
-      const response = await fetch('/send-verification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      // ... handle response
-    };
-  
-    const handleVerifyCode = async () => {
-      const response = await fetch('/verify-code', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code }),
-      });
-      // ... handle response
-    };
 
-    const emailData = {
-        emailHTML : <html><h1>test</h1></html>,
-        userEmail : user.email,
-        userName : user.firstName,
-    };
+    function handleSubmit(){
+        event.preventDefault(); // Prevent default form submission behavior
+        
+        const emailVerificationData = {
+            email: email,
+            code: code,
+        }
+        PostVerificationCode(emailVerificationData);
+    }
 
-    PostVerificationEmail(emailData);
-  */
     return (
         <> 
-        <form className="flex max-w-sm flex-col gap-4">
-        <div>
-            <div className="mb-2 block">
-            <Label htmlFor="code" value="Enter the code you received:" />
+        <form className="flex max-w-sm flex-col gap-4" onSubmit={handleSubmit}>
+            <div>
+                <div className="mb-2 block">
+                    <Label htmlFor="code" value="Enter the code you received:" />
+                </div>
+                <TextInput 
+                    id="code" // Use the correct id
+                    type="text" // Change to text for verification codes
+                    value={code} // Bind the value to the state
+                    onChange={(e) => setCode(e.target.value)} // Update the state on change
+                    required
+                />
             </div>
-            <TextInput id="email1" type="email" placeholder="" required />
-        </div>
-        
-
-        <Button type="submit">Submit</Button>
+            <Button type="submit">Submit</Button>
         </form>
         </>  
     );

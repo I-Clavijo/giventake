@@ -15,7 +15,6 @@ const userSchema = new mongoose.Schema({
     imgName: String,
     interests: [String],
     isVerified: { type: Boolean, default: false },
-    emailToken: { type: String },
     location: {
         geometry: { type: pointSchema },
         country: String,

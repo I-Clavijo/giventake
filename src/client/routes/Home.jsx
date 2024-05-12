@@ -9,19 +9,18 @@ import RenderEmail from '../api/emails/renderEmail.jsx';
 import PostWelcomeEmail from '../api/emails/PostEmail.jsx';
 import PostVerificationEmail from '../api/emails/PostVerificationEmail.jsx';
 import EmailVerification from "../components/Auth/EmailVerification.jsx";
+import { data } from "autoprefixer";
 
 export default function Home() {
   const { data: user, isLoading: isLoadingUser, isError: isErrorUser } = useUser();
   const filters = { onlyPeopleIFollow: 1 };
-
   const { mutate: postAction } = usePostAction({ filters });
   const { data: posts, isLoading: isLoadingPosts } = usePosts({ filters });
-
 
   const sendWelcomeEmail = async () => {
     const emailData = {
       emailHTML : RenderEmail(),
-      userEmail : user.email,
+      email : user.email,
       userName : user.firstName,
   };
 
@@ -31,7 +30,7 @@ export default function Home() {
   const sendVerificationEmail = async () => {
     const emailData = {
       emailHTML : RenderEmail(),
-      userEmail : user.email,
+      email : user.email,
       userName : user.firstName,
   };
 
@@ -47,7 +46,7 @@ export default function Home() {
     <div>
       <button onClick={sendVerificationEmail}>Send verification email</button>
     </div>
-    <EmailVerification />
+    <EmailVerification email={user.email}/>
     
     {user?.flags?.hideWelcomeModal === false && <WelcomeModal />}
 
