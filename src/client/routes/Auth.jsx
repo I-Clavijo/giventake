@@ -9,7 +9,6 @@ import { useLogin } from "../api/auth/useLogin";
 import LoginImg from '../assets/images/login-photo.png';
 import styles from "./Auth.module.scss";
 import EmailVerification from "../components/Auth/EmailVerification";
-import EmailVerification2 from "../components/Auth/EmailVerification2";
 import PostVerificationEmail from "../api/emails/PostVerificationEmail";
 
 export default function Auth() {
@@ -90,7 +89,7 @@ export default function Auth() {
                         <i>"Only a life lived for others is a life worthwhile." <br /> Albert Einstein</i>
                     </Card>
                 </div>
-                {!verifyEmail && <div id="1" className={styles.loginImgWrap}>
+                {!verifyEmail && <div className={styles.form}>
                     <form method="post" className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                         <h2>{isLogin ? 'Login' : 'Create a new user'}</h2>
                         {!isLogin && <>
@@ -157,8 +156,9 @@ export default function Auth() {
                         </Button>
                     </form>
                 </div>}
-                <div>
-                    {verifyEmail && <EmailVerification2 email= {email} setIsVerified={setIsVerified}/>}
+                <div className={styles.emailVerification}>
+                    {verifyEmail && <h2>Verify your email</h2>}
+                    {verifyEmail && <EmailVerification email= {email} setIsVerified={setIsVerified}/>}
                 </div>
             </div>
         </div>
