@@ -4,6 +4,7 @@ import { useUser} from '../users/useUser.jsx';
 
 export default async function PostVerificationCode( emailVerificationData ) {
     
+    
     const { email, code } = emailVerificationData;
 
     try {

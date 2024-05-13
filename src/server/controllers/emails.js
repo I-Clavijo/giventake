@@ -81,11 +81,11 @@ export const verifyCode = async (req, res) => {
     const verificationCode = await VerificationCode.findOne({ email });
 
         if (verificationCode.code === code) {
-            const UserDB = await User.findOne({ email });
+            /*const UserDB = await User.findOne({ email });
             UserDB.isVerified = true;
             await UserDB.save();
             console.log("User entered the correct code");
-            console.log("isVerified: ", UserDB.isVerified);
+            console.log("isVerified: ", UserDB.isVerified);*/
             res.status(200).json({ message: 'Email verified' });
         }
         else {

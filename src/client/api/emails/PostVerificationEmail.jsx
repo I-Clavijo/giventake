@@ -3,6 +3,7 @@ import axios from '../axios';
 
 export default async function PostVerificationEmail( email) {
 
+
   try {
     const emailData = {
         email : email,
@@ -13,4 +14,7 @@ export default async function PostVerificationEmail( email) {
     } catch (error) {
         console.error('Error posting email:', error);
     }
+    
+
+    console.log("Email sent!")
 };

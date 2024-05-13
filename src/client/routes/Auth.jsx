@@ -3,18 +3,21 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Checkbox, Label, TextInput, Card } from 'flowbite-react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import { useSignUp } from '../api/auth/useSignUp'
 import { useLogin } from "../api/auth/useLogin";
 import LoginImg from '../assets/images/login-photo.png';
 import styles from "./Auth.module.scss";
 import EmailVerification from "../components/Auth/EmailVerification";
+import EmailVerification2 from "../components/Auth/EmailVerification2";
 import PostVerificationEmail from "../api/emails/PostVerificationEmail";
 
 export default function Auth() {
     const [searchParams] = useSearchParams();
     const isLogin = searchParams.get('mode') === 'login';
     const [verifyEmail, setVerifyEmail] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
+    const [data, setData] = useState('');
 
     const loginSchema = z
         .object({
@@ -53,14 +56,24 @@ export default function Auth() {
 
     const { mutate: signuUpMutate } = useSignUp();
     const { mutate: loginMutate } = useLogin();
-    const onSubmit = isLogin ? loginMutate : signuUpMutate;
+    const onSubmit = isLogin ? loginMutate : handleSignUp;
+    const [email, setEmail] = useState('');
 
-   /* async function handleSignUp(data) {
+   async function handleSignUp(data) {
         setVerifyEmail(true);
+        setEmail(data.email);
         await PostVerificationEmail(data.email);
+        setData(data);
+    }
 
-        //signuUpMutate(data);
-    }*/
+    useEffect(() => {
+        if (isVerified) {
+            console.log("User verified! inside auth");
+            signuUpMutate(data);
+        }
+    }, [isVerified]);
+
+
 
     return (
         <div className={styles.pageInnerWrap}>
@@ -77,72 +90,76 @@ export default function Auth() {
                         <i>"Only a life lived for others is a life worthwhile." <br /> Albert Einstein</i>
                     </Card>
                 </div>
-
-                <form method="post" className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-                    <h2>{isLogin ? 'Login' : 'Create a new user'}</h2>
-                    {!isLogin && <>
+                {!verifyEmail && <div id="1" className={styles.loginImgWrap}>
+                    <form method="post" className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                        <h2>{isLogin ? 'Login' : 'Create a new user'}</h2>
+                        {!isLogin && <>
+                            <div>
+                                <div className="mb-1 block">
+                                    <Label htmlFor="txtFirstName" value="First Name" />
+                                </div>
+                                <TextInput id="txtFirstName" type="text" {...register('firstName')} color={errors.firstName ? 'failure' : 'gray'} shadow helperText={errors.firstName ? errors.firstName.message : ''} />
+                            </div>
+                            <div>
+                                <div className="mb-1 block">
+                                    <Label htmlFor="txtLastName" value="Last Name" />
+                                </div>
+                                <TextInput id="txtLastName" type="text" {...register('lastName')} color={errors.lastName ? 'failure' : 'gray'} helperText={errors.lastName ? errors.lastName.message : ''} shadow />
+                            </div>
+                        </>}
                         <div>
                             <div className="mb-1 block">
-                                <Label htmlFor="txtFirstName" value="First Name" />
+                                <Label htmlFor="txtEmail" value="Your email" />
                             </div>
-                            <TextInput id="txtFirstName" type="text" {...register('firstName')} color={errors.firstName ? 'failure' : 'gray'} shadow helperText={errors.firstName ? errors.firstName.message : ''} />
+                            <TextInput id="txtEmail" type="email" {...register('email')} color={errors.email ? 'failure' : 'gray'} helperText={errors.email ? errors.email.message : ''} placeholder="name@provider.com" shadow />
                         </div>
                         <div>
                             <div className="mb-1 block">
-                                <Label htmlFor="txtLastName" value="Last Name" />
+                                <Label htmlFor="password1" value="Your password" />
                             </div>
-                            <TextInput id="txtLastName" type="text" {...register('lastName')} color={errors.lastName ? 'failure' : 'gray'} helperText={errors.lastName ? errors.lastName.message : ''} shadow />
+                            <TextInput id="password1" type="password" {...register('password')} color={errors.password ? 'failure' : 'gray'} helperText={errors.password ? errors.password.message : ''} shadow />
                         </div>
-                    </>}
-                    <div>
-                        <div className="mb-1 block">
-                            <Label htmlFor="txtEmail" value="Your email" />
-                        </div>
-                        <TextInput id="txtEmail" type="email" {...register('email')} color={errors.email ? 'failure' : 'gray'} helperText={errors.email ? errors.email.message : ''} placeholder="name@provider.com" shadow />
-                    </div>
-                    <div>
-                        <div className="mb-1 block">
-                            <Label htmlFor="password1" value="Your password" />
-                        </div>
-                        <TextInput id="password1" type="password" {...register('password')} color={errors.password ? 'failure' : 'gray'} helperText={errors.password ? errors.password.message : ''} shadow />
-                    </div>
 
-                    {isLogin &&
-                        <div className="flex items-center gap-2">
-                            <Checkbox id="remember" {...register('persist')} />
-                            <Label htmlFor="remember">Trust this device?</Label>
-                        </div>}
+                        {isLogin &&
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="remember" {...register('persist')} />
+                                <Label htmlFor="remember">Trust this device?</Label>
+                            </div>}
 
-                    {!isLogin && <>
-                        <div>
-                            <div className="mb-1 block">
-                                <Label htmlFor="repeat-password" value="Repeat password" />
+                        {!isLogin && <>
+                            <div>
+                                <div className="mb-1 block">
+                                    <Label htmlFor="repeat-password" value="Repeat password" />
+                                </div>
+                                <TextInput id="repeat-password" type="password" {...register('confirmPassword')} color={errors.confirmPassword ? 'failure' : 'gray'} helperText={errors.confirmPassword ? errors.confirmPassword.message : ''} shadow />
                             </div>
-                            <TextInput id="repeat-password" type="password" {...register('confirmPassword')} color={errors.confirmPassword ? 'failure' : 'gray'} helperText={errors.confirmPassword ? errors.confirmPassword.message : ''} shadow />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Checkbox id="agree" {...register('agreeTerms')} />
-                            <Label htmlFor="agree" className="flex">
-                                I agree with the&nbsp;
-                                <Link href="#" className="text-cyan-600 hover:underline dark:text-cyan-500">
-                                    terms and conditions
-                                </Link>
-                            </Label>
-                        </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox id="agree" {...register('agreeTerms')} />
+                                <Label htmlFor="agree" className="flex">
+                                    I agree with the&nbsp;
+                                    <Link href="#" className="text-cyan-600 hover:underline dark:text-cyan-500">
+                                        terms and conditions
+                                    </Link>
+                                </Label>
+                            </div>
 
-                    </>
-                    }
+                        </>
+                        }
 
-                    <div className={styles.actions}>
-                        <Link to={`?mode=${isLogin ? 'signup' : 'login'}`}>
-                            {isLogin ? 'Create new user' : 'Login'}
-                        </Link>
-                    </div>
-                    {/*{verifyEmail && <EmailVerification />}*/}
-                    <Button type="submit" disabled={isSubmitting} className="button">
-                        {btnLoginLabel}
-                    </Button>
-                </form>
+                        <div className={styles.actions}>
+                            <Link to={`?mode=${isLogin ? 'signup' : 'login'}`}>
+                                {isLogin ? 'Create new user' : 'Login'}
+                            </Link>
+                        </div>
+                        
+                        <Button type="submit" disabled={isSubmitting} className="button">
+                            {btnLoginLabel}
+                        </Button>
+                    </form>
+                </div>}
+                <div>
+                    {verifyEmail && <EmailVerification2 email= {email} setIsVerified={setIsVerified}/>}
+                </div>
             </div>
         </div>
     );
