@@ -138,7 +138,7 @@ export default function Auth() {
                             {isLogin ? 'Create new user' : 'Login'}
                         </Link>
                     </div>
-                    {verifyEmail && <EmailVerification />}
+                    {/*{verifyEmail && <EmailVerification />}*/}
                     <Button type="submit" disabled={isSubmitting} className="button">
                         {btnLoginLabel}
                     </Button>

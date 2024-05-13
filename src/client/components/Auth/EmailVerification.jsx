@@ -5,15 +5,15 @@ import PostVerificationCode from "../../api/emails/PostVerificationCode";
 import { useForm } from "react-hook-form";
 
 const EmailVerification = ({ email }) => {
-    const [error, setError] = useState(null);
+ /*   const [error, setError] = useState(null);
     const [code, setCode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     async function handleSubmit(event) {
-       /* event.preventDefault();
+       event.preventDefault();
         setIsLoading(true);
         setError('');
-        */
+        
 
         const emailVerificationData = {
             email: email,
@@ -21,7 +21,7 @@ const EmailVerification = ({ email }) => {
         };
 
         console.log(emailVerificationData);
-        /*
+        
         try {
             const response = await PostVerificationCode(emailVerificationData);
             if (response.status == 401) {
@@ -35,11 +35,12 @@ const EmailVerification = ({ email }) => {
             setError("An error occurred. Please try again.");
         } finally {
             setIsLoading(false);
-        }*/
-    }
+        }
+    }*/
 
     return (
-        <form className="flex max-w-mb flex-col gap-4" onSubmit={handleSubmit}>
+        <>
+       /* <form className="flex max-w-mb flex-col gap-4" onSubmit={handleSubmit}>
             <div>
                 <div className="mb-2 block">
                     <Label htmlFor="code" value="Check your inbox and enter the code you received:" />
@@ -56,7 +57,8 @@ const EmailVerification = ({ email }) => {
             <Button type="submit" disabled={isLoading}>
                 {isLoading ? 'Verifying...' : 'Verify'}
             </Button>
-        </form>
+        </form> */
+        </>
     );
 };
 

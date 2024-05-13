@@ -17,6 +17,7 @@ export default function Home() {
   const { mutate: postAction } = usePostAction({ filters });
   const { data: posts, isLoading: isLoadingPosts } = usePosts({ filters });
 
+  /*
   const sendWelcomeEmail = async () => {
     const emailData = {
       emailHTML : RenderEmail(),
@@ -37,16 +38,16 @@ export default function Home() {
     PostVerificationEmail(emailData);
   };
 
-
+*/
 
   return <>
     <div>
-      <button onClick={sendWelcomeEmail}>Send Welcome email</button>
+      {/*<button onClick={sendWelcomeEmail}>Send Welcome email</button>*/}
     </div>
     <div>
-      <button onClick={sendVerificationEmail}>Send verification email</button>
+      {/*<button onClick={sendVerificationEmail}>Send verification email</button>*/}
     </div>
-    <EmailVerification email={user.email}/>
+    {/*<EmailVerification email={user.email}/>*/}
     
     {user?.flags?.hideWelcomeModal === false && <WelcomeModal />}
 
