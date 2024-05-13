@@ -53,14 +53,14 @@ export default function Auth() {
 
     const { mutate: signuUpMutate } = useSignUp();
     const { mutate: loginMutate } = useLogin();
-    const onSubmit = isLogin ? loginMutate : handleSignUp;
+    const onSubmit = isLogin ? loginMutate : signuUpMutate;
 
-    async function handleSignUp(data) {
+   /* async function handleSignUp(data) {
         setVerifyEmail(true);
         await PostVerificationEmail(data.email);
 
         //signuUpMutate(data);
-    }
+    }*/
 
     return (
         <div className={styles.pageInnerWrap}>

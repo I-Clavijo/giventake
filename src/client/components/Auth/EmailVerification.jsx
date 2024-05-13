@@ -40,7 +40,7 @@ const EmailVerification = ({ email }) => {
 
     return (
         <>
-       /* <form className="flex max-w-mb flex-col gap-4" onSubmit={handleSubmit}>
+       {/* <form className="flex max-w-mb flex-col gap-4" onSubmit={handleSubmit}>
             <div>
                 <div className="mb-2 block">
                     <Label htmlFor="code" value="Check your inbox and enter the code you received:" />
@@ -57,7 +57,7 @@ const EmailVerification = ({ email }) => {
             <Button type="submit" disabled={isLoading}>
                 {isLoading ? 'Verifying...' : 'Verify'}
             </Button>
-        </form> */
+    </form> */}
         </>
     );
 };
