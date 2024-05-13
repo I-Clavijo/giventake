@@ -42,9 +42,8 @@ export const signUp = async (req, res) => {
         email,
         password: hashedPassword,
         refreshToken,
-        isVerified: false,
-        emailToken: crypto.randomBytes(64).toString('hex'),
-        roles: defaultRoles
+        roles: defaultRoles,
+        flags: { hideWelcomeModal: false }
     });
 
     // Delete keys from the user object

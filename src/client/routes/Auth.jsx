@@ -11,6 +11,7 @@ import styles from "./Auth.module.scss";
 import EmailVerification from "../components/Auth/EmailVerification";
 import PostVerificationEmail from "../api/emails/PostVerificationEmail";
 import { sendWelcomeEmail } from "../../server/controllers/emails";
+import PostWelcomeEmail from "../api/emails/PostWelcomeEmail";
 
 export default function Auth() {
     const [searchParams] = useSearchParams();
@@ -54,7 +55,7 @@ export default function Auth() {
     let btnLoginLabel = isSubmitting ? 'Loging in...' : 'Login';
     if (!isLogin) btnLoginLabel = isSubmitting ? 'Signing Up...' : 'Sign Up';
 
-    const { mutate: signuUpMutate } = useSignUp();
+    const { mutate: signupMutate } = useSignUp();
     const { mutate: loginMutate } = useLogin();
     const onSubmit = isLogin ? loginMutate : handleSignUp;
     const [email, setEmail] = useState('');
@@ -69,8 +70,8 @@ export default function Auth() {
     useEffect(() => {
         if (isVerified) {
             //send Welcome email
-            
-            signuUpMutate(data);
+            PostWelcomeEmail({userName: data.firstName, email: data.email});
+            signupMutate(data);
         }
     }, [isVerified]);
 
