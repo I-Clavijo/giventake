@@ -64,7 +64,6 @@ export const signUp = async (req, res) => {
 
     // Send authorization roles and access token to user
     res.json({ accessToken, ...userDB });
-
 }
 
 export const login = async (req, res) => {

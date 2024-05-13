@@ -10,6 +10,7 @@ import LoginImg from '../assets/images/login-photo.png';
 import styles from "./Auth.module.scss";
 import EmailVerification from "../components/Auth/EmailVerification";
 import PostVerificationEmail from "../api/emails/PostVerificationEmail";
+import { sendWelcomeEmail } from "../../server/controllers/emails";
 
 export default function Auth() {
     const [searchParams] = useSearchParams();
@@ -67,7 +68,8 @@ export default function Auth() {
 
     useEffect(() => {
         if (isVerified) {
-            console.log("User verified! inside auth");
+            //send Welcome email
+            
             signuUpMutate(data);
         }
     }, [isVerified]);

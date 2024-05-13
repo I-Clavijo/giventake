@@ -1,5 +1,4 @@
 import express from "express";
-import { verifyAuth, enforceAuth } from '../middleware/verifyAuth.js';
 import { sendVerificationEmail, sendWelcomeEmail, verifyCode } from "../controllers/emails.js";
 
 
