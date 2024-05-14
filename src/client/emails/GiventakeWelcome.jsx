@@ -12,7 +12,8 @@ const baseUrl = process.env.GIVENTAKE_URL
 
 const baseUrl = "https://giventake.org";
 
-const GiventakeWelcomeEmail = ({userName}) => {
+const GiventakeWelcomeEmail = ({name}) => {
+
   return (
     <Html>
       <Head />
@@ -27,7 +28,7 @@ const GiventakeWelcomeEmail = ({userName}) => {
             </section>
             <Container style={container}>
                 <Heading style={title}>
-                    <h2>Hi {userName},</h2>
+                    <h2>Hi {name},</h2>
                     <h2>Welcome to given'take </h2>
                 </Heading>
                 <Section> 

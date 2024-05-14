@@ -14,7 +14,6 @@ export default async function PostVerificationEmail( email) {
     } catch (error) {
         console.error('Error posting email:', error);
     }
-    
 
-    console.log("Email sent!")
+    console.log("Verification email sent to:", email);
 };
