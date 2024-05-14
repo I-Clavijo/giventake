@@ -34,13 +34,13 @@ export const sendWelcomeEmail = async (req, res) => {
     const { emailHTML, email, userName } = req.body;
 
     await resend.emails.send({
-        from: "noreply@giventake.org",
+        from: "given'take <noreply@giventake.org>",
         to: email,
         subject: "Welcome " + userName + " to given'take",
         html: emailHTML,
     }); 
 
-    console.log("Email sent!");
+    console.log("Welcome email sent!");
 }
 
 export const sendVerificationEmail = async (req, res) => {
@@ -53,7 +53,7 @@ export const sendVerificationEmail = async (req, res) => {
     
     try {
       await resend.emails.send({
-        from: 'noreply@giventake.org', 
+        from: "given'take <noreply@giventake.org>", 
         to: email,
         subject: 'Email Verification',
         html: `
