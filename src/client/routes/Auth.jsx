@@ -159,10 +159,10 @@ export default function Auth() {
                         </Button>
                     </form>
                 </div>}
-                <div className={styles.emailVerification}>
-                    {verifyEmail && <h2>Verify your email</h2>}
-                    {verifyEmail && <EmailVerification email= {email} setIsVerified={setIsVerified}/>}
-                </div>
+                {verifyEmail && <div className={styles.emailVerification}>
+                    <h2>Verify your email</h2>
+                    <EmailVerification email= {email} setIsVerified={setIsVerified}/>
+                </div>}
             </div>
         </div>
     );
