@@ -10,7 +10,6 @@ import LoginImg from '../assets/images/login-photo.png';
 import styles from "./Auth.module.scss";
 import EmailVerification from "../components/Auth/EmailVerification";
 import PostVerificationEmail from "../api/emails/PostVerificationEmail";
-import { sendWelcomeEmail } from "../../server/controllers/emails";
 import PostWelcomeEmail from "../api/emails/PostWelcomeEmail";
 
 export default function Auth() {
@@ -19,6 +18,7 @@ export default function Auth() {
     const [verifyEmail, setVerifyEmail] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
     const [data, setData] = useState('');
+    const [email, setEmail] = useState('');
 
     const loginSchema = z
         .object({
@@ -58,14 +58,25 @@ export default function Auth() {
     const { mutate: signupMutate } = useSignUp();
     const { mutate: loginMutate } = useLogin();
     const onSubmit = isLogin ? loginMutate : handleSignUp;
-    const [email, setEmail] = useState('');
 
-   async function handleSignUp(data) {
-        setVerifyEmail(true);
-        setEmail(data.email);
-        await PostVerificationEmail(data.email);
-        setData(data);
-    }
+
+    async function handleSignUp(formData) {
+        try {
+          const parsedData = signupSchema.parse(formData); 
+    
+          setVerifyEmail(true);
+          setEmail(parsedData.email);
+          await PostVerificationEmail(parsedData.email); 
+          setData(parsedData);
+        } catch (error) {
+          if (error instanceof z.ZodError) {
+            console.error("Validation errors:", error.errors);
+          } else {
+            console.error("An error occurred:", error);
+          }
+        }
+      }
+    
 
     useEffect(() => {
         if (isVerified) {

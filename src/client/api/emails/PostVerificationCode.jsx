@@ -1,6 +1,4 @@
-import React from 'react';
 import axios from '../axios';
-import { useUser} from '../users/useUser.jsx';
 
 export default async function PostVerificationCode( emailVerificationData ) {
     
