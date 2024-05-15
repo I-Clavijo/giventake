@@ -11,12 +11,12 @@ const baseUrl = process.env.GIVENTAKE_URL
 
 const baseUrl = "https://giventake.org";
 
-const GiventakeWelcomeEmail = ({name}) => {
+const EmailVerification = ({code}) => {
 
   return (
     <Html>
       <Head />
-      <Preview>Given'take Welcome</Preview>
+      <Preview>Email Verification</Preview>
         <Body style={main}>
             <section style={header}>
                 <Img
@@ -27,21 +27,20 @@ const GiventakeWelcomeEmail = ({name}) => {
             </section>
             <Container style={container}>
                 <Heading style={title}>
-                    <h2>Hi {name}, Welcome to given'take</h2>
-                  
+                    <h2>Verify your email address </h2>
                 </Heading>
                 <Section> 
                     <Text style= {bodyText}>
-                        Explore our community built on the principles of mutual aid,
-                             where giving and receiving help is at the heart of everything we do.
-                              Help us create a space where kindness thrives and support is freely given,
-                               making a positive impact in each other's lives.
+                        Thanks for starting the account creation process.
+                           We want to make sure it's really you. Please enter the following verification code when prompted.
+                            If you don't want to create an account, you can ignore this message.
                     </Text>
                 </Section>
-                <Section>
-                    <Button>
-                        <Link style={button} href={`${baseUrl}`}>Get Started</Link>
-                    </Button>
+                <Section style={verificationContainer}>
+                    <Text style={verifyText}>Verification code</Text>
+                    <Text style = {codeText}>
+                        {code}
+                    </Text>
                 </Section>
                 <Section style={footer}>
                     <Text style= {footerText}>
@@ -66,11 +65,12 @@ const GiventakeWelcomeEmail = ({name}) => {
   );
 };
 
-GiventakeWelcomeEmail.PreviewProps = {
-    name: "Ivan",
-  }
+EmailVerification.PreviewProps = {
+  code: "123456",
+}
 
-export default GiventakeWelcomeEmail;
+
+export default EmailVerification;
 
 
 const main = {
@@ -90,6 +90,7 @@ const main = {
     margin: "auto",
     maxWidth: "100%",
     width: "640px",
+    
   };
   
   const header = {
@@ -120,7 +121,7 @@ const main = {
     backgroundColor: "#5F51E8",
     borderRadius: "3px",
     color: "#fff",
-    fontSize: "18px",
+    fontSize: "20px",
     textDecoration: "none",
     textAlign: "center",
     display: "block",
@@ -134,4 +135,25 @@ const main = {
 
   const footerText = {
     fontSize: "17px",
+  }
+
+  const codeText = {
+    fontWeight: "bold",
+    fontSize: "36px",
+    margin: "10px 0",
+    textAlign: "center"
+  }
+
+  const verifyText = {
+    margin: 0,
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: "20px",
+  }
+  
+  const verificationContainer = {
+    backgroundColor: "#f9f9f9",
+    padding: "20px",
+    borderRadius: "5px",
+    margin: "20px 0",
   }

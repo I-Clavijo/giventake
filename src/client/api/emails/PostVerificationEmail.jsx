@@ -3,7 +3,6 @@ import axios from '../axios';
 
 export default async function PostVerificationEmail( email) {
 
-
   try {
     const emailData = {
         email : email,

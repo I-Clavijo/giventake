@@ -5,7 +5,6 @@ export default async function PostWelcomeEmail( {userName, email}) {
 
     console.log('Sending welcome email to:', email, 'for user:', userName);
 
-
     try {
         const emailData = {
             emailHTML: renderEmailHTML(userName),
