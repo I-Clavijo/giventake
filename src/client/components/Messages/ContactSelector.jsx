@@ -142,7 +142,7 @@ export default function ContactSelector({ contacts, selectedContact, onContactSe
         }
 
         let contactIdObj, title, message, date, contactImg;
-
+        console.log(contact);
         if (contact?.isNewContact) {
           contactIdObj = { userId: contact.user._id, isNewContact: true };
           title = contact.user.firstName + ' ' + contact.user.lastName;
@@ -150,11 +150,10 @@ export default function ContactSelector({ contacts, selectedContact, onContactSe
           contactImg = contact.user.imgUrl;
         } else {
           contactIdObj = { conversationId: contact.conversationId };
-          title =
-            contact.otherParticipants[0].firstName + ' ' + contact.otherParticipants[0].lastName;
+          title = contact.otherUsers[0].firstName + ' ' + contact.otherUsers[0].lastName;
           message = contact.lastMessage.message?.text;
           date = getRelativeTime(contact.lastMessage.createdAt);
-          contactImg = contact.otherParticipants[0]?.imgUrl;
+          contactImg = contact.otherUsers[0]?.imgUrl;
         }
 
         const key = md5(JSON.stringify(contactIdObj));

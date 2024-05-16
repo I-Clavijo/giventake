@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 // const contacts = [{
 //     conversationId: '',
-//     otherParticipants: [{ // without the selfUser
+//     otherUsers: [{ // without the selfUser
 //         userId: '',
 //         firstName: '',
 //         lastName: '',
@@ -38,7 +38,7 @@ export const getContactsQuery = async (userId) => {
         { $match: { users: new ObjectId(userId) } },
         { // get only the other pariticipants not incl. the selfUser
             $addFields: {
-                otherParticipants: {
+                otherUsers: {
                     $filter: {
                         input: '$users',
                         as: 'user',
@@ -50,9 +50,9 @@ export const getContactsQuery = async (userId) => {
         { // populate users
             $lookup: {
                 from: User.collection.name,
-                localField: "otherParticipants",
+                localField: "otherUsers",
                 foreignField: "_id",
-                as: "otherParticipants",
+                as: "otherUsers",
                 pipeline: [{
                     $project: {
                         firstName: 1, lastName: 1, imgName: 1
@@ -90,7 +90,7 @@ export const getContactsQuery = async (userId) => {
                     },
                     {
                         $project: {
-                            sender: 1, message: 1, createdAt: 1, fromSelf: 1
+                            sender: 1, body: 1, createdAt: 1, fromSelf: 1
                         }
                     }
                 ]
@@ -115,7 +115,7 @@ export const getContactsQuery = async (userId) => {
             $project: {
                 _id: 0,
                 conversationId: "$_id",
-                otherParticipants: 1,
+                otherUsers: 1,
                 lastMessage: 1,
                 post: 1
             }
@@ -124,3 +124,60 @@ export const getContactsQuery = async (userId) => {
 
     return userConversations;
 };
+
+
+
+export const getConversationMessagesQuery = async (selfUser, conversationId) => {
+    const userConversationMessages = await Message.aggregate([
+        {
+            $match: {
+                conversation: new ObjectId(conversationId)
+            }
+        },
+        {
+            $addFields: {
+                fromSelf: { $eq: ['$sender', new ObjectId(selfUser)] },
+            }
+        }
+    ])
+
+    return userConversationMessages
+}
+
+export const getConversationParticipantsQuery = async (selfUser, conversationId) => {
+    const conversationParticipants = await Conversation.aggregate([
+        {
+            $match: {
+                _id: new ObjectId(conversationId)
+            }
+        },
+        { // populate users
+            $lookup: {
+                from: User.collection.name,
+                localField: "users",
+                foreignField: "_id",
+                as: "users",
+                pipeline: [
+                    {
+                        $addFields: {
+                            isSelf: { $eq: ['$_id', new ObjectId(selfUser)] },
+                        }
+                    },
+                    {
+                        $project: {
+                            firstName: 1, lastName: 1, imgName: 1, isSelf: 1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $project: {
+                users: 1
+            }
+        }
+    ])
+
+    return conversationParticipants?.[0].users
+}
+
