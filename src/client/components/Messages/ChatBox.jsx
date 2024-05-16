@@ -10,15 +10,15 @@ import { IoSendSharp } from 'react-icons/io5';
 export default function ChatBox({ socket, conversation, sendMessage, onClose }) {
   const [message, setMessage] = useState('');
 
-  const onSendMessage = () => {
+  const onSendMessage = (message) => {
     setMessage('');
-    sendMessage();
+    sendMessage(message);
   };
 
   const onKeyDownHandler = (e) => {
     const KEY_ENTER = 13;
     if (!e.shiftKey && e.keyCode === KEY_ENTER) {
-      onSendMessage();
+      onSendMessage(e.target.value);
     }
   };
 

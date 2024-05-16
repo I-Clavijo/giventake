@@ -9,6 +9,7 @@ import { useContacts } from '../api/messages/useContacts';
 import { useLocation } from 'react-router-dom';
 import { useConversation } from '../api/messages/useConversation';
 import NoConversationsImg from '../assets/images/empty-states/no-contacts.svg';
+import { useSendMessage } from '../api/messages/useSendMessage';
 
 const chatHistory = [
   {
@@ -65,6 +66,8 @@ export default function Messages() {
     enabled: !!currentContact?.conversationId
   });
 
+  const { mutate: sendMessageMutation } = useSendMessage({ userId: user._id });
+
   //set the first contact to be selected
   useEffect(() => {
     if (contacts) {
@@ -108,7 +111,9 @@ export default function Messages() {
     setShowChatBox(true);
   };
 
-  const sendMessage = () => {};
+  const sendMessage = (message) => {
+    sendMessageMutation({ currentContact, message });
+  };
 
   const allContacts = [...(newContact ? [newContact] : []), ...(contacts ?? [])];
 

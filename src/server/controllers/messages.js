@@ -53,39 +53,26 @@ export const getConversationMessages = async (req, res) => {
 
 
 export const addMessage = async (req, res) => {
-    const { from, to, message } = req.body;
-    const data = await Message.create({
-        message: { text: message },
-        users: [from, to],
-        sender: from,
+    let { conversationId, userId, isNewContact, postId, message } = req.body;
+    const selfUserId = req.user._id;
+
+    // if it's a new conversation then create new one
+    if (isNewContact && userId) {
+        const newConversation = await Conversation.create({
+            users: [selfUserId, userId],
+            ...(postId && { post: postId })
+        });
+        conversationId = newConversation._id
+    }
+
+
+    const newMessage = await Message.create({
+        conversation: conversationId,
+        sender: selfUserId,
+        body: { text: message },
     });
 
-    if (data) return res.sendStatus(201);
+
+    if (newMessage) return res.sendStatus(201);
     else throw new AppError('Failed to add message to the database', 500);
 };
-
-// const conversation = {
-//     _id: '',
-//     users: [{
-//         _id: '',
-//         firstName: '',
-//         lastName: '',
-//         imgUrl: ''
-//     }],
-//     messages: [
-//         {
-//             sender: '',
-//             fromSelf: boolean,
-//             message: {
-//                 text: ''
-//             },
-//             createdAt: '',
-//         }
-//     ]
-//     },
-//     post?: {
-//         _id: '',
-//         imgUrl: '',
-//         title: ''
-//     }
-// }

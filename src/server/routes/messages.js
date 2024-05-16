@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get("/", enforceAuth, getConversationMessages);
 router.get("/contacts", enforceAuth, getContacts);
-router.put("/", enforceAuth, addMessage);
+router.post("/", enforceAuth, addMessage);
 
 export default router;
