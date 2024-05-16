@@ -41,7 +41,7 @@ const chatHistory = [
 ];
 
 export default function Contact({
-  contactId,
+  contactIdObj,
   isSelected,
   onContactSelect,
   contactImg,
@@ -52,7 +52,7 @@ export default function Contact({
   return (
     <$ListItem
       className={`${isSelected ? 'selected' : ''}`}
-      onClick={() => onContactSelect(contactId)}
+      onClick={() => onContactSelect(contactIdObj)}
     >
       <div className="profile-img">
         <img className="rounded-full" src={contactImg || ProfileImg} alt="Profile Pic" />

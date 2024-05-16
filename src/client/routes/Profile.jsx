@@ -170,16 +170,16 @@ const Profile = ({ isMyProfile }) => {
               )}
               {!isMyProfile && (
                 <div className={styles.actions}>
-                  <Link to="/messages">
-                    <Button
-                      size="xs"
-                      color="gray"
-                      style={{ padding: '5px' }}
-                      onClick={onMessageHandler}
-                    >
-                      Message
-                    </Button>
-                  </Link>
+                  {/* <Link to="/messages"> */}
+                  <Button
+                    size="xs"
+                    color="gray"
+                    style={{ padding: '5px' }}
+                    onClick={onMessageHandler}
+                  >
+                    Message
+                  </Button>
+                  {/* </Link> */}
                   {friends && (
                     <Button
                       size="xs"

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import Contact from './Contact';
 import { getRelativeTime } from '../../utils/lib';
+import md5 from 'md5';
 
 const TABS = {
   All: 'All',
@@ -125,30 +126,30 @@ const conversations_data = [
 
 export default function ContactSelector({ contacts, selectedContact, onContactSelect }) {
   const [selectedTab, setSelectedTab] = useState(TABS.All);
-  console.log('ContactSelector', contacts);
-  const changeContact = (contact) => {
-    onContactSelect(contact);
+
+  const changeContact = (contactIdObj) => {
+    onContactSelect(contactIdObj);
   };
 
   const contactsList = (
     <ul>
       {contacts?.map((contact) => {
         let isSelected = false;
-        if (selectedContact?.isNewContact) {
-          isSelected = selectedContact?.user._id === contact?.user._id;
+        if (selectedContact?.isNewContact && selectedContact?.user) {
+          isSelected = selectedContact?.userId === contact.user._id;
         } else {
           isSelected = selectedContact?.conversationId === contact.conversationId;
         }
 
-        let contactId, title, message, date, contactImg;
+        let contactIdObj, title, message, date, contactImg;
 
         if (contact?.isNewContact) {
-          contactId = contact.user._id;
+          contactIdObj = { userId: contact.user._id, isNewContact: true };
           title = contact.user.firstName + ' ' + contact.user.lastName;
           message = '';
           contactImg = contact.user.imgUrl;
         } else {
-          contactId = contact.conversationId;
+          contactIdObj = { conversationId: contact.conversationId };
           title =
             contact.otherParticipants[0].firstName + ' ' + contact.otherParticipants[0].lastName;
           message = contact.lastMessage.message?.text;
@@ -156,10 +157,12 @@ export default function ContactSelector({ contacts, selectedContact, onContactSe
           contactImg = contact.otherParticipants[0]?.imgUrl;
         }
 
+        const key = md5(JSON.stringify(contactIdObj));
+
         return (
           <Contact
-            key={contactId}
-            {...{ contactId, contactImg, message, title, date, isSelected }}
+            key={key}
+            {...{ contactIdObj, contactImg, message, title, date, isSelected }}
             onContactSelect={changeContact}
           />
         );

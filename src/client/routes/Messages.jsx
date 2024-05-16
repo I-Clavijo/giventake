@@ -60,24 +60,31 @@ export default function Messages() {
 
   const { data: contacts } = useContacts();
   const { data: conversation } = useConversation({
-    conversationId: currentContact?.contact._id,
-    enabled: !!currentContact?.contact && !currentContact?.isNew
+    conversationId: currentContact?.conversationId,
+    enabled: !!currentContact?.conversationId
   });
 
   // Handler: if got navigated to the messages page with a message action or interest action
   useEffect(() => {
-    if (selectedContactDirect) {
+    if (selectedContactDirect && contacts) {
       const foundContact = contacts.find((contact) =>
         contact.otherParticipants.find((user) => user._id === selectedContactDirect.user._id)
       );
 
-      setNewContact({ user: selectedContactDirect.user, isNewContact: true });
-      setCurrentContact({
-        userId: selectedContactDirect.user._id,
-        isNewContact: true
-      });
+      if (foundContact) {
+        setNewContact(null);
+        setCurrentContact({
+          conversationId: foundContact.conversationId
+        });
+      } else {
+        setNewContact({ user: selectedContactDirect.user, isNewContact: true });
+        setCurrentContact({
+          userId: selectedContactDirect.user._id,
+          isNewContact: true
+        });
+      }
     }
-  }, [selectedContactDirect]);
+  }, [selectedContactDirect, contacts]);
 
   useEffect(() => {
     if (user) {
@@ -86,15 +93,14 @@ export default function Messages() {
     }
   }, [user]);
 
-  const changeContactHandler = (contact) => {
-    setCurrentContact({ conversationId: contact.conversationId });
+  const changeContactHandler = (contactIdObj) => {
+    setCurrentContact(contactIdObj);
     setOpenChat(true);
   };
 
   const sendMessage = () => {};
 
-  const allContacts = [...(newContact ?? []), ...(contacts ?? [])];
-  // console.log(allContacts);
+  const allContacts = [...(newContact ? [newContact] : []), ...(contacts ?? [])];
 
   return (
     <>
