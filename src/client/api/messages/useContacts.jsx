@@ -4,21 +4,19 @@ import { useSnackbar } from 'notistack';
 import { QUERY_KEY } from "../constants";
 import useAxiosPrivate from "../useAxiosPrivate";
 
-export const useFriends = ({ userId, enabled }={}) => {
+export const useContacts = () => {
     const { enqueueSnackbar } = useSnackbar();
     const axiosPrivate = useAxiosPrivate();
 
     return useQuery({
-        queryKey: [QUERY_KEY.friends, userId],
+        queryKey: [QUERY_KEY.conversations],
         queryFn: async () => {
-            const { data } = await axiosPrivate.get('/friends', { params: { userId } });
+            const { data } = await axiosPrivate.get('/messages/contacts');
             return data;
         },
         onError: (err) => {
             let errMessage = err.message || 'Something went wrong. Please try again!';
             enqueueSnackbar(errMessage, { variant: 'error' });
         },
-        enabled: enabled ?? true,
-        staleTime: 0
     })
 };

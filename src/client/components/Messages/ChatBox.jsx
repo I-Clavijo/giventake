@@ -5,6 +5,7 @@ import { useState } from 'react';
 import ChatMessage from './ChatMessage';
 import { Button, TextInput, Textarea } from 'flowbite-react';
 import CloseIcon from "../../assets/images/CloseIcon.svg"
+import { IoSendSharp } from "react-icons/io5";
 
 
 const chatHistory = [
@@ -86,7 +87,20 @@ const contacts = [
     },
 ];
 
-export default function ChatBox({ }) {
+export default function ChatBox({ socket, conversation, sendMessage }) {
+    const [message, setMessage] = useState('');
+
+    const onSendMessage = () => {
+        setMessage('')
+        sendMessage()
+    }
+
+    const onKeyDownHandler = e => {
+        const KEY_ENTER = 13
+        if (e.keyCode === KEY_ENTER) {
+            onSendMessage()
+        }
+    };
 
     return <$Wrapper>
         <div className='chatHeader'>
@@ -111,7 +125,8 @@ export default function ChatBox({ }) {
             })}
         </div>
         <div className='chatFooter'>
-            <Textarea className='inputMessage' id="messageText" type="message" placeholder="Enter message" required shadow />
+            <Textarea className='inputMessage' id="messageText" type="message" value={message} onChange={e => setMessage(e.target.value)} placeholder="Enter message" required shadow onKeyUp={onKeyDownHandler} />
+            <IoSendSharp size='1.3em' color='#fff' className='sendButton' onClick={onSendMessage} />
         </div>
     </$Wrapper>;
 };
@@ -169,7 +184,7 @@ const $Wrapper = styled.div`
         row-gap: 10px;
         flex-grow: 1;
         overflow: auto;
-        padding-bottom: 50px;
+        padding: .3em;
         background-color: #f3f4f6;
 
         .logo{
@@ -190,43 +205,42 @@ const $Wrapper = styled.div`
     }
 
     .chatFooter{
-        background: #f5f5f5;
+        background: #fff;
         display: flex;
         justify-content: space-between;
         width: 100%;
         bottom: 0;
         min-height: 4rem;
         max-height: 10rem;
-
-        @media screen and (max-width: 767px){ // Mobile
-            // padding-bottom: 50px;
-        }
-
+        align-items:center;
+        border-top: 2px #ddd solid;
 
         .inputMessage{
-            /* flex-grow: 1; */
             resize: none;
-            input{
-                width: 100%;
-                border-radius: unset;
+            background: #fff;
+            border: 0;
+            border-radius: 0;
+            resize: none;
+            margin:0;
+            width: 100%;
+            border-radius: unset;
+            outline: none;
+            height: 100%;
+
+            &:focus{
                 outline: none;
+                border: 0;
+                --tw-ring-opacity: 0;
             }
         }
     
         .sendButton {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-
-            button {
-                text-align: center;
-                padding-inline: 10px;
-                height: 100%;
-                background-color: #8cd28e;
-                color: white;
-                cursor: pointer;
-            }
+            background: var(--forth-color);
+            padding: .3em .6em .3em .8em;
+            box-sizing: content-box;
+            border-radius: 1em;
+            cursor: pointer;
+            margin-right: .4em;
         }  
     }
 `;

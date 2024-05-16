@@ -9,7 +9,6 @@ const ObjectId = mongoose.Types.ObjectId;
 
 export const getFriends = async (req, res) => {
     const { userId } = req.query;
-    console.log(req.query)
         
     const following = await getFollowingListQuery(userId);
     // attach a image url to each user I am following
@@ -23,7 +22,7 @@ export const getFriends = async (req, res) => {
     let isAuthUserIsFollowing; 
     if (auth_userId && auth_userId !== userId) {
         const authUser_following = await getFollowingUsersIdQuery(auth_userId);
-        console.log('authUser_following',authUser_following )
+
         isAuthUserIsFollowing = authUser_following.includes(userId);
     }
 
@@ -45,12 +44,10 @@ export const friendAction = async (req, res) => {
     if (!toUser || !actions) throw new AppError('Please specify the action and the user.', 400);
 
     const authUser = req.user._id;
-    console.log('authUser', authUser)
-    console.log('actions', actions)
 
     let filter, query;
     filter = { user: authUser, toUser };
-    console.log('friendAction: filter=',filter)
+
     if (actions.follow) {
         query = { user: authUser, toUser }
         await Friends.updateOne(filter, query, { upsert: true })
