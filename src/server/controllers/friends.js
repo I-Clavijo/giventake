@@ -9,7 +9,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 export const getFriends = async (req, res) => {
     const { userId } = req.query;
-        
+
     const following = await getFollowingListQuery(userId);
     // attach a image url to each user I am following
     for (const item of following) {
@@ -19,7 +19,7 @@ export const getFriends = async (req, res) => {
     }
 
     const auth_userId = req.user?._id; // undefined if the user is unauthenticated
-    let isAuthUserIsFollowing; 
+    let isAuthUserIsFollowing;
     if (auth_userId && auth_userId !== userId) {
         const authUser_following = await getFollowingUsersIdQuery(auth_userId);
 
@@ -35,7 +35,7 @@ export const getFriends = async (req, res) => {
     }
 
     const friends = { user: userId, following, followers, isAuthUserIsFollowing };
-    console.log(friends)
+
     res.status(200).json(friends);
 };
 

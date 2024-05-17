@@ -28,7 +28,6 @@ export const createReview = async (req, res) => {
 
 export const getReviews = async (req, res) => {
     const { filters } = req.query;
-    console.log(filters)
 
     const user = await User.aggregate([
         { $match: { _id: new ObjectId(filters.userId) } },
@@ -74,7 +73,6 @@ export const getReviews = async (req, res) => {
     ]);
 
     const reviews = user[0]?.reviews || [];
-    console.log(reviews)
 
     // get profile image from S3 bucket
     for (const review of reviews) {

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import ProfileImg from '../../assets/images/profile-img.jpeg';
 import { differenceInDays, isSameDay } from 'date-fns';
-import { useState, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import { Button, TextInput, Textarea } from 'flowbite-react';
 import CloseIcon from '../../assets/images/CloseIcon.svg';
@@ -9,8 +9,9 @@ import { IoSendSharp } from 'react-icons/io5';
 
 export default function ChatBox({ socket, conversation, sendMessage, onClose }) {
   const [message, setMessage] = useState('');
+  const scrollableDivRef = useRef(null);
 
-  const onSendMessage = (message) => {
+  const onSendMessage = () => {
     setMessage('');
     sendMessage(message);
   };
@@ -18,12 +19,17 @@ export default function ChatBox({ socket, conversation, sendMessage, onClose }) 
   const onKeyDownHandler = (e) => {
     const KEY_ENTER = 13;
     if (!e.shiftKey && e.keyCode === KEY_ENTER) {
-      onSendMessage(e.target.value);
+      onSendMessage();
     }
   };
 
-  let previousDate = conversation?.messages?.[0].createdAt;
-  console.log(conversation?.otherUsers[0]);
+  useEffect(() => {
+    scrollableDivRef.current?.lastElementChild?.scrollIntoView({
+      // behavior: 'smooth',
+      block: 'end'
+    });
+  }, [conversation]);
+
   return (
     <$Wrapper>
       {conversation && (
@@ -50,8 +56,13 @@ export default function ChatBox({ socket, conversation, sendMessage, onClose }) 
             </div>
           </div>
 
-          <div className="chatBody">
+          <div className="chatBody" ref={scrollableDivRef}>
             {conversation?.messages?.map((message, index) => {
+              const previousDate =
+                index > 0
+                  ? conversation.messages[index - 1].createdAt
+                  : conversation.messages[0].createdAt;
+
               const currDate = new Date(message.createdAt);
               const isSameDate = isSameDay(new Date(previousDate), currDate);
 
@@ -59,7 +70,6 @@ export default function ChatBox({ socket, conversation, sendMessage, onClose }) 
                 (user) => user._id === message.sender
               )?.imgUrl;
 
-              console.log(profileImg);
               return (
                 <ChatMessage
                   key={message._id}
@@ -71,6 +81,8 @@ export default function ChatBox({ socket, conversation, sendMessage, onClose }) 
                 />
               );
             })}
+            {/* important place holder dont delete this div! it is for the scroll function */}
+            <div></div>
           </div>
 
           <div className="chatFooter">

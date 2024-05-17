@@ -1,5 +1,4 @@
-import axios from "axios";
-import { differenceInMinutes, differenceInHours, differenceInDays, isToday, isTomorrow, isYesterday } from 'date-fns'
+import { differenceInMinutes, differenceInHours, differenceInDays, isToday, isTomorrow, isYesterday } from 'date-fns';
 
 export const getFormData = (dataObject, fileListPropertyName) => {
     const formData = new FormData();
@@ -37,7 +36,6 @@ export function isObjectEmpty(obj) {
 }
 
 
-
 export function getRelativeTime(inputDate) {
     const now = new Date();
     const date = new Date(inputDate);
@@ -54,7 +52,17 @@ export function getRelativeTime(inputDate) {
 
     // Determine relative time
     if (isToday(date)) {
-        return diffInMinutes === 0 ? "Right now" : (diffInMinutes > 0 ? `${diffInMinutes} minute(s) from now` : `${-diffInMinutes} minute(s) ago`);
+        if (diffInMinutes === 0) {
+            return "Right now";
+        } else if (diffInMinutes > 0 && diffInMinutes <= 59) {
+            return diffInMinutes === 1 ? "1 minute from now" : `${diffInMinutes} minutes from now`;
+        } else if (diffInMinutes > 59) {
+            return diffInHours === 1 ? "1 hour from now" : `${diffInHours} hours from now`;
+        } else if (diffInMinutes < 0 && diffInMinutes >= -59) {
+            return diffInMinutes === -1 ? "1 minute ago" : `${-diffInMinutes} minutes ago`;
+        } else {
+            return diffInHours === -1 ? "1 hour ago" : `${-diffInHours} hours ago`;
+        }
     } else if (isTomorrow(date)) {
         return "Tomorrow";
     } else if (isYesterday(date)) {
@@ -64,8 +72,8 @@ export function getRelativeTime(inputDate) {
     } else if (diffInDays === -1) {
         return "1 day ago";
     } else if (diffInDays > 0) {
-        return `${diffInDays} day(s) from now`;
+        return `${diffInDays} days from now`;
     } else {
-        return `${-diffInDays} day(s) ago`;
+        return `${-diffInDays} days ago`;
     }
 }

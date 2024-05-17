@@ -11,6 +11,8 @@
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--secondary-font-color);
+  position: sticky;
+  top: 0; /* or any other value like 10px */
 }
 
 .messageWrapper {

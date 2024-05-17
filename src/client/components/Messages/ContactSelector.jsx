@@ -135,16 +135,16 @@ export default function ContactSelector({ contacts, selectedContact, onContactSe
     <ul>
       {contacts?.map((contact) => {
         let isSelected = false;
-        if (selectedContact?.isNewContact && selectedContact?.user) {
+        if (selectedContact?.user) {
           isSelected = selectedContact?.userId === contact.user._id;
         } else {
           isSelected = selectedContact?.conversationId === contact.conversationId;
         }
 
         let contactIdObj, title, message, date, contactImg;
-        console.log(contact);
-        if (contact?.isNewContact) {
-          contactIdObj = { userId: contact.user._id, isNewContact: true };
+
+        if (contact?.user) {
+          contactIdObj = { userId: contact.user._id };
           title = contact.user.firstName + ' ' + contact.user.lastName;
           message = '';
           contactImg = contact.user.imgUrl;

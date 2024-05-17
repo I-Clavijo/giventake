@@ -178,6 +178,6 @@ export const getConversationParticipantsQuery = async (selfUser, conversationId)
         }
     ])
 
-    return conversationParticipants?.[0].users
+    return conversationParticipants?.[0]?.users
 }
 
