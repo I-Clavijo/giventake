@@ -18,5 +18,14 @@
   p {
     width: 20em;
     margin: auto;
+    font-weight: 300;
+  }
+  .link {
+    margin-top: 1em;
+    font-weight: 400;
+
+    a {
+      text-decoration: underline;
+    }
   }
 }
