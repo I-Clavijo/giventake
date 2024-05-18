@@ -13,6 +13,7 @@ import { useSendMessage } from '../api/messages/useSendMessage';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '../api/constants';
 import { useReceiveMessage } from '../api/messages/useReceiveMessage';
+import EmptyState from '../components/EmptyState';
 
 export default function Messages() {
   const { state } = useLocation();
@@ -125,12 +126,7 @@ export default function Messages() {
               onContactSelect={changeContactHandler}
             />
           ) : (
-            <>
-              <div className={styles.emptyState}>
-                <img src={NoConversationsImg} />
-                <h5>No Conversations</h5>
-              </div>
-            </>
+            <EmptyState img={NoConversationsImg} title="No Conversations" />
           )}
         </div>
         <div className={`${styles.chatBox} ${showChatBox && styles.show}`}>
