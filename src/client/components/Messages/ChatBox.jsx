@@ -6,8 +6,9 @@ import ChatMessage from './ChatMessage';
 import { Button, TextInput, Textarea } from 'flowbite-react';
 import CloseIcon from '../../assets/images/CloseIcon.svg';
 import { IoSendSharp } from 'react-icons/io5';
+import { isObjectEmpty } from '../../utils/lib';
 
-export default function ChatBox({ socket, conversation, sendMessage, onClose }) {
+export default function ChatBox({ conversation, sendMessage, onClose }) {
   const [message, setMessage] = useState('');
   const scrollableDivRef = useRef(null);
 
@@ -32,7 +33,7 @@ export default function ChatBox({ socket, conversation, sendMessage, onClose }) 
 
   return (
     <$Wrapper>
-      {conversation && (
+      {!isObjectEmpty(conversation) && (
         <>
           <div className="chatHeader">
             <div className="imgCrop">

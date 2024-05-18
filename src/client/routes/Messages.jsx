@@ -10,6 +10,9 @@ import { useLocation } from 'react-router-dom';
 import { useConversation } from '../api/messages/useConversation';
 import NoConversationsImg from '../assets/images/empty-states/no-contacts.svg';
 import { useSendMessage } from '../api/messages/useSendMessage';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '../api/constants';
+import { useReceiveMessage } from '../api/messages/useReceiveMessage';
 
 export default function Messages() {
   const { state } = useLocation();
@@ -18,6 +21,7 @@ export default function Messages() {
   const { data: user } = useUser();
   const socket = useRef();
   const [showChatBox, setShowChatBox] = useState(false);
+
   const [newContact, setNewContact] = useState();
 
   const { data: contacts } = useContacts();
@@ -28,13 +32,18 @@ export default function Messages() {
     enabled: !!currentContact?.conversationId
   });
 
-  const { mutate: sendMessageMutation } = useSendMessage({ userId: user._id });
+  const { mutate: sendMessageMutation } = useSendMessage({
+    selfUserId: user._id
+  });
+  const { mutate: receiveMessageMutation } = useReceiveMessage({
+    selfUserId: user._id
+  });
 
   //set the first contact to be selected
   useEffect(() => {
-    if (contacts) {
+    if (contacts && !selectedContactDirect) {
       setCurrentContact({
-        conversationId: contacts?.[0].conversationId
+        conversationId: contacts?.[0]?.conversationId
       });
     }
   }, [contacts]);
@@ -42,16 +51,19 @@ export default function Messages() {
   // Handler: if got navigated to the messages page with a message action or interest action
   useEffect(() => {
     if (selectedContactDirect && contacts) {
+      //look up for the requested contact in the contacts list
       const foundContact = contacts.find((contact) =>
         contact.otherUsers.find((user) => user._id === selectedContactDirect.user._id)
       );
 
       if (foundContact) {
+        // select this contact from existing contacts list
         setNewContact(null);
         setCurrentContact({
           conversationId: foundContact.conversationId
         });
       } else {
+        // select this new contact and add it as a new contact
         setNewContact({ user: selectedContactDirect.user });
         setCurrentContact({
           userId: selectedContactDirect.user._id
@@ -60,6 +72,7 @@ export default function Messages() {
     }
   }, [selectedContactDirect, contacts]);
 
+  // if the user is online send to the server a poke message that this user is online and willing to get instant messages
   useEffect(() => {
     if (user) {
       socket.current = io(BASE_URL);
@@ -67,17 +80,34 @@ export default function Messages() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on('msg-recieve', (packet) => {
+        receiveMessageMutation({
+          conversationId: packet.conversationId,
+          message: packet.message,
+          from: packet.from,
+          isNew: packet.isNew
+        });
+      });
+    }
+  }, []);
+
   const changeContactHandler = (contactIdObj) => {
     setCurrentContact(contactIdObj);
     setShowChatBox(true);
   };
 
   const sendMessage = (message) => {
-    sendMessageMutation({ contact: currentContact, message });
+    sendMessageMutation({
+      contact: currentContact,
+      to: conversation?.otherUsers.map((user) => user._id),
+      message,
+      socket
+    });
   };
 
   const allContacts = [...(newContact ? [newContact] : []), ...(contacts ?? [])];
-
   const newConversation = newContact
     ? {
         otherUsers: [newContact.user]

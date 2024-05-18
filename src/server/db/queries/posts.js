@@ -12,7 +12,7 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
             localField: "user",
             foreignField: "_id",
             as: "user",
-            pipeline: [{ $project: { firstName: 1, lastName: 1, imgName: 1 } }]
+            pipeline: [{ $project: { _id: 1, firstName: 1, lastName: 1, imgName: 1 } }]
         },
     },
     { $unwind: '$user' },

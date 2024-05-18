@@ -1,7 +1,7 @@
 import { connectDB } from "./db/utils/connection.js"
 import createApp from "./app.js"
 import ViteExpress from "vite-express";
-import {Server} from 'socket.io';
+import { Server } from 'socket.io';
 
 try {
 	process.on('uncaughtException', err => {
@@ -37,14 +37,23 @@ try {
 	global.onlineUsers = new Map();
 	io.on("connection", (socket) => {
 		global.chatSocket = socket;
+
 		socket.on("add-user", (userId) => {
 			onlineUsers.set(userId, socket.id);
 		});
 
 		socket.on("send-msg", (data) => {
-			const sendUserSocket = onlineUsers.get(data.to);
-			if (sendUserSocket) {
-				socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+			for (const userId of data.to) {
+				const sendUserSocket = onlineUsers.get(userId);
+				if (sendUserSocket) {
+					const packet = {
+						conversationId: data.conversationId,
+						message: data.message,
+						from: data.from,
+						isNew: data.isNew
+					}
+					socket.to(sendUserSocket).emit("msg-recieve", packet);
+				}
 			}
 		});
 	});

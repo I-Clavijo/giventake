@@ -9,18 +9,26 @@ export const useSendMessage = ({ selfUserId }) => {
   const queryClient = useQueryClient();
 
   return useOptimisticMutation({
-    mutationFn: async (variables) => {
-      console.log(variables);
-      const { data } = await axiosPrivate.post('/messages', variables);
+    mutationFn: async ({ contact, message } = variables) => {
+      const { data } = await axiosPrivate.post('/messages', { contact, message });
       return data;
     },
-    optimistic: ({ contact, message } = variables) => {
+    optimistic: ({ contact, message, to, socket } = variables) => {
       return [
         {
           queryKey: [QUERY_KEY.conversations, contact],
           updater: (currentData) => {
-            const uniqueId = uuidv4();
+            //if conversation is NOT new then send message immidiatly
+            if (contact?.conversationId) {
+              socket.current.emit('send-msg', {
+                to,
+                from: selfUserId,
+                conversationId: contact?.conversationId,
+                message
+              });
+            }
 
+            const uniqueId = uuidv4();
             const newMessage = {
               _id: uniqueId,
               conversation: contact?.conversationId,
@@ -34,17 +42,31 @@ export const useSendMessage = ({ selfUserId }) => {
 
             const result = {
               ...currentData,
-              messages: [newMessage, ...(currentData?.messages ?? [])]
+              messages: [...(currentData?.messages ?? []), newMessage]
             };
-            console.log(result);
+
             return result;
           }
         }
       ];
     },
-    onSuccess: () => {
-      console.log('onSuccess');
-      queryClient.invalidateQueries(QUERY_KEY.conversations);
+    onSuccess: (data, { contact, socket, message }, context) => {
+      if (!contact?.conversationId) {
+        queryClient.invalidateQueries(QUERY_KEY.conversations);
+
+        //if conversation is NEW then send message after got a conversationId (only after conversation has been created in the db)
+        if (data?.conversation) {
+          console.log('returnedDataMsgSend', data.conversation);
+
+          socket.current.emit('send-msg', {
+            to: data.conversation.otherUsers,
+            from: selfUserId,
+            conversationId: data.conversation.conversationId,
+            message,
+            isNew: true
+          });
+        }
+      }
     }
   });
 };

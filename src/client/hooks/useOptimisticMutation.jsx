@@ -82,7 +82,7 @@ const useOptimisticMutation = ({ mutationFn, optimistic, onSuccess }) => {
         }
       }
 
-      onSuccess?.();
+      onSuccess?.(data, variables, context);
     },
     // When mutation is done invalidate cancelled queries so they get refetched
     onSettled: (data, error, variables, context) => {

@@ -65,6 +65,7 @@ const Profile = ({ isMyProfile }) => {
 
   const interestsSepByDots = user?.interests?.map((interest, index) => (
     <span key={index}>
+      {' '}
       {interest} {index < user.interests.length - 1 ? '•' : ''}
     </span>
   ));
