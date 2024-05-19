@@ -1,35 +1,37 @@
-import styled from 'styled-components';
-import ProfileImg from '../../assets/images/profile-img.jpeg';
-import { differenceInDays, isSameDay } from 'date-fns';
-import { useState, useRef, useEffect } from 'react';
-import ChatMessage from './ChatMessage';
-import { Button, TextInput, Textarea } from 'flowbite-react';
-import CloseIcon from '../../assets/images/CloseIcon.svg';
-import { IoSendSharp } from 'react-icons/io5';
-import { isObjectEmpty } from '../../utils/lib';
+import styled from 'styled-components'
+import ProfileImg from '../../assets/images/profile-img.jpeg'
+import { differenceInDays, isSameDay } from 'date-fns'
+import { useState, useRef, useEffect } from 'react'
+import ChatMessage from './ChatMessage'
+import { Button, TextInput, Textarea } from 'flowbite-react'
+import CloseIcon from '../../assets/images/CloseIcon.svg'
+import { IoSendSharp } from 'react-icons/io5'
+import { isObjectEmpty } from '../../utils/lib'
 
 export default function ChatBox({ conversation, sendMessage, onClose }) {
-  const [message, setMessage] = useState('');
-  const scrollableDivRef = useRef(null);
+  const [message, setMessage] = useState('')
+  const scrollableDivRef = useRef(null)
 
   const onSendMessage = () => {
-    setMessage('');
-    sendMessage(message);
-  };
+    setMessage('')
+    sendMessage(message)
+  }
 
-  const onKeyDownHandler = (e) => {
-    const KEY_ENTER = 13;
+  const onKeyDownHandler = e => {
+    const KEY_ENTER = 13
     if (!e.shiftKey && e.keyCode === KEY_ENTER) {
-      onSendMessage();
+      onSendMessage()
     }
-  };
+  }
 
   useEffect(() => {
     scrollableDivRef.current?.lastElementChild?.scrollIntoView({
       // behavior: 'smooth',
       block: 'end'
-    });
-  }, [conversation]);
+    })
+
+    //TODO: set all messages read
+  }, [conversation])
 
   return (
     <$Wrapper>
@@ -37,11 +39,7 @@ export default function ChatBox({ conversation, sendMessage, onClose }) {
         <>
           <div className="chatHeader">
             <div className="imgCrop">
-              <img
-                className="rounded-full"
-                src={conversation?.otherUsers[0].imgUrl || ProfileImg}
-                alt="Profile Pic"
-              />
+              <img className="rounded-full" src={conversation?.otherUsers[0].imgUrl || ProfileImg} alt="Profile Pic" />
             </div>
             <div className="userInfo">
               <p style={{ padding: '10px' }}>
@@ -60,16 +58,12 @@ export default function ChatBox({ conversation, sendMessage, onClose }) {
           <div className="chatBody" ref={scrollableDivRef}>
             {conversation?.messages?.map((message, index) => {
               const previousDate =
-                index > 0
-                  ? conversation.messages[index - 1].createdAt
-                  : conversation.messages[0].createdAt;
+                index > 0 ? conversation.messages[index - 1].createdAt : conversation.messages[0].createdAt
 
-              const currDate = new Date(message.createdAt);
-              const isSameDate = isSameDay(new Date(previousDate), currDate);
+              const currDate = new Date(message.createdAt)
+              const isSameDate = isSameDay(new Date(previousDate), currDate)
 
-              const profileImg = conversation.users.find(
-                (user) => user._id === message.sender
-              )?.imgUrl;
+              const profileImg = conversation.users.find(user => user._id === message.sender)?.imgUrl
 
               return (
                 <ChatMessage
@@ -80,7 +74,7 @@ export default function ChatBox({ conversation, sendMessage, onClose }) {
                   showTitleDate={!isSameDate || index === 0}
                   profileImg={profileImg}
                 />
-              );
+              )
             })}
             {/* important place holder dont delete this div! it is for the scroll function */}
             <div></div>
@@ -92,7 +86,7 @@ export default function ChatBox({ conversation, sendMessage, onClose }) {
               id="messageText"
               type="message"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={e => setMessage(e.target.value)}
               placeholder="Enter message"
               required
               shadow
@@ -103,7 +97,7 @@ export default function ChatBox({ conversation, sendMessage, onClose }) {
         </>
       )}
     </$Wrapper>
-  );
+  )
 }
 
 const $Wrapper = styled.div`
@@ -216,4 +210,4 @@ const $Wrapper = styled.div`
       margin-right: 0.4em;
     }
   }
-`;
+`

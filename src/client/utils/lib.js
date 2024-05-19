@@ -8,7 +8,6 @@ export const getFormData = (dataObject, fileListPropertyName) => {
     //add attachments only if they exist
     if (!!fileList?.length) {
         for (const item of fileList) {
-            console.log(item);
             formData.append('attachment', item, item.name);
         }
     }

@@ -1,4 +1,4 @@
-import styles from './PostCreator.module.scss';
+import styles from './PostCreator.module.scss'
 import {
   Textarea,
   Button,
@@ -10,56 +10,67 @@ import {
   Card,
   Select,
   Spinner
-} from 'flowbite-react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreatePost } from '../../api/posts/useCreatePost';
-import { useState } from 'react';
-import { CATEGORIES } from '../../utils/staticData';
-import DragNDrop from '../RHF/DragNDrop';
-import LocationSelector from '../RHF/Location/LocationSelector';
+} from 'flowbite-react'
+import { useForm } from 'react-hook-form'
+import { optional, z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCreatePost } from '../../api/posts/useCreatePost'
+import { useState } from 'react'
+import { CATEGORIES } from '../../utils/staticData'
+import DragNDrop from '../RHF/DragNDrop'
+import LocationSelector from '../RHF/Location/LocationSelector'
 
 const PostCreator = () => {
-  const { mutate: createPost, isPending } = useCreatePost();
+  const { mutate: createPost, isPending } = useCreatePost()
+
+  // Define a schema for the location object
+  const locationSchema = z.object({
+    city: z.string().trim().min(2).max(30).optional(),
+    country: z.string().trim().min(2).max(30).optional(),
+    lat: z.string().optional(),
+    long: z.string().optional()
+  })
 
   const createPostSchema = z
     .object({
-      category: z.string().refine((category) => category !== '', {
+      category: z.string().refine(category => category !== '', {
         message: 'Please choose a category'
       }),
-      title: z.string().min(3).max(30),
+      title: z.string().min(3).max(100),
       startDate: z.date(),
-      startTime: z.string(),
-      endTime: z.string(),
+      startTime: z.string().optional(),
+      endTime: z.string().optional(),
       endDate: z.date().optional(),
       isAllDay: z.boolean().optional(),
       isEndDate: z.boolean().optional(),
       isRemoteHelp: z.boolean().optional(),
-      location: z.object({
-        city: z.string().trim().min(2).max(30),
-        country: z.string().trim().min(2).max(30),
-        lat: z.string(),
-        long: z.string()
-      }),
+      location: locationSchema.optional(), // Make location optional
       img: z.any().optional(),
       description: z.string().min(5).max(700)
     })
     .refine(
-      ({ isAllDay, startTime }) => isAllDay || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(startTime),
+      ({ location, isRemoteHelp }) => {
+        if (!isRemoteHelp) {
+          return location && location.lat && location.long
+        }
+        return true
+      },
       {
-        path: ['startTime'],
-        message: 'Invalid'
+        path: ['location.city'],
+        message: 'City is required'
       }
     )
+    .refine(({ isAllDay, startTime }) => isAllDay || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(startTime), {
+      path: ['startTime'],
+      message: 'Invalid'
+    })
     .refine(
-      ({ isAllDay, endTime, isEndDate }) =>
-        isAllDay || !isEndDate || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(endTime),
+      ({ isAllDay, endTime, isEndDate }) => isAllDay || !isEndDate || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(endTime),
       {
         path: ['endTime'],
         message: 'Invalid'
       }
-    );
+    )
 
   // NOTE:: for testing purpoeses only.
   // const formTestValues = {
@@ -80,13 +91,16 @@ const PostCreator = () => {
     control
   } = useForm({
     defaultValues: {
+      // startTime: '',
+      // endTime: '',
+      isRemoteHelp: false,
       startDate: new Date(new Date().setHours(0, 0, 0, 0)),
       endDate: new Date(new Date().setHours(0, 0, 0, 0)),
       isAllDay: true
       // ...formTestValues
     },
     resolver: zodResolver(createPostSchema)
-  });
+  })
 
   return (
     <div className={styles.postCreator}>
@@ -95,8 +109,8 @@ const PostCreator = () => {
         Ready to tap into the collective wisdom of our amazing community?
         <br /> Don't hesitate to create a new post if you find yourself in need of assistance.
         <br /> <i>Just as you've helped others, it's now your turn to ask for support.</i>
-        <br /> Together, we can overcome any challenge. Describe your situation, and let the magic
-        of our community work its wonders! <br />{' '}
+        <br /> Together, we can overcome any challenge. Describe your situation, and let the magic of our community work
+        its wonders! <br />{' '}
       </p>
 
       <h3 className={styles.textBoldOut}>Together, we're unstoppable!</h3>
@@ -112,20 +126,19 @@ const PostCreator = () => {
               {...register('category')}
               id="category"
               color={errors.category ? 'failure' : 'gray'}
-              helperText={errors.category?.message}
-            >
+              helperText={errors.category?.message}>
               <option value="">Category</option>
               {Object.entries(CATEGORIES)
                 .slice(1)
-                .map((item) => {
-                  const id = item[0];
-                  const category = item[1];
+                .map(item => {
+                  const id = item[0]
+                  const category = item[1]
 
                   return (
                     <option key={id} value={id}>
                       {category.name}
                     </option>
-                  );
+                  )
                 })}
             </Select>
           </div>
@@ -138,9 +151,9 @@ const PostCreator = () => {
                   color={errors.startDate ? 'failure' : 'gray'}
                   helperText={errors.startDate?.message}
                   value={watch('startDate').toDateString()}
-                  onSelectedDateChanged={(value) => {
-                    setValue('startDate', value);
-                    setValue('endDate', value);
+                  onSelectedDateChanged={value => {
+                    setValue('startDate', value)
+                    setValue('endDate', value)
                   }}
                   showClearButton={false}
                   showTodayButton={false}
@@ -182,7 +195,7 @@ const PostCreator = () => {
                     value={watch('endDate').toDateString()}
                     showClearButton={false}
                     showTodayButton={false}
-                    onSelectedDateChanged={(value) => setValue('endDate', value)}
+                    onSelectedDateChanged={value => setValue('endDate', value)}
                     id="endDate"
                     minDate={watch('startDate')}
                     {...register('endDate')}
@@ -235,7 +248,7 @@ const PostCreator = () => {
           <Label className={styles.label} value="Title *" />
           <TextInput
             {...register('title')}
-            maxLength={30}
+            maxLength={100}
             color={errors.title ? 'failure' : 'gray'}
             helperText={errors.title?.message}
           />
@@ -260,11 +273,7 @@ const PostCreator = () => {
           </div>
 
           <Label className={styles.label} value="Picture of your post (optional)" />
-          <DragNDrop
-            {...{ register, watch }}
-            name="img"
-            txtFileType="SVG, PNG, JPG or GIF (MAX. 800x400px)"
-          />
+          <DragNDrop {...{ register, watch }} name="img" txtFileType="SVG, PNG, JPG or GIF (MAX. 800x400px)" />
 
           <div className={styles.submitButton}>
             <Button type="submit" disabled={isPending} className="button">
@@ -274,7 +283,7 @@ const PostCreator = () => {
         </form>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default PostCreator;
+export default PostCreator
