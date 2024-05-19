@@ -38,7 +38,8 @@ const Post = ({
   openModalHandler,
   isLoading,
   noTitle,
-  noActions
+  noActions,
+  isSelf
 }) => {
   // const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
   // setWantToHelpCount((prevCount) => (!isUserInterested ? prevCount + 1 : prevCount - 1));
@@ -159,7 +160,7 @@ const Post = ({
             </p>
           </div>
         </div>
-        {!noActions && (
+        {!noActions && !isSelf && (
           <div className={styles.postFooter}>
             <div
               style={{

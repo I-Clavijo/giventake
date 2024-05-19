@@ -55,6 +55,11 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
         }
     },
     {
+        $addFields: {
+            isSelf: { $eq: ['$user._id', new ObjectId(auth_userId)] },
+        }
+    },
+    {
         $sort: { createdAt: -1 } // Sort by createdAt field in descending order (newest first)
     }];
 
