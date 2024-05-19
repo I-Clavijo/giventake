@@ -76,7 +76,7 @@ export const getPosts = async (req, res) => {
   //get all posts from DB
   const auth_userId = req.user?._id
   let posts = await getAllPostsQuery(auth_userId, filters)
-
+  console.log(posts)
   // get post image from S3 bucket
   for (const post of posts) {
     // For each post, generate a signed URL and save it to the post object

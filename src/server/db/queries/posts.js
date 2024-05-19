@@ -2,6 +2,35 @@ import mongoose from 'mongoose'
 import { Friends, Post, User } from '../model/index.js'
 const ObjectId = mongoose.Types.ObjectId
 
+export const getSavedPostsQuery = async (auth_userId, populate) => {
+  const userIdObjectId = auth_userId ? new ObjectId(auth_userId) : null
+
+  return await User.aggregate([
+    {
+      $match: {
+        _id: userIdObjectId
+      }
+    },
+    {
+      $lookup: {
+        from: Post.collection.name,
+        as: 'posts',
+        localField: 'savedPosts',
+        foreignField: '_id'
+      }
+    },
+    {
+      $unwind: '$posts'
+    },
+    {
+      $replaceRoot: {
+        newRoot: '$posts'
+      }
+    },
+    ...populate
+  ])
+}
+
 export const getAllPostsQuery = async (auth_userId, filters) => {
   const userIdObjectId = auth_userId ? new ObjectId(auth_userId) : null
 
@@ -110,6 +139,8 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
       },
       ...populate
     ])
+  } else if (userIdObjectId && filters?.onlySavedPosts) {
+    return await getSavedPostsQuery(auth_userId, populate)
   }
 
   return await Post.aggregate([
