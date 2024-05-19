@@ -1,60 +1,36 @@
+import s from "./EmailVerification.module.scss";
 import { Button, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
-import PostVerificationCode from "../../api/emails/PostVerificationCode";
+import { Spinner } from "flowbite-react";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
+const EmailVerification = ({ onVerify, isVerifying, onReturn }) => {
+  const [code, setCode] = useState("");
 
-const EmailVerification = ({ email , setIsVerified}) => {
-   const [error, setError] = useState(null);
-    const [code, setCode] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+  return (
+    <div className={s.emailVerification}>
+    <IoMdArrowRoundBack className={s.btnReturn} onClick={onReturn} />
 
-    async function handleSubmit() {
-        setIsLoading(true);
-        setError('');
-        
-
-        const emailVerificationData = {
-            email: email,
-            code: code,
-        };
-
-        console.log(emailVerificationData.email);
-        
-        
-        try {
-            const response = await PostVerificationCode(emailVerificationData);
-            if (response.status == 401) {
-                setError("Code is not valid");
-                console.log("test"); 
-            } else {
-                // Code is valid, handle success (e.g., redirect, update state)
-            }
-        } catch (error) {
-            if (error)
-            setError("An error occurred. Please try again.");
-        } finally {
-            setIsLoading(false);
-        }
-        setIsVerified(true);
-    }
-
-    return (
-        <>
-            <div>
-                <div className="mb-2 block">
-                    <Label htmlFor="code" value="Check your inbox and enter the code you received:" />
-                </div>
-                <TextInput
-                    onChange={(e) => setCode(e.target.value)}
-                    required
-                />
-                {error && <Label color="failure">{error}</Label>} 
-            </div>
-            <Button onClick={handleSubmit}>
-                {isLoading ? 'Verifying...' : 'Verify'}
-            </Button>
-        </>
-    );
+      <h2>Verify your email</h2>
+      <div>
+        <div className="mb-2 block">
+          <Label
+            htmlFor="code"
+            value="Check your inbox and enter the code you received:"
+          />
+        </div>
+        <TextInput onChange={(e) => setCode(e.target.value)} required />
+      </div>
+      <Button
+        onClick={() => onVerify(code)}
+        disabled={isVerifying}
+        className="button"
+      >
+        <span className="mr-">{isVerifying ? "Verifying... " : "Verify"}</span>
+        {isVerifying && <Spinner />}
+      </Button>
+    </div>
+  );
 };
 
 export default EmailVerification;
