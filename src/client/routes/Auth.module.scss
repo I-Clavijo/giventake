@@ -1,7 +1,7 @@
 
 .pageInnerWrap{
     max-width: 60rem;
-    margin: 2rem auto;
+    margin: 1rem auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,21 +12,22 @@
 
 .authWrap{
     display: flex;
-    margin-top: 2rem;
-    gap: 2rem;
+    width: 100%;
+    gap: 1rem;
     @media screen and (max-width: 767px){ // Mobile
         flex-direction: column-reverse;
     }
 
     .loginImgWrap{
-        width: 50%;
+        width: 100%;
+        max-width: 400px;
         @media screen and (max-width: 767px){ // Mobile
             width: 100%;
         }
 
         h2 {
             text-align: center;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
     }
 
@@ -34,7 +35,7 @@
         display: flex;
         gap:.5rem;
         flex-direction: column;
-        width: 50%;
+        width: 100%;
         @media screen and (max-width: 767px){ // Mobile
             width: 100%;
         }
@@ -42,8 +43,9 @@
         .actions {
             display: flex;
             gap: 1rem;
-            justify-content: flex-end;
+            justify-content: left;
             align-items: center;
+            
         
             button {
                 font: inherit;
@@ -71,3 +73,4 @@
         }
     }
 }
+

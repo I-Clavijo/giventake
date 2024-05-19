@@ -1,3 +1,4 @@
+import { differenceInDays } from "date-fns";
 import mongoose from "mongoose";
 
 export function flattenObject(obj, parentKey = '') {
@@ -32,4 +33,17 @@ export function convertToUpperCase(word) {
     const result = wordsArray.map(w => w.toUpperCase()).join('_');
 
     return result;
+}
+
+
+export const calcRealtiveDay = (date1, date2) => {
+    let x = differenceInDays(date1.toString(), date2.toString())
+    if (x === 0)
+        return date2.getHours() + ':' + (date2.getMinutes() < 10 ? '0' : '') + date2.getMinutes()
+    else if (x === 1)
+        return "Yesterday"
+    else if (x < 7)
+        return x + " day ago"
+    // else 
+    return date2.getDate().toString() + '/' + (date2.getMonth() + 1).toString()
 }

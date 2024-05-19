@@ -5,8 +5,7 @@ import { useSnackbar } from 'notistack';
 import { QUERY_KEY } from '../constants';
 
 
-const signUp = async ({ firstName, lastName, email, password }) => {
-    const signupData = { firstName, lastName, email, password };
+const signUp = async (signupData) => {
     return await axios.post('/auth/signup', JSON.stringify(signupData), {
         headers: { 'Content-Type': 'application/json' },
     });
@@ -24,7 +23,6 @@ export const useSignUp = () => {
     return useMutation({
         mutationFn: (data) => signUp(data),
         onSuccess: ({data}) => {
-            console.log("onSuccess: ", data);
             queryClient.setQueryData([QUERY_KEY.user], data) // save the user in the state            
             navigate(from, { replace: true });
         },
@@ -33,6 +31,8 @@ export const useSignUp = () => {
             switch (error?.request?.status) {
                 case 409:
                     errMsg = "User already exists."; break;
+                case 401: 
+                errMsg = "Wrong verification code."; break;
             }
             console.log('error: ', errMsg);
             enqueueSnackbar(errMsg, { variant: 'error' });

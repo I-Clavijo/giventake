@@ -13,6 +13,11 @@ export const getUserById = async (req, res) => {
     const user = await User.findOne({ _id: userId }).lean();
     if (!user) throw AppError('User not found', 404);
 
+    // get profile image url from S3
+    const imgName = user.imgName;
+    const url = imgName ? await getImageUrl(imgName) : '';
+    user.imgUrl = url;
+
     removePropsMutable(user, ['password', 'refreshToken',])
 
     res.status(200).json(user);
@@ -74,3 +79,5 @@ export const updateUser = async (req, res) => {
 
     res.status(201).json(returnedData);
 };
+
+
