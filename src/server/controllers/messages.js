@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Conversation, Message } from '../db/model/index.js';
 import AppError from '../utils/AppError.js';
-import { getContactsQuery, getConversationMessagesQuery, getConversationParticipantsQuery } from '../db/queries/messages.js';
+import { getContactsQuery, getConversationMessagesQuery, getConversationParticipantsQuery, getConversationPostQuery } from '../db/queries/messages.js';
 import { getImageUrl } from '../utils/S3.js';
 const ObjectId = mongoose.Schema.ObjectId;
 
@@ -17,6 +17,12 @@ export const getContacts = async (req, res) => {
         const imgName = contact.lastMessage.sender?.imgName;
         const url = imgName ? await getImageUrl(imgName) : '';
         contact.lastMessage.sender.imgUrl = url;
+
+        if (contact?.post?.imgName) {
+            const imgName2 = contact.post?.imgName;
+            const url2 = imgName2 ? await getImageUrl(imgName2) : '';
+            contact.post.imgUrl = url2;
+        }
 
         for (const participant of contact.otherUsers) {
             const imgName = participant?.imgName;
@@ -42,10 +48,16 @@ export const getConversationMessages = async (req, res) => {
         participant.imgUrl = url;
     }
 
+    const post = await getConversationPostQuery(selfUserId, conversationId)
+    const imgName = post?.imgName;
+    const url = imgName ? await getImageUrl(imgName) : '';
+    post.imgUrl = url;
+
     const conversation = {
         conversationId,
         users: conversationParticipants,
         otherUsers: conversationParticipants?.filter((user) => !user?.isSelf),
+        post,
         messages: userConversationMessages
     }
 

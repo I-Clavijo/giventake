@@ -33,6 +33,7 @@ const Feed = ({
         createdAt={post.createdAt}
         location={post.city}
         postPic={post.imgUrl}
+        title={post?.title}
         description={post.description}
         likes={post.usersSaved?.length || 0}
         interested={post.usersInterested?.length || 0}

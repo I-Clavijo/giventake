@@ -7,7 +7,7 @@ const ObjectId = mongoose.Schema.ObjectId;
 * @type {mongoose.SchemaDefinitionProperty}
 */
 const postSchema = new mongoose.Schema({
-	user: { type: ObjectId, required: true, ref: MODEL_KEY.User },
+    user: { type: ObjectId, required: true, ref: MODEL_KEY.User },
     category: { type: String, required: true },
     isRemoteHelp: Boolean,
     location: {
@@ -18,13 +18,14 @@ const postSchema = new mongoose.Schema({
     },
     helpDate: {
         startDate: Date,
-        startTime: String, 
+        startTime: String,
         endTime: String,
         endDate: Date,
         isAllDay: Boolean,
         isEndDate: Boolean
     },
     imgName: String,
+    title: String,
     description: { type: String, required: true },
     usersSaved: [{ type: ObjectId, ref: MODEL_KEY.User }],
     usersInterested: [{ type: ObjectId, ref: MODEL_KEY.User }],

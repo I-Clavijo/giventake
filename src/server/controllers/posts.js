@@ -10,7 +10,7 @@ import { convertToUpperCase } from '../db/utils/lib.js';
 
 export const createPost = async (req, res) => {
     const file = req.file;
-    const { category, startDate, startTime, endTime, endDate, isAllDay, isEndDate, location, isRemoteHelp, description } = req.body;
+    const { category, startDate, startTime, endTime, endDate, isAllDay, isEndDate, location, isRemoteHelp, title, description } = req.body;
 
     // only if file uploaded
     let fileName = '';
@@ -27,6 +27,7 @@ export const createPost = async (req, res) => {
     const newPost = {
         user: req.user._id,
         category,
+        title,
         helpDate: {
             startDate,
             startTime,

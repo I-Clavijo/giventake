@@ -1,18 +1,19 @@
-import { useEffect, useState } from 'react';
-import styles from './Post.module.scss';
-import ProfilePic from '../../assets/images/profile-img.jpeg';
-import BookmarkIcon from '../../assets/images/bookmark-icon-black.svg';
-import BookmarkIconFilled from '../../assets/images/bookmark-icon-black-filled.svg';
-import FilledHandWaving from '../../assets/images/hand_waving_icon_filled.svg';
-import HandWaving from '../../assets/images/hand_waving_icon.svg';
-import FlagIcon from '../../assets/images/flag-icon-v2.svg';
-import FilledFlagIcon from '../../assets/images/flag-filled-icon.svg';
-import { Modal, Tooltip } from 'flowbite-react';
-import { usePostAction } from '../../api/posts/usePostAction';
-import { FaExpandAlt, FaEyeSlash } from 'react-icons/fa';
-import ReportModal from './ReportModal';
-import PostSkeleton from './PostSkeleton';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import styles from './Post.module.scss'
+import ProfilePic from '../../assets/images/profile-img.jpeg'
+import BookmarkIcon from '../../assets/images/bookmark-icon-black.svg'
+import BookmarkIconFilled from '../../assets/images/bookmark-icon-black-filled.svg'
+import FilledHandWaving from '../../assets/images/hand_waving_icon_filled.svg'
+import HandWaving from '../../assets/images/hand_waving_icon.svg'
+import FlagIcon from '../../assets/images/flag-icon-v2.svg'
+import FilledFlagIcon from '../../assets/images/flag-filled-icon.svg'
+import { Modal, Tooltip } from 'flowbite-react'
+import { usePostAction } from '../../api/posts/usePostAction'
+import { FaExpandAlt, FaEyeSlash } from 'react-icons/fa'
+import ReportModal from './ReportModal'
+import PostSkeleton from './PostSkeleton'
+import { Link, useNavigate } from 'react-router-dom'
+import InterestedModal from './InterestedModal'
 
 const Post = ({
   userId,
@@ -27,6 +28,7 @@ const Post = ({
   helpDate,
   location = '',
   postPic = '',
+  title = '',
   description = '',
   interested = 0,
   isSavedByUser,
@@ -38,19 +40,28 @@ const Post = ({
   noTitle,
   noActions
 }) => {
-  const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
-  const navigate = useNavigate();
+  // const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
+  // setWantToHelpCount((prevCount) => (!isUserInterested ? prevCount + 1 : prevCount - 1));
+
+  const navigate = useNavigate()
   // const [showMoreActive, setShowMoreActive] = useState(postInModal);
-  const [showReportModal, setShowReportModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false)
+  const [showInterestedModal, setShowInterestedModal] = useState(false)
 
   const toggleSaveForLater = () => {
-    onPostAction({ postId, actions: { isSavedByUser: !isSavedByUser } });
-  };
+    onPostAction({ postId, actions: { isSavedByUser: !isSavedByUser } })
+  }
 
   const toggleHelp = () => {
-    onPostAction({ postId, actions: { isUserInterested: !isUserInterested } });
-    setWantToHelpCount((prevCount) => (!isUserInterested ? prevCount + 1 : prevCount - 1));
-  };
+    if (isUserInterested) {
+      onPostAction({
+        postId,
+        actions: { isUserInterested: !isUserInterested }
+      })
+    } else {
+      setShowInterestedModal(true)
+    }
+  }
 
   // // Show more button
   // const toggleShowMore = () => {
@@ -58,47 +69,44 @@ const Post = ({
   // };
 
   // sets how long ago the post was posted
-  const displayDate = new Date(createdAt);
-  const [timeAgo, setTimeAgo] = useState('');
+  const [timeAgo, setTimeAgo] = useState('')
 
   useEffect(() => {
     const calculateTimeAgo = () => {
-      const currentDate = new Date();
-      const postDateTime = new Date(createdAt);
+      const currentDate = new Date()
+      const postDateTime = new Date(createdAt)
 
-      const timeDifference = currentDate.getTime() - postDateTime.getTime();
-      const seconds = Math.floor(timeDifference / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
+      const timeDifference = currentDate.getTime() - postDateTime.getTime()
+      const seconds = Math.floor(timeDifference / 1000)
+      const minutes = Math.floor(seconds / 60)
+      const hours = Math.floor(minutes / 60)
+      const days = Math.floor(hours / 24)
 
-      let timeAgoString = '';
+      let timeAgoString = ''
       if (days > 0) {
-        timeAgoString = `${days} day${days > 1 ? 's' : ''} ago`;
+        timeAgoString = `${days} day${days > 1 ? 's' : ''} ago`
       } else if (hours > 0) {
-        timeAgoString = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        timeAgoString = `${hours} hour${hours > 1 ? 's' : ''} ago`
       } else if (minutes > 0) {
-        timeAgoString = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        timeAgoString = `${minutes} minute${minutes > 1 ? 's' : ''} ago`
       } else {
-        timeAgoString = `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+        timeAgoString = `${seconds} second${seconds > 1 ? 's' : ''} ago`
       }
 
-      setTimeAgo(timeAgoString);
-    };
+      setTimeAgo(timeAgoString)
+    }
 
-    calculateTimeAgo();
+    calculateTimeAgo()
 
     // Update the time every minute
-    const interval = setInterval(calculateTimeAgo, 60000);
+    const interval = setInterval(calculateTimeAgo, 60000)
 
-    return () => clearInterval(interval);
-  }, [createdAt]);
+    return () => clearInterval(interval)
+  }, [createdAt])
 
   //control description length
-  let postDescription = description;
-  const descriptionMaxLength = postPic
-    ? MAX_DESCRIPTION_LENGTH_W_PHOTO
-    : MAX_DESCRIPTION_LENGTH_NO_PHOTO;
+  let postDescription = description
+  const descriptionMaxLength = postPic ? MAX_DESCRIPTION_LENGTH_W_PHOTO : MAX_DESCRIPTION_LENGTH_NO_PHOTO
   let cutDescription =
     postDescription.length > descriptionMaxLength ? (
       <>
@@ -107,7 +115,7 @@ const Post = ({
       </>
     ) : (
       postDescription
-    );
+    )
 
   const postTag = (
     <div className={`${styles.post} ${isUserReported ? styles.reportedPost : ''}`}>
@@ -121,8 +129,7 @@ const Post = ({
                 {fullName}
               </h6>
               <p>
-                {timeAgo}{' '}
-                {location?.city && location?.country && `• ${location.city}, ${location.country}`}
+                {timeAgo} {location?.city && location?.country && `• ${location.city}, ${location.country}`}
               </p>
             </div>
             {/* </div> */}
@@ -130,17 +137,20 @@ const Post = ({
         )}
 
         <div className={styles.postBody}>
-          <div {...(!postInModal && { onClick: openModalHandler, style: { cursor: 'pointer' } })}>
+          <div
+            {...(!postInModal && {
+              onClick: openModalHandler,
+              style: { cursor: 'pointer' }
+            })}>
             {postPic && (
               <div className={styles.imgCrop}>
                 <img src={postPic} alt="Post" />
               </div>
             )}
+            <h6 className={styles.title}>{title}</h6>
             <p>
               {postInModal ? postDescription : cutDescription}
-
               {/* DO we need the read more button? now that we have modal */}
-
               {/* {!showMoreActive && !postInModal && description.length > MAX_DESCRIPTION_LENGTH && ( */}
               {/* <button className={styles.readMore} onClick={toggleShowMore}> */}
               {/* <u> Read More</u> */}
@@ -151,7 +161,12 @@ const Post = ({
         </div>
         {!noActions && (
           <div className={styles.postFooter}>
-            <div style={{ width: 'fit-content', display: 'flex', alignItems: 'center' }}>
+            <div
+              style={{
+                width: 'fit-content',
+                display: 'flex',
+                alignItems: 'center'
+              }}>
               <div className={styles.likes}>
                 <img
                   className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''} ${
@@ -172,7 +187,7 @@ const Post = ({
                       {...(isLoggedIn && { onClick: toggleHelp })}
                       alt="Help"
                     />
-                    <span className={styles.likeCount}>{wantToHelpCount}</span>
+                    {/* <span className={styles.likeCount}>{wantToHelpCount}</span> */}
                   </div>
                 </Tooltip>
               </div>
@@ -197,37 +212,37 @@ const Post = ({
         </div>
       )}
     </div>
-  );
+  )
 
   return (
     <>
       <ReportModal
         show={showReportModal}
         onClose={() => setShowReportModal(false)}
-        {...{ postId, isUserReported }}
+        {...{ postId, isUserReported, onPostAction }}
       />
+      <InterestedModal
+        show={showInterestedModal}
+        onClose={() => setShowInterestedModal(false)}
+        {...{ userId, postId, fullName, isUserInterested, onPostAction }}
+      />
+
       {isLoading ? <PostSkeleton /> : postTag}
     </>
-  );
-};
+  )
+}
 
-const PostWithModal = (props) => {
-  const [openModal, setOpenModal] = useState(false);
+const PostWithModal = props => {
+  const [openModal, setOpenModal] = useState(false)
 
   return (
     <>
-      <Modal
-        size="md"
-        dismissible
-        show={openModal}
-        onClose={() => setOpenModal(false)}
-        className={styles.modalWrap}
-      >
+      <Modal size="md" dismissible show={openModal} onClose={() => setOpenModal(false)} className={styles.modalWrap}>
         <Post {...props} postInModal />
       </Modal>
       <Post {...props} openModalHandler={() => setOpenModal(true)} />
     </>
-  );
-};
+  )
+}
 
-export default PostWithModal;
+export default PostWithModal

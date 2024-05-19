@@ -27,7 +27,7 @@ const ObjectId = mongoose.Types.ObjectId;
 //         }
 //     },
 //     post?: {
-//         postId: '',
+//         _id: '',
 //         imgUrl: '',
 //         title: ''
 //     }
@@ -103,6 +103,13 @@ export const getContactsQuery = async (userId) => {
                 localField: "post",
                 foreignField: "_id",
                 as: "post",
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1, title: 1, imgName: 1
+                        }
+                    }
+                ]
             }
         },
         {
@@ -119,6 +126,9 @@ export const getContactsQuery = async (userId) => {
                 lastMessage: 1,
                 post: 1
             }
+        },
+        {
+            $sort: { "lastMessage.createdAt": -1 }
         }
     ]);
 
@@ -181,3 +191,28 @@ export const getConversationParticipantsQuery = async (selfUser, conversationId)
     return conversationParticipants?.[0]?.users ?? []
 }
 
+export const getConversationPostQuery = async (selfUser, conversationId) => {
+    const conversationParticipants = await Conversation.aggregate([
+        {
+            $match: {
+                _id: new ObjectId(conversationId)
+            }
+        },
+        { // populate users
+            $lookup: {
+                from: User.collection.name,
+                localField: "post",
+                foreignField: "_id",
+                as: "post",
+            }
+        },
+        {
+            $unwind: {
+                path: "$post",
+                preserveNullAndEmptyArrays: true
+            }
+        }
+    ])
+
+    return conversationParticipants?.[0]
+}

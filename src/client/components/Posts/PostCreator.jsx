@@ -28,6 +28,7 @@ const PostCreator = () => {
       category: z.string().refine((category) => category !== '', {
         message: 'Please choose a category'
       }),
+      title: z.string().min(3).max(30),
       startDate: z.date(),
       startTime: z.string(),
       endTime: z.string(),
@@ -60,15 +61,16 @@ const PostCreator = () => {
       }
     );
 
-  const formTestValues = {
-    category: 'TRAVEL',
-    startTime: '12:00',
-    endTime: '16:00',
-    address: 'Even Gvirol, 22',
-    city: 'Herzliya',
-    description:
-      'Hello everybody, I need your help with traveling with me to Italy to hike in the mountains, and help me with my wheelchair.'
-  };
+  // NOTE:: for testing purpoeses only.
+  // const formTestValues = {
+  //   category: 'TRAVEL',
+  //   startTime: '12:00',
+  //   endTime: '16:00',
+  //   address: 'Even Gvirol, 22',
+  //   city: 'Herzliya',
+  //   description:
+  //     'Hello everybody, I need your help with traveling with me to Italy to hike in the mountains, and help me with my wheelchair.'
+  // };
   const {
     register,
     handleSubmit,
@@ -80,8 +82,8 @@ const PostCreator = () => {
     defaultValues: {
       startDate: new Date(new Date().setHours(0, 0, 0, 0)),
       endDate: new Date(new Date().setHours(0, 0, 0, 0)),
-      isAllDay: true,
-      ...formTestValues
+      isAllDay: true
+      // ...formTestValues
     },
     resolver: zodResolver(createPostSchema)
   });
@@ -100,7 +102,7 @@ const PostCreator = () => {
       <h3 className={styles.textBoldOut}>Together, we're unstoppable!</h3>
 
       <Card>
-        <h4>Create new post</h4>
+        <h4 style={{ marginBottom: 0 }}>Create new post</h4>
         <form onSubmit={handleSubmit(createPost)}>
           <div className="mb-2 mt-4">
             <Label className={styles.label} htmlFor="category">
@@ -230,11 +232,12 @@ const PostCreator = () => {
             )}
           </div>
 
-          <Label className={styles.label} value="Picture of your post (optional)" />
-          <DragNDrop
-            {...{ register, watch }}
-            name="img"
-            txtFileType="SVG, PNG, JPG or GIF (MAX. 800x400px)"
+          <Label className={styles.label} value="Title *" />
+          <TextInput
+            {...register('title')}
+            maxLength={30}
+            color={errors.title ? 'failure' : 'gray'}
+            helperText={errors.title?.message}
           />
 
           <div className="mb-4">
@@ -248,13 +251,20 @@ const PostCreator = () => {
             </div>
             <Textarea
               id="description"
-              placeholder="Write here"
+              placeholder="Describe what kind of help you need"
               rows={5}
               {...register('description')}
               color={errors.description ? 'failure' : 'gray'}
               helperText={errors.description?.message}
             />
           </div>
+
+          <Label className={styles.label} value="Picture of your post (optional)" />
+          <DragNDrop
+            {...{ register, watch }}
+            name="img"
+            txtFileType="SVG, PNG, JPG or GIF (MAX. 800x400px)"
+          />
 
           <div className={styles.submitButton}>
             <Button type="submit" disabled={isPending} className="button">
