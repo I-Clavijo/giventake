@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 
 export default function FeedPage() {
   const filters = { onlyPeopleIFollow: 1 }
+  const { data: user, isLoading: isLoadingUser, isError: isErrorUser, isLoggedIn } = useUser()
 
   const { mutate: postAction } = usePostAction({ filters })
   const { data: posts, isLoading: isLoadingPosts } = usePosts({ filters })
@@ -20,7 +21,7 @@ export default function FeedPage() {
       {isLoadingPosts ? (
         <Spinner />
       ) : posts.length ? (
-        <Feed {...{ posts }} onPostAction={postAction} />
+        <Feed {...{ posts, isLoggedIn }} onPostAction={postAction} />
       ) : (
         <EmptyState
           img={NoPostsImg}
