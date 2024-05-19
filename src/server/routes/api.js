@@ -15,5 +15,4 @@ router.use("/reviews", reviewsRoutes);
 router.use("/friends", friendsRoutes);
 router.use("/messages", messagesRoutes);
 
-
 export default router;

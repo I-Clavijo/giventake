@@ -4,9 +4,9 @@ export const MODEL_KEY = {
   ReportedPost: 'ReportedPost',
   Friends: 'Friends',
   Message: 'Message',
-  Conversation: 'Conversation'
-};
-
+  Conversation: 'Conversation',
+  VerificationCode: 'VerificationCode'
+}
 
 export const REPORTS_REASONS = {
   SPAM: 'Spam',
@@ -16,6 +16,6 @@ export const REPORTS_REASONS = {
   FALSE_INFORMATION: 'False information',
   PERSONAL_ATTACK: 'Personal attack',
   OTHER: 'Other reason (please specify)'
-};
+}
 
-export const REPORTS_KEYS = Object.keys(REPORTS_REASONS);
+export const REPORTS_KEYS = Object.keys(REPORTS_REASONS)

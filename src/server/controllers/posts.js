@@ -17,7 +17,7 @@ export const createPost = async (req, res) => {
     if (file) {
         // transform image
         file.buffer = await sharp(file.buffer)
-            .resize({ height: 600, width: 600, fit: "contain" })
+            .resize({ height: null, width: 600, fit: "inside" })
             .toBuffer();
 
         // upload image to S3

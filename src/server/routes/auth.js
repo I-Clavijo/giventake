@@ -1,6 +1,6 @@
 import express from "express";
 import { check } from "express-validator";
-import { signUp, login, logout, handleRefreshToken } from "../controllers/auth.js";
+import { signUp, login, logout, handleRefreshToken, sendVerificationEmail } from "../controllers/auth.js";
 
 const router = express.Router();
 
@@ -11,12 +11,10 @@ router.post(
 		check("lastName").not().isEmpty(),
 		check("email").normalizeEmail().isEmail(),
 		check("password").isLength({ min: 6 }),
-		// check("shippingAddress").not().isEmpty(),
-		// check("phone").not().isEmpty(),
 	],
 	signUp
 );
-
+router.post('/send-verification-code', sendVerificationEmail)
 router.post("/login", login);
 router.post("/logout", logout);
 router.get("/refresh", handleRefreshToken);
