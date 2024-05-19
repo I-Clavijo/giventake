@@ -168,7 +168,7 @@ const PostCreator = () => {
                   <TextInput
                     color={errors.startTime ? 'failure' : 'gray'}
                     helperText={errors.startTime?.message}
-                    placeholder="Start time (24h)"
+                    placeholder="10:00"
                     {...register('startTime')}
                     maxLength={5}
                   />
@@ -180,7 +180,7 @@ const PostCreator = () => {
                   <label className={styles.label}>to</label>
                   <span className={styles.endTime}>
                     <TextInput
-                      placeholder="End time (24h)"
+                      placeholder="18:00"
                       {...register('endTime')}
                       maxLength={5}
                       color={errors.endTime ? 'failure' : 'gray'}

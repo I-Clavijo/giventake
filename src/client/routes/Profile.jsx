@@ -1,105 +1,106 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Tabs } from 'flowbite-react';
-import Stars from '../components/Reviews/Stars';
-import { useUser } from '../api/users/useUser.jsx';
-import { HiChartSquareBar, HiUserCircle } from 'react-icons/hi';
-import styles from './Profile.module.scss';
-import ProfileImg from '../assets/images/profile-img.jpeg';
-import { HiOutlinePencilSquare } from 'react-icons/hi2';
-import Feed, { showAs } from '../components/Posts/Feed.jsx';
-import ReviewsFeed from '../components/Reviews/ReviewsFeed.jsx';
-import { EditProfileModal } from '../components/Profile/EditProfileModal.jsx';
-import { usePosts } from '../api/posts/usePosts.jsx';
-import PageError from '../utils/PageError.js';
-import { ReviewAskModal } from '../components/Reviews/ReviewAskModal.jsx';
-import { useReviews } from '../api/reviews/useReviews.jsx';
-import { FriendsListModal, modes } from '../components/Profile/FriendsListModal.jsx';
-import { useFriendAction } from '../api/friends/useFriendAction.jsx';
-import { useFriends } from '../api/friends/useFriends.jsx';
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Button, Tabs } from 'flowbite-react'
+import Stars from '../components/Reviews/Stars'
+import { useUser } from '../api/users/useUser.jsx'
+import { HiChartSquareBar, HiUserCircle } from 'react-icons/hi'
+import styles from './Profile.module.scss'
+import ProfileImg from '../assets/images/profile-img.jpeg'
+import { HiOutlinePencilSquare } from 'react-icons/hi2'
+import Feed, { showAs } from '../components/Posts/Feed.jsx'
+import ReviewsFeed from '../components/Reviews/ReviewsFeed.jsx'
+import { EditProfileModal } from '../components/Profile/EditProfileModal.jsx'
+import { usePosts } from '../api/posts/usePosts.jsx'
+import PageError from '../utils/PageError.js'
+import { ReviewAskModal } from '../components/Reviews/ReviewAskModal.jsx'
+import { useReviews } from '../api/reviews/useReviews.jsx'
+import { FriendsListModal, modes } from '../components/Profile/FriendsListModal.jsx'
+import { useFriendAction } from '../api/friends/useFriendAction.jsx'
+import { useFriends } from '../api/friends/useFriends.jsx'
+import { usePostAction } from '../api/posts/usePostAction.jsx'
 
 const Profile = ({ isMyProfile }) => {
-  let { id: userId } = useParams();
-  const navigate = useNavigate();
+  let { id: userId } = useParams()
+  const navigate = useNavigate()
 
-  const { data: authUser, isLoggedIn } = useUser();
+  const { data: authUser, isLoggedIn } = useUser()
   const {
     data: user,
     isLoading: isLoadingUser,
     isError: isErrorUser,
     isSuccess: isSuccessUser
-  } = useUser({ userId, enabled: isMyProfile ? true : !!userId });
+  } = useUser({ userId, enabled: isMyProfile ? true : !!userId })
   if (!isMyProfile && isErrorUser && !user)
-    throw new PageError('Profile page not found.', 'Are you sure you are in the right page?');
+    throw new PageError('Profile page not found.', 'Are you sure you are in the right page?')
 
   // navigate the user to his own profile page if he visit it as a guest.
   useEffect(() => {
-    if (userId !== undefined && userId === authUser?._id) navigate('/profile');
-  }, [userId, user?._id]);
+    if (userId !== undefined && userId === authUser?._id) navigate('/profile')
+  }, [userId, user?._id])
 
-  const { mutate: friendAction } = useFriendAction();
+  const { mutate: friendAction } = useFriendAction()
 
   const filters = {
     userId: isMyProfile && user?._id ? user._id : userId
-  };
+  }
   const { data: posts, isLoading: isLoadingPosts } = usePosts({
     filters,
     enabled: isMyProfile ? true : !!userId && isSuccessUser
-  });
+  })
 
   const { data: reviews } = useReviews({
     filters,
     enabled: isMyProfile ? true : !!userId && isSuccessUser
-  });
+  })
 
   const { data: friends, isLoading: friendsIsLoading } = useFriends({
     userId: isMyProfile && user?._id ? user._id : userId,
     enabled: isMyProfile ? true : !!userId && isSuccessUser
-  });
+  })
 
-  const [showReviewModal, setShowReviewModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false)
 
-  const [showFriendsModal, setShowFriendsModal] = useState(false);
-  const [friendsListMode, setFriendsListMode] = useState();
+  const [showFriendsModal, setShowFriendsModal] = useState(false)
+  const [friendsListMode, setFriendsListMode] = useState()
+  const { mutate: postAction } = usePostAction({ filters })
 
   const interestsSepByDots = user?.interests?.map((interest, index) => (
     <span key={index}>
       {' '}
       {interest} {index < user.interests.length - 1 ? '•' : ''}
     </span>
-  ));
+  ))
 
-  let txtLocation = '';
+  let txtLocation = ''
   if (user?.location?.city) {
-    txtLocation = user.location.city;
-    if (user.location.country) txtLocation += `, ${user.location.country}`;
+    txtLocation = user.location.city
+    if (user.location.country) txtLocation += `, ${user.location.country}`
   }
 
   const onFollowersClickHandler = () => {
-    setShowFriendsModal(true);
-    setFriendsListMode(modes.FOLLOWERS);
-  };
+    setShowFriendsModal(true)
+    setFriendsListMode(modes.FOLLOWERS)
+  }
   const onFollowingClickHandler = () => {
-    setShowFriendsModal(true);
-    setFriendsListMode(modes.FOLLOWING);
-  };
+    setShowFriendsModal(true)
+    setFriendsListMode(modes.FOLLOWING)
+  }
 
   const onMessageHandler = () => {
     if (userId) {
-      navigate('/messages', { state: { selectedContactDirect: { user } } });
+      navigate('/messages', { state: { selectedContactDirect: { user } } })
     }
-  };
+  }
 
   const onFriendHandler = () => {
     if (friends) {
-      let actions;
-      if (friends.isAuthUserIsFollowing) actions = { unfollow: 1 };
-      else actions = { follow: 1 };
+      let actions
+      if (friends.isAuthUserIsFollowing) actions = { unfollow: 1 }
+      else actions = { follow: 1 }
 
-      friendAction({ toUser: userId, actions });
+      friendAction({ toUser: userId, actions })
     }
-  };
+  }
 
   return (
     <>
@@ -131,19 +132,11 @@ const Profile = ({ isMyProfile }) => {
                   <p className={styles.statNumber}>{posts?.length || '-'}</p>
                   <p className={styles.statText}>Posts</p>
                 </div>
-                <div
-                  className={styles.stat}
-                  onClick={onFollowersClickHandler}
-                  style={{ cursor: 'pointer' }}
-                >
+                <div className={styles.stat} onClick={onFollowersClickHandler} style={{ cursor: 'pointer' }}>
                   <p className={styles.statNumber}>{friends?.followers?.length ?? '-'}</p>
                   <p className={styles.statText}>Followers</p>
                 </div>
-                <div
-                  className={styles.stat}
-                  onClick={onFollowingClickHandler}
-                  style={{ cursor: 'pointer' }}
-                >
+                <div className={styles.stat} onClick={onFollowingClickHandler} style={{ cursor: 'pointer' }}>
                   <p className={styles.statNumber}>{friends?.following?.length ?? '-'}</p>
                   <p className={styles.statText}>Following</p>
                 </div>
@@ -163,33 +156,21 @@ const Profile = ({ isMyProfile }) => {
                     Edit Profile
                   </Button>
                   <EditProfileModal show={showEditModal} onClose={() => setShowEditModal(false)} />
-                  <ReviewAskModal
-                    show={showReviewModal}
-                    onClose={() => setShowReviewModal(false)}
-                  />
                 </div>
               )}
               {!isMyProfile && (
                 <div className={styles.actions}>
                   {/* <Link to="/messages"> */}
-                  <Button
-                    size="xs"
-                    color="gray"
-                    style={{ padding: '5px' }}
-                    onClick={onMessageHandler}
-                  >
+                  <Button size="xs" color="gray" style={{ padding: '5px' }} onClick={onMessageHandler}>
                     Message
                   </Button>
                   {/* </Link> */}
                   {friends && (
                     <Button
                       size="xs"
-                      {...(friends.isAuthUserIsFollowing
-                        ? { color: 'gray' }
-                        : { className: 'button' })}
+                      {...(friends.isAuthUserIsFollowing ? { color: 'gray' } : { className: 'button' })}
                       style={{ padding: '5px' }}
-                      onClick={onFriendHandler}
-                    >
+                      onClick={onFriendHandler}>
                       {friends.isAuthUserIsFollowing ? 'Unfollow' : 'Follow'}
                     </Button>
                   )}
@@ -207,6 +188,8 @@ const Profile = ({ isMyProfile }) => {
                   isLoading={isLoadingPosts}
                   noTitle
                   {...(isMyProfile && { noActions: true })}
+                  onPostAction={postAction}
+                  {...{ isLoggedIn }}
                 />
               )}
             </Tabs.Item>
@@ -221,7 +204,7 @@ const Profile = ({ isMyProfile }) => {
         </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile

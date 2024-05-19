@@ -174,6 +174,7 @@ export default function Messages() {
         <div className={`${styles.chatBox} ${showChatBox && styles.show}`}>
           <ChatBox
             {...{ socket, sendMessage }}
+            selfUserId={user._id}
             conversation={conversation || newConversation}
             onClose={() => setShowChatBox(false)}
           />

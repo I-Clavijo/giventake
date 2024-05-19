@@ -7,8 +7,14 @@ import { Button, TextInput, Textarea } from 'flowbite-react'
 import CloseIcon from '../../assets/images/CloseIcon.svg'
 import { IoSendSharp } from 'react-icons/io5'
 import { isObjectEmpty } from '../../utils/lib'
+import { FaRegStar } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
+import { ReviewAskModal } from '../Reviews/ReviewAskModal'
 
-export default function ChatBox({ conversation, sendMessage, onClose }) {
+export default function ChatBox({ conversation, sendMessage, onClose, selfUserId }) {
+  const navigate = useNavigate()
+  const [showReviewModal, setShowReviewModal] = useState(undefined)
+
   const [message, setMessage] = useState('')
   const scrollableDivRef = useRef(null)
 
@@ -42,7 +48,9 @@ export default function ChatBox({ conversation, sendMessage, onClose }) {
               <img className="rounded-full" src={conversation?.otherUsers[0].imgUrl || ProfileImg} alt="Profile Pic" />
             </div>
             <div className="userInfo">
-              <p style={{ padding: '10px' }}>
+              <p
+                style={{ padding: '10px', cursor: 'pointer' }}
+                onClick={() => navigate(`/profile/${conversation?.otherUsers[0]._id}`)}>
                 <strong>
                   {conversation?.otherUsers[0].firstName} {conversation?.otherUsers[0].lastName}
                 </strong>
@@ -55,6 +63,29 @@ export default function ChatBox({ conversation, sendMessage, onClose }) {
             </div>
           </div>
 
+          {conversation?.post && (
+            <div className="chatPost">
+              <div>
+                <p>{conversation.post.title}</p>
+                {showReviewModal !== false &&
+                  !conversation.post?.reviewToUser &&
+                  conversation.post.user === selfUserId && (
+                    <>
+                      <Button color="light" size="sm" className="mt-1" onClick={() => setShowReviewModal(true)}>
+                        Write review
+                      </Button>
+                      <ReviewAskModal
+                        toUser={conversation?.otherUsers[0]._id}
+                        postId={conversation.post._id}
+                        show={showReviewModal}
+                        onClose={() => setShowReviewModal(false)}
+                      />
+                    </>
+                  )}
+              </div>
+              {conversation.post?.imgUrl && <img src={conversation.post.imgUrl} />}
+            </div>
+          )}
           <div className="chatBody" ref={scrollableDivRef}>
             {conversation?.messages?.map((message, index) => {
               const previousDate =
@@ -142,6 +173,31 @@ const $Wrapper = styled.div`
       }
     }
   }
+  .chatPost {
+    display: flex;
+    gap: 2em;
+    padding: 1em;
+    padding-top: 0;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #ccc;
+    & > div {
+      flex: 1;
+
+      p {
+        margin: 0;
+        word-break: break-word;
+        font-size: 0.9em;
+      }
+    }
+
+    img {
+      width: 5em;
+      height: 5em;
+      border-radius: 10em;
+      flex-shrink: 0;
+    }
+  }
+
   .chatBody {
     height: 100%;
     position: relative;

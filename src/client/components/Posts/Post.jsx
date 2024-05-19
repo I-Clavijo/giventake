@@ -14,11 +14,12 @@ import ReportModal from './ReportModal'
 import PostSkeleton from './PostSkeleton'
 import { Link, useNavigate } from 'react-router-dom'
 import InterestedModal from './InterestedModal'
+import { useSnackbar } from 'notistack'
 
 const Post = ({
   userId,
   isLoggedIn,
-  onPostAction,
+  onPostAction: onPostActionHandler,
   MAX_DESCRIPTION_LENGTH_W_PHOTO = 150,
   MAX_DESCRIPTION_LENGTH_NO_PHOTO = 450,
   postId,
@@ -48,6 +49,12 @@ const Post = ({
   // const [showMoreActive, setShowMoreActive] = useState(postInModal);
   const [showReportModal, setShowReportModal] = useState(false)
   const [showInterestedModal, setShowInterestedModal] = useState(false)
+  const { enqueueSnackbar } = useSnackbar()
+
+  const onPostAction = data => {
+    if (isLoggedIn) onPostActionHandler(data)
+    else enqueueSnackbar('You need to login to perfom this action.', { variant: 'info' })
+  }
 
   const toggleSaveForLater = () => {
     onPostAction({ postId, actions: { isSavedByUser: !isSavedByUser } })
