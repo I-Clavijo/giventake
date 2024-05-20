@@ -28,7 +28,12 @@ export default function AppSideBar({ children, Icon, title, search, nav, current
 
     let navlink = (
       <NavLink to={item.link} className={styles.linkWrap}>
-        {content}
+        {item?.numUnreadConversations ? (
+          <span className={styles.newMsgIndicator}>{item.numUnreadConversations}</span>
+        ) : (
+          <></>
+        )}
+        <span>{content}</span>
       </NavLink>
     )
 
