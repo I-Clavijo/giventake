@@ -1,137 +1,188 @@
-import styles from "./Messages.module.scss";
-import { Button, TextInput, Card } from 'flowbite-react';
-import ChatMessage from "../components/ChatMessage";
-import ChatHeader from "../components/ChatHeader";
-
-const chatHistory = [
-	{ sender: 'Alice', message: 'Hi Bob! How are you doing today? Hi Bob! How are you doing today? Hi Bob! How are you doing today?' },
-	{ sender: 'Bob', message: 'Hey Alice! I\'m good, thanks. How about you?' },
-	{ sender: 'Alice', message: 'I\'m doing well too, thanks! Did you have a good weekend?' },
-	{ sender: 'Bob', message: 'Yeah, it was nice. I went hiking with some friends. What about you?' },
-	{ sender: 'Alice', message: 'That sounds fun! I mostly relaxed at home and caught up on some reading.' },
-	{ sender: 'Bob', message: 'Nice! Any good books you\'d recommend?' },
-	{ sender: 'Alice', message: 'Definitely! I just finished "The Night Circus" by Erin Morgenstern. It\'s magical!' },
-	{ sender: 'Bob', message: 'Oh, I\'ve heard about that one. I\'ll add it to my list!' },
-	{ sender: 'Alice', message: 'You should! So, how\'s work going?' },
-	{ sender: 'Bob', message: 'It\'s busy as usual, but things are going well. How about your job?' },
-	{ sender: 'Alice', message: 'Pretty good! We\'re working on an exciting project right now.' },
-	{ sender: 'Bob', message: 'That\'s awesome to hear. What\'s the project about?' },
-	{ sender: 'Alice', message: 'It\'s a new app for tracking daily habits and goals. I think it\'ll be really helpful.' },
-	{ sender: 'Bob', message: 'Sounds interesting! Let me know when it\'s ready—I\'d love to try it out.' },
-	{ sender: 'Alice', message: 'Will do! By the way, are you free this weekend? We could grab coffee.' },
-	{ sender: 'Bob', message: 'I think I should be free. Coffee sounds great!' },
-	{ sender: 'Alice', message: 'Perfect! How about Saturday afternoon?' },
-	{ sender: 'Bob', message: 'Works for me. See you then!' },
-	{ sender: 'Alice', message: 'Great! Looking forward to it.' },
-	{ sender: 'Bob', message: 'Hey Alice, quick question—do you know any good sushi places around here?' },
-	{ sender: 'Alice', message: 'Yes, there\'s a great sushi place called Sakura Sushi. I can show you the location.' },
-	{ sender: 'Bob', message: 'Awesome, thanks! Let\'s go there after coffee on Saturday.' },
-	{ sender: 'Alice', message: 'Sounds like a plan!' },
-	{ sender: 'Bob', message: 'By the way, have you watched any good movies lately?' },
-	{ sender: 'Alice', message: 'Not recently. Any recommendations?' },
-	{ sender: 'Bob', message: 'I watched "Parasite" last week. It\'s fantastic!' },
-	{ sender: 'Alice', message: 'Oh, I\'ve heard great things about that one. I\'ll check it out.' },
-	{ sender: 'Bob', message: 'Definitely do! So, what else is new with you?' },
-	{ sender: 'Alice', message: 'Not much, just trying to stay productive. How about you?' },
-	{ sender: 'Bob', message: 'Same here. Hey, I\'ve been meaning to ask—do you play any musical instruments?' },
-	{ sender: 'Alice', message: 'Yes, I play the piano. I used to take lessons when I was younger.' },
-	{ sender: 'Bob', message: 'That\'s impressive! I\'ve always wanted to learn the guitar.' },
-];
-const chatData = [
-	{ 
-		avatar: 'https://via.placeholder.com/50', 
-		name: 'Guy 1', 
-		lastMessage: 'Hey, how are you?' ,
-		// lastMessage: chatHistory[chatHistory.length]["message"] ,
-		time: '14:12'
-	},
-	{ 
-		avatar: 'https://via.placeholder.com/50', 
-		name: 'Guy 2', 
-		lastMessage: 'What time are we meeting tomorrow?',
-		time: '12:02'
-	},
-	{ 
-		avatar: 'https://via.placeholder.com/50', 
-		name: 'Guy 3', 
-		lastMessage: 'Did you finish that report yet?',
-		time: '21:21'
-	},
-	{ 
-		avatar: 'https://via.placeholder.com/50', 
-		name: 'Guy 1', 
-		lastMessage: 'Hey, how are you?' ,
-		// lastMessage: chatHistory[chatHistory.length]["message"] ,
-		time: '14:12'
-	},
-	{ 
-		avatar: 'https://via.placeholder.com/50', 
-		name: 'Guy 2', 
-		lastMessage: 'What time are we meeting tomorrow?',
-		time: '12:02'
-	},
-	{ 
-		avatar: 'https://via.placeholder.com/50', 
-		name: 'Guy 3', 
-		lastMessage: 'Did you finish that report yet?',
-		time: '21:21'
-	},
-];
+import { useCallback, useEffect, useRef, useState } from 'react'
+import styles from './Messages.module.scss'
+import ChatBox from '../components/Messages/ChatBox'
+import { useUser } from '../api/users/useUser'
+import { BASE_URL } from '../api/axios'
+import { io } from 'socket.io-client'
+import ContactSelector from '../components/Messages/ContactSelector'
+import { useContacts } from '../api/messages/useContacts'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useConversation } from '../api/messages/useConversation'
+import NoConversationsImg from '../assets/images/empty-states/no-contacts.svg'
+import { useSendMessage } from '../api/messages/useSendMessage'
+import { useReceiveMessage } from '../api/messages/useReceiveMessage'
+import EmptyState from '../components/EmptyState'
+import useReadConversation from '../api/messages/useReadConversation'
 
 export default function Messages() {
-	// const [chatHistory, setChatHistory] = useState([]);
-	
-	return (
-		<>
-			<div>
-				<h4>Messages</h4>
-				<div className={styles.chatPage}>
-					 <Card className={`max-w-sm ${styles.cardWrapper}`}>
-						<div className="flex items-center justify-between">
-							<h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">Last Messages</h5>
-						</div>
-						<div className="flow-root" style={{ overflow: 'auto', maxHeight: '350px' }}>
-							<ul className="divide-y divide-gray-200 dark:divide-gray-700">
-							{
-								chatData.map((chat, index) => {
-									return (
-										<li className="py-3 sm:py-4" key={index}>
-											<div className="flex items-center space-x-4">
-												<div className="shrink-0">
-													<img className="rounded-full" src={chat.avatar} alt="Profile Pic"/>
-												</div>
-												<div className="min-w-0 flex-1">
-													<p className="truncate text-sm font-medium text-gray-900 dark:text-white">{chat.name}</p>
-													<div className="flex justify-between">
-														<p className="truncate text-sm text-gray-500 dark:text-gray-400">{chat.lastMessage}</p>
-														<p className="text-sm text-gray-500 dark:text-gray-400 me-2">{chat.time}</p>
-													</div>
-												</div>
-											</div>
-										</li>
-									)
-								})
-							}
-							</ul>
-						</div>
-					</Card>
-					<div className={styles.lastChat}>
-						<ChatHeader/>					
-						<div className={styles.chatBody}>			
-							<div className={styles.logo}>
-								<h1>Given'take logo</h1>
-							</div>
-							{chatHistory.map((message, index) => (
-								<ChatMessage key={index} message={message} />
-							))}
-						</div>						
-						<div className={styles.chatFooter}>
-							<TextInput className={styles.inputMessage} id="messageText" type="message" placeholder="Enter message" required shadow />
-							<Button className={styles.sendButton} gradientMonochrome="info">send</Button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</>
-	);
+  const { state: navigationState, pathname } = useLocation()
+  const navigate = useNavigate()
+  let isNavigated = true
+  // const [navigationState, setNavigationState] = useState(state);
+
+  const [firstContactsRender, setFirstContactsRender] = useState(true)
+  const { selectedContactDirect, interestedInPost } = navigationState || {}
+
+  const { data: user } = useUser()
+  const socket = useRef()
+  const [showChatBox, setShowChatBox] = useState(false)
+
+  const [newContact, setNewContact] = useState()
+
+  const { data: contacts } = useContacts()
+
+  const [currentContact, setCurrentContact] = useState()
+  const { data: conversation } = useConversation({
+    conversationId: currentContact?.conversationId,
+    enabled: !!currentContact?.conversationId
+  })
+
+  const { mutate: sendMessageMutation } = useSendMessage({
+    selfUserId: user._id
+  })
+  const { mutate: receiveMessageMutation } = useReceiveMessage({
+    selfUserId: user._id
+  })
+  const { mutate: readConversation } = useReadConversation()
+
+  //set the first contact to be selected
+  useEffect(() => {
+    if (contacts && !selectedContactDirect && firstContactsRender) {
+      setFirstContactsRender(false)
+
+      setCurrentContact({
+        conversationId: contacts?.[0]?.conversationId
+      })
+    }
+  }, [contacts])
+
+  // Handler: if got navigated to the messages page with a message action or interest action
+  useEffect(() => {
+    if (navigationState && isNavigated) {
+      isNavigated = false
+      if (selectedContactDirect && contacts) {
+        //CASE: user is want to send message to specific user
+
+        //look up for the requested contact in the contacts list
+        const foundContact = contacts.find(contact => {
+          const isAssociatedWithPost = !!contact?.post?._id
+          const isSameUser = !!contact.otherUsers.find(user => user._id === selectedContactDirect.user._id)
+
+          return !isAssociatedWithPost && isSameUser
+        })
+
+        if (foundContact) {
+          // select this contact from existing contacts list
+          setNewContact(null)
+          setCurrentContact({
+            conversationId: foundContact.conversationId
+          })
+        } else {
+          // select this new contact and add it as a new contact
+          setNewContact({ user: selectedContactDirect.user })
+          setCurrentContact({
+            userId: selectedContactDirect.user._id
+          })
+        }
+      } else if (interestedInPost && contacts) {
+        const interestedInPostTemp = interestedInPost
+        navigate(pathname, { state: { interestedInPost: null } })
+        //CASE: user is interested in post so send message to post owner
+
+        //look up for the requested contact in the contacts list
+        const foundContact = contacts.find(contact => {
+          const isSamePost = contact.post?._id === interestedInPostTemp.postId
+          const isSameUser = !!contact.otherUsers.find(user => user._id === interestedInPostTemp.userId)
+
+          return isSamePost && isSameUser
+        })
+
+        let contact = {
+          userId: interestedInPostTemp.userId,
+          postId: interestedInPostTemp.postId
+        }
+        if (foundContact) {
+          // select this contact from existing contacts list
+          setNewContact(null)
+          contact = {
+            conversationId: foundContact.conversationId
+          }
+          setCurrentContact(contact)
+        }
+
+        sendMessage(interestedInPostTemp.message, contact)
+      }
+    }
+  }, [navigationState, contacts])
+
+  // if the user is online send to the server a poke message that this user is online and willing to get instant messages
+  useEffect(() => {
+    if (user) {
+      socket.current = io(BASE_URL)
+      socket.current.emit('add-user', user._id)
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on('msg-recieve', packet => {
+        receiveMessageMutation({
+          conversationId: packet.conversationId,
+          message: packet.message,
+          from: packet.from,
+          isNew: packet.isNew
+        })
+      })
+    }
+  }, [])
+
+  const changeContactHandler = contactIdObj => {
+    setCurrentContact(contactIdObj)
+    setShowChatBox(true)
+    if (contactIdObj?.conversationId) {
+      readConversation({ conversationId: contactIdObj.conversationId })
+    }
+  }
+
+  const sendMessage = (message, contact) => {
+    sendMessageMutation({
+      contact: currentContact || contact,
+      to: conversation?.otherUsers.map(user => user._id),
+      message,
+      socket
+    })
+  }
+
+  const allContacts = [...(newContact ? [newContact] : []), ...(contacts ?? [])]
+  const newConversation = newContact
+    ? {
+        otherUsers: [newContact.user]
+      }
+    : null
+
+  return (
+    <>
+      <div className={styles.chatPage}>
+        <div className={styles.contactsWrap}>
+          {allContacts?.length ? (
+            <ContactSelector
+              contacts={allContacts}
+              selectedContact={currentContact}
+              onContactSelect={changeContactHandler}
+            />
+          ) : (
+            <EmptyState img={NoConversationsImg} title="No Conversations" />
+          )}
+        </div>
+        <div className={`${styles.chatBox} ${showChatBox && styles.show}`}>
+          <ChatBox
+            {...{ socket, sendMessage }}
+            selfUserId={user._id}
+            conversation={conversation || newConversation}
+            onClose={() => setShowChatBox(false)}
+          />
+        </div>
+      </div>
+    </>
+  )
 }

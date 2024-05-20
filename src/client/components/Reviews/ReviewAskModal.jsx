@@ -1,12 +1,12 @@
-import { Button, Label, Modal, TextInput, Dropdown, Select, Textarea } from "flowbite-react";
-import { useState, useMemo } from "react";
-import { useSnackbar } from 'notistack';
-import { Rating, Star } from '@smastrom/react-rating';
-import '@smastrom/react-rating/style.css';
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { useCreateReview } from "../../api/reviews/useCreateReview";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Label, Modal, TextInput, Dropdown, Select, Textarea } from 'flowbite-react'
+import { useState, useMemo } from 'react'
+import { useSnackbar } from 'notistack'
+import { Rating, Star } from '@smastrom/react-rating'
+import '@smastrom/react-rating/style.css'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { useCreateReview } from '../../api/reviews/useCreateReview'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 // fromUser: ObjectId,
 // rating: {
@@ -18,36 +18,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // description: { type: String },
 // createdAt: { type: Date },
 
-export function ReviewAskModal({ show, onClose, toUser='66197bc771671388122f52a5', postId='662e78479247951d40cb1813' }) {
-  const { mutateAsync: createReview } = useCreateReview();
-  const reviewAskSchema = z
-    .object({
-      rating: z.number().min(1).max(5),
-      description: z.string().optional(),
-    });
+export function ReviewAskModal({ show, onClose, toUser, postId }) {
+  const { mutateAsync: createReview } = useCreateReview()
+  const reviewAskSchema = z.object({
+    rating: z.number().min(1).max(5),
+    description: z.string().optional()
+  })
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting }
   } = useForm({
-    defaultValues: { 
+    defaultValues: {
       rating: 0
     },
     resolver: zodResolver(reviewAskSchema)
-  });
+  })
 
-  const onSubmit = (data) => {
+  const onSubmit = data => {
     const review = {
       ...data,
-      toUser: toUser, 
-      postId: postId 
-    };
+      toUser: toUser,
+      postId: postId
+    }
 
-    createReview({ data: review, closeModal: onClose });
-  };
+    createReview({ data: review, closeModal: onClose })
+  }
 
   return (
     <>
@@ -56,7 +55,7 @@ export function ReviewAskModal({ show, onClose, toUser='66197bc771671388122f52a5
         <Modal.Body>
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <Label className="block" htmlFor="rating" value="1. Rate the experience" />
-            <Rating className="mb-4" onChange={(value) => setValue('rating', value)} value={watch('rating')} />
+            <Rating className="mb-4" onChange={value => setValue('rating', value)} value={watch('rating')} />
 
             <Label className="mb-2 block" htmlFor="description" value="2. What did you like/improve?" />
             <Textarea
@@ -67,11 +66,13 @@ export function ReviewAskModal({ show, onClose, toUser='66197bc771671388122f52a5
               {...register('description')}
             />
             <div className="w-full">
-              <Button type="submit" className="button">Submit your review</Button>
+              <Button type="submit" className="button">
+                Submit your review
+              </Button>
             </div>
           </form>
         </Modal.Body>
       </Modal>
     </>
-  );
+  )
 }

@@ -8,9 +8,9 @@ import credentials from './middleware/credentials.js';
 import errorHandler from './middleware/errorHandler.js';
 import apiRoutes from './routes/api.js';
 import { API_VERSION } from "./config.js";
-
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,7 +26,7 @@ export default function createApp() {
 	app.use(credentials);
 
 	// Cross Origin Resource Sharing
-	app.use(cors(corsOptions));
+	app.use(cors(corsOptions)); 
 
 	// built-in middleware to handle urlencoded form data
 	app.use(express.urlencoded({ extended: false }));
@@ -41,7 +41,7 @@ export default function createApp() {
 	app.use(`/api/v${API_VERSION}`, apiRoutes);
 
 	// handle errors
-	app.use(errorHandler);
+	app.use(errorHandler);  
 
 	return app;
 }

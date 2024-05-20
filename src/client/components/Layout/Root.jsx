@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { SnackbarProvider } from 'notistack';
 import AppSideBar from './AppSideBar';
 import { useUser } from "../../api/users/useUser";
@@ -17,11 +17,23 @@ import { Button, Popover } from "flowbite-react";
 import { MdOutlinePerson, MdOutlineLogout, MdLockOutline } from "react-icons/md";
 import { TbHeartHandshake } from "react-icons/tb";
 import useLogout from "../../api/auth/useLogout";
+import { IoNewspaperOutline, IoNewspaper } from "react-icons/io5";
+import { HiNewspaper, HiOutlineNewspaper } from "react-icons/hi2";
+
+import { FaCompass } from "react-icons/fa6";
+import { FaRegCompass } from "react-icons/fa";
+import { AiOutlineMessage, AiFillMessage } from "react-icons/ai";
+import { TbSquareRoundedPlus, TbSquareRoundedPlusFilled } from "react-icons/tb";
+import { HiOutlineLockClosed, HiLockClosed } from "react-icons/hi";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { FaCircleUser, FaRegCircleUser } from "react-icons/fa6";
+
 
 
 export default function Root({ children }) {
     const { isLoggedIn, data: user } = useUser();
     const { mutate: logout } = useLogout();
+    const { pathname } = useLocation();
 
     const profilePopover = children => {
         const content = <div className={styles.popoverWrap}>
@@ -31,20 +43,22 @@ export default function Root({ children }) {
         return <Popover trigger="click" aria-labelledby="profile-popover" {...{ content, children }} />;
     }
     const navlinks = [
-        { icon: NewsIcon, title: "Feed", link: "/" },
-        { icon: ExploreIcon, title: "Explore", link: "/explore" },
-        { icon: MessagesIcon, title: "Messages", link: "/messages" },
-        { icon: BookmarkIcon, title: "Saved", link: "/saved", showOnTop: true },
-        { icon: CreateIcon, title: "Create", link: "/create", showOnTop: true },
-        isLoggedIn
-            ? { icon: ProfileIcon, title: `${user.firstName} ${user.lastName}`, popover: profilePopover }
-            : { icon: LockIcon, title: "Sign in/up", link: "/auth?mode=login" }
+        ...(isLoggedIn ? [{ icon: HiOutlineNewspaper, iconActive: HiNewspaper, title: "Feed", link: "/feed" }] : []),
+        { icon: FaRegCompass, iconActive: FaCompass, title: "Explore", link: "/" },
+        ...(isLoggedIn ? [
+            { icon: AiOutlineMessage, iconActive: AiFillMessage, title: "Messages", link: "/messages" },
+            { icon: FaRegBookmark, iconActive: FaBookmark, title: "Saved", link: "/saved", showOnTop: true },
+            { icon: TbSquareRoundedPlus, iconActive: TbSquareRoundedPlusFilled, title: "Create", link: "/create", showOnTop: true },
+            { icon: FaRegCircleUser, iconActive: FaCircleUser, title: `${user.firstName} ${user.lastName}`, link: "/profile", popover: profilePopover }
+        ] : [
+            { icon: HiOutlineLockClosed, iconActive: HiLockClosed, title: "Sign in/up", link: "/auth?mode=login" }
+        ]),
     ];
 
     return (
         <>
             <ScrollToTop />
-            <AppSideBar icon={<TbHeartHandshake size={70} />} title="given'take" nav={navlinks}>
+            <AppSideBar Icon={TbHeartHandshake} title="given'take" nav={navlinks} currentPathName={pathname}>
                 {children}
                 <SnackbarProvider autoHideDuration={5000} anchorOrigin={{ horizontal: 'center', vertical: 'top' }}>
                     <Outlet />

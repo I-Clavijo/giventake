@@ -34,7 +34,7 @@ export function FeedFilters({ defaultValues, onChange }) {
   };
 
   useEffect(() => {
-    setIsAllLocations(false);
+    if(watch('location.lat') && watch('location.long')) setIsAllLocations(false);
 
   }, [watch('location.city'), watch('location.country')]);
 
@@ -60,7 +60,7 @@ export function FeedFilters({ defaultValues, onChange }) {
     <form className={s.wrapper}>
       <div className={s.filtersWrap}>
         <Link to='' onClick={() => resetForm()}>
-          <FiFilter size={25} color='#333' />
+          <FiFilter size={18} color='#333' />
         </Link>
         <span>
           <span>
@@ -84,7 +84,7 @@ export function FeedFilters({ defaultValues, onChange }) {
 
         <span>
           <span>
-            posts from
+            from
           </span>
 
           <div className={s.filterBox}>
