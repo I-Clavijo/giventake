@@ -1,9 +1,10 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const $Wrapper = styled.div`
   width: fit-content;
   input {
     width: 20em;
+    border: 2px #ccc solid;
   }
   .searchWrap {
     position: relative;
@@ -23,4 +24,4 @@ export const $Wrapper = styled.div`
       display: block;
     }
   }
-`;
+`
