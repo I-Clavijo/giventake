@@ -10,6 +10,7 @@ import { usePostAction } from '../api/posts/usePostAction.jsx'
 import { useQueryClient } from '@tanstack/react-query'
 import { QUERY_KEY } from '../api/constants.js'
 import { useSnackbar } from 'notistack'
+import WelcomeModal from '../components/WelcomeModal.jsx'
 
 export default function Explore() {
   const queryClient = useQueryClient()

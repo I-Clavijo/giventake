@@ -27,23 +27,26 @@ export default function ContactSelector({ contacts, selectedContact, onContactSe
           isSelected = selectedContact?.conversationId === contact.conversationId
         }
 
-        let contactIdObj, title, message, date, contactImg
+        let contactIdObj, title, message, date, contactImg, isSelfRead
         if (contact?.user) {
           contactIdObj = { userId: contact.user._id }
           title = contact.user.firstName + ' ' + contact.user.lastName
           message = ''
           contactImg = contact.user.imgUrl
+          isSelfRead = true
         } else if (contact?.conversationId && contact?.post) {
           contactIdObj = { conversationId: contact.conversationId }
           title = contact.otherUsers[0].firstName + ' • ' + (contact.post.title ?? '')
           message = contact.lastMessage.body?.text
           contactImg = contact.post.imgUrl || contact.otherUsers[0].imgUrl
+          isSelfRead = contact.isSelfRead
         } else if (contact?.conversationId) {
           contactIdObj = { conversationId: contact.conversationId }
           title = contact.otherUsers[0].firstName + ' ' + contact.otherUsers[0].lastName
           message = contact.lastMessage.body?.text
           date = getRelativeTime(contact.lastMessage.createdAt)
           contactImg = contact.otherUsers[0]?.imgUrl
+          isSelfRead = contact.isSelfRead
         }
 
         const key = md5(JSON.stringify(contactIdObj))
@@ -51,7 +54,7 @@ export default function ContactSelector({ contacts, selectedContact, onContactSe
         return (
           <Contact
             key={key}
-            {...{ contactIdObj, contactImg, message, title, date, isSelected }}
+            {...{ contactIdObj, contactImg, message, title, date, isSelected, isSelfRead }}
             onContactSelect={changeContact}
           />
         )

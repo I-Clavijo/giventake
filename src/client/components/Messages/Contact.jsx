@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import ProfileImg from '../../assets/images/profile-img.jpeg';
+import styled from 'styled-components'
+import ProfileImg from '../../assets/images/profile-img.jpeg'
 
 export default function Contact({
   contactIdObj,
@@ -8,13 +8,11 @@ export default function Contact({
   contactImg,
   title,
   message = '',
-  date
+  date,
+  isSelfRead
 }) {
   return (
-    <$ListItem
-      className={`${isSelected ? 'selected' : ''}`}
-      onClick={() => onContactSelect(contactIdObj)}
-    >
+    <$ListItem className={`${isSelected ? 'selected' : ''}`} onClick={() => onContactSelect(contactIdObj)}>
       <div className="profile-img">
         <img className="rounded-full" src={contactImg || ProfileImg} alt="Profile Pic" />
       </div>
@@ -24,9 +22,10 @@ export default function Contact({
           <p className="date">{date}</p>
         </div>
         <p className="msg-preview">{message}</p>
+        {!isSelfRead && <span className="newMsgIndicator"></span>}
       </div>
     </$ListItem>
-  );
+  )
 }
 
 const $ListItem = styled.li`
@@ -39,16 +38,29 @@ const $ListItem = styled.li`
   border-bottom: 1px solid #eee;
   cursor: pointer;
 
+  .newMsgIndicator {
+    width: 1em;
+    height: 1em;
+    border-radius: 1em;
+    background-color: #16bed7;
+    flex-shrink: 0;
+    position: absolute;
+    right: 0.6em;
+    bottom: 0.6em;
+  }
   &.selected {
     border-left: #637084 0.3em solid;
     background-color: #f6f6f6;
   }
   .profile-img {
     padding: 0.3em;
-    width: fit-content;
+    /* width: fit-content; */
+    flex-shrink: 0;
+    position: relative;
+
     img {
       height: 100%;
-      width: auto;
+      width: 100%;
     }
   }
   .details {
@@ -56,6 +68,7 @@ const $ListItem = styled.li`
     flex-direction: column;
     justify-content: space-between;
     width: calc(100% - 5em);
+    flex: 1;
 
     .top {
       display: flex;
@@ -89,4 +102,4 @@ const $ListItem = styled.li`
       }
     }
   }
-`;
+`

@@ -133,12 +133,18 @@ export const getContactsQuery = async userId => {
       }
     },
     {
+      $addFields: {
+        isSelfRead: { $in: [new ObjectId(userId), '$readByUsers'] }
+      }
+    },
+    {
       $project: {
         _id: 0,
         conversationId: '$_id',
         otherUsers: 1,
         lastMessage: 1,
-        post: 1
+        post: 1,
+        isSelfRead: 1
       }
     },
     {

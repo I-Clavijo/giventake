@@ -49,6 +49,7 @@ export const useReceiveMessage = ({ selfUserId }) => {
               currContact => currContact.conversationId === conversationId
             )
             const newData = [...currentData]
+            newData[foundConversationIndex].isSelfRead = false
             newData[foundConversationIndex].lastMessage.body.text = message
             newData[foundConversationIndex].lastMessage.createdAt = new Date()
             newData[foundConversationIndex].lastMessage.fromSelf = null

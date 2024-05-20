@@ -10,10 +10,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useConversation } from '../api/messages/useConversation'
 import NoConversationsImg from '../assets/images/empty-states/no-contacts.svg'
 import { useSendMessage } from '../api/messages/useSendMessage'
-import { useQueryClient } from '@tanstack/react-query'
-import { QUERY_KEY } from '../api/constants'
 import { useReceiveMessage } from '../api/messages/useReceiveMessage'
 import EmptyState from '../components/EmptyState'
+import useReadConversation from '../api/messages/useReadConversation'
 
 export default function Messages() {
   const { state: navigationState, pathname } = useLocation()
@@ -21,7 +20,7 @@ export default function Messages() {
   let isNavigated = true
   // const [navigationState, setNavigationState] = useState(state);
 
-  const [isSendingMessage, setIsSendingMessage] = useState(false)
+  const [firstContactsRender, setFirstContactsRender] = useState(true)
   const { selectedContactDirect, interestedInPost } = navigationState || {}
 
   const { data: user } = useUser()
@@ -44,10 +43,13 @@ export default function Messages() {
   const { mutate: receiveMessageMutation } = useReceiveMessage({
     selfUserId: user._id
   })
+  const { mutate: readConversation } = useReadConversation()
 
   //set the first contact to be selected
   useEffect(() => {
-    if (contacts && !selectedContactDirect) {
+    if (contacts && !selectedContactDirect && firstContactsRender) {
+      setFirstContactsRender(false)
+
       setCurrentContact({
         conversationId: contacts?.[0]?.conversationId
       })
@@ -83,7 +85,6 @@ export default function Messages() {
           })
         }
       } else if (interestedInPost && contacts) {
-        setIsSendingMessage(true)
         const interestedInPostTemp = interestedInPost
         navigate(pathname, { state: { interestedInPost: null } })
         //CASE: user is interested in post so send message to post owner
@@ -110,7 +111,6 @@ export default function Messages() {
         }
 
         sendMessage(interestedInPostTemp.message, contact)
-        setIsSendingMessage(false)
       }
     }
   }, [navigationState, contacts])
@@ -139,6 +139,9 @@ export default function Messages() {
   const changeContactHandler = contactIdObj => {
     setCurrentContact(contactIdObj)
     setShowChatBox(true)
+    if (contactIdObj?.conversationId) {
+      readConversation({ conversationId: contactIdObj.conversationId })
+    }
   }
 
   const sendMessage = (message, contact) => {
@@ -161,7 +164,7 @@ export default function Messages() {
     <>
       <div className={styles.chatPage}>
         <div className={styles.contactsWrap}>
-          {contacts?.length ? (
+          {allContacts?.length ? (
             <ContactSelector
               contacts={allContacts}
               selectedContact={currentContact}

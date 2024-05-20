@@ -79,11 +79,20 @@ export const addMessage = async (req, res) => {
   if (!conversationId && userId) {
     newConversation = await Conversation.create({
       users: [selfUserId, userId],
-      ...(postId && { post: postId })
+      ...(postId && { post: postId }),
+      readByUsers: [selfUserId]
     })
     conversationId = newConversation._id
     console.log('Conversation Created')
   }
+
+  //set message as unread
+  const conversation = await Conversation.findByIdAndUpdate(conversationId, {
+    $set: {
+      readByUsers: [selfUserId]
+    }
+  })
+  if (!conversation) throw new AppError('Conversation not found.', 400)
 
   const newMessage = await Message.create({
     conversation: conversationId,
@@ -97,7 +106,6 @@ export const addMessage = async (req, res) => {
       conversationId,
       users: newConversation.users,
       otherUsers: newConversation.users?.filter(userId => {
-        console.log(selfUserId, userId.toString())
         return userId.toString() !== selfUserId
       }),
       messages: [newMessage]
@@ -106,4 +114,20 @@ export const addMessage = async (req, res) => {
   }
   if (newMessage) return res.sendStatus(201)
   else throw new AppError('Failed to add message to the database', 500)
+}
+
+export const readConversation = async (req, res) => {
+  let { conversationId } = req.body
+  const selfUserId = req.user._id
+
+  const conversation = await Conversation.findByIdAndUpdate(conversationId, {
+    $addToSet: {
+      readByUsers: selfUserId
+    }
+  })
+  if (!conversation) throw new AppError('Conversation not found.', 400)
+
+  console.log(conversation)
+
+  res.sendStatus(201)
 }

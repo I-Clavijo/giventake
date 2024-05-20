@@ -56,6 +56,7 @@ export const useSendMessage = ({ selfUserId }) => {
               currContact => currContact.conversationId === contact.conversationId
             )
             const newData = [...currentData]
+            newData[foundConversationIndex].isSelfRead = true
             newData[foundConversationIndex].lastMessage.body.text = message
             newData[foundConversationIndex].lastMessage.createdAt = new Date()
             newData[foundConversationIndex].lastMessage.fromSelf = null
