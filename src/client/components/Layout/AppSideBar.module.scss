@@ -150,13 +150,6 @@
                 color: var(--logo-color);
                 margin: 0;
             }
-            div.searchWrap{
-                width: fit-content;
-                input{
-                    width: 20em;
-                }
-            }
-
         }
         
         .innerWrap {
@@ -221,50 +214,4 @@
             display: none;
         }
 	}
-    .searchWrap {
-       position: relative;
-        cursor: pointer; 
-    }
-    .overlay {
-        position: absolute;
-        top: 80px;
-        left: 0;
-        width: 100%;
-        height: calc(100% - 80px);
-        background-color: rgba(0, 0, 0, 0.7); 
-        z-index: 1000; 
-        display: none; 
-      
-        &.visible {
-          display: block; 
-        }
-      }
-    
-    .searchResult {
-        display: flex;
-        position: relative;
-        z-index: 1004;
-        align-items: center;
-        padding: 5px;
-        cursor: pointer;
-        border: 1px solid black;
-        border-radius: 5px;
-        
-    }
-    .searchLink {
-        text-decoration: solid;
-    }
-    .userInfo {
-        display: flex;
-        align-items: center;
-    }
-    .profilePic {
-        width: 25px;
-        height: 25px;
-        margin-right: 10px;
-        border-radius: 50%;
-    }
-    .userName {
-        font-size: 16px;
-    }
 }
