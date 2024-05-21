@@ -17,6 +17,7 @@
     margin: 0; /* Reset margin */
     padding: 0; /* Reset padding */
     width: 250px;
+    z-index: 99;
   }
   .searchResultsAfter {
     display:none;
