@@ -1,34 +1,34 @@
-import './index.scss';
+import './index.scss'
 
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
-import RequireAuth from './components/Auth/RequireAuth';
-import PersistLogin from './components/Auth/PersistLogin';
-import Root from './components/Layout/Root';
-import ErrorPage from './routes/ErrorPage';
-import Feed from './routes/Feed';
-import Explore from './routes/Explore';
-import Auth from './routes/Auth';
-import Profile from './routes/Profile';
-import Messages from './routes/Messages';
-import Missing from './routes/Missing';
-import Editor from './routes/Editor';
-import Admin from './routes/Admin';
-import Unauthorized from './components/Auth/Unauthorized';
-import SavedPosts from './routes/SavedPosts';
-import Create from './routes/Create';
+import RequireAuth from './components/Auth/RequireAuth'
+import PersistLogin from './components/Auth/PersistLogin'
+import Root from './components/Layout/Root'
+import ErrorPage from './routes/ErrorPage'
+import Feed from './routes/Feed'
+import Explore from './routes/Explore'
+import Auth from './routes/Auth'
+import Profile from './routes/Profile'
+import Messages from './routes/Messages'
+import Missing from './routes/Missing'
+import Editor from './routes/Editor'
+import Admin from './routes/Admin'
+import Unauthorized from './components/Auth/Unauthorized'
+import SavedPosts from './routes/SavedPosts'
+import Create from './routes/Create'
 
 const ROLES = {
   User: 2001,
   Editor: 1984,
   Admin: 5150
-};
+}
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
   {
@@ -74,13 +74,13 @@ const router = createBrowserRouter([
       { path: '*', element: <Missing /> }
     ]
   }
-]);
+])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   </React.StrictMode>
-);
+)

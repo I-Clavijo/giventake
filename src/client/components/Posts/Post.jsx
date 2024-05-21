@@ -130,17 +130,18 @@ const Post = ({
       <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
         {(!noTitle || postInModal) && (
           <div className={styles.postHeader}>
-            {/* <div className='flex'> */}
-            {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
-            <div>
-              <h6 onClick={() => navigate(`/profile/${userId}`)} style={{ cursor: 'pointer' }}>
-                {fullName}
-              </h6>
-              <p>
-                {timeAgo} {location?.city && location?.country && `• ${location.city}, ${location.country}`}
-              </p>
+            <div className="flex">
+              {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
+              <div>
+                <h6 onClick={() => navigate(`/profile/${userId}`)} style={{ cursor: 'pointer' }}>
+                  {fullName}
+                </h6>
+                <p>
+                  {timeAgo} {location?.city && location?.country && `• ${location.city}, ${location.country}`}
+                </p>
+              </div>
             </div>
-            {/* </div> */}
+            <div></div>
           </div>
         )}
 
