@@ -109,7 +109,7 @@ const Profile = ({ isMyProfile }) => {
           <div className={styles.profileInfo}>
             <div className={styles.profileLeft}>
               <img
-                className="w-28 h-28 mb-2  rounded-full shadow-lg"
+                className={styles.profileImg}
                 src={user.imgUrl ? user.imgUrl : ProfileImg}
                 alt="Profile image"
               />
