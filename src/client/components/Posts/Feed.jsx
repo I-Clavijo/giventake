@@ -42,7 +42,7 @@ const Feed = ({
         isUserReported={post.isUserReported}
         isSelf={post.isSelf}
         noActions={noActions && !!post.isSelf}
-        {...{ isLoading, noTitle, onPostAction, isLoggedIn }}
+        {...{ isLoading, noTitle, onPostAction, isLoggedIn, post }}
       />
     )
 

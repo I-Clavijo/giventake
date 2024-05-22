@@ -21,8 +21,10 @@ import { FaAngleDoubleUp } from 'react-icons/fa'
 import { IoMdMore } from 'react-icons/io'
 import { calculateTimeAgo } from '../../utils/lib'
 import useBumpPost from '../../api/posts/useBumpPost'
+import PostForm from './PostForm'
 
 const Post = ({
+  post,
   userId,
   isLoggedIn,
   onPostAction: onPostActionHandler,
@@ -246,13 +248,21 @@ const Post = ({
 }
 
 const PostWithModal = props => {
+  const { postId, post } = props || {}
+
   const [openModal, setOpenModal] = useState(false)
+  const [showModalEdit, setShowModalEdit] = useState(false)
 
   return (
     <>
+      <Modal size="md" show={showModalEdit} onClose={() => setShowModalEdit(false)} className={styles.modalWrap}>
+        <PostForm isEdit {...{ postId, post }} />
+      </Modal>
+
       <Modal size="md" dismissible show={openModal} onClose={() => setOpenModal(false)} className={styles.modalWrap}>
         <Post {...props} postInModal />
       </Modal>
+
       <Post {...props} openModalHandler={() => setOpenModal(true)} />
     </>
   )

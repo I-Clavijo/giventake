@@ -20,7 +20,7 @@ import Editor from './routes/Editor'
 import Admin from './routes/Admin'
 import Unauthorized from './components/Auth/Unauthorized'
 import SavedPosts from './routes/SavedPosts'
-import Create from './routes/Create'
+import CreatePost from './routes/CreatePost'
 
 const ROLES = {
   User: 2001,
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
               { path: '/feed', element: <Feed /> },
               { path: '/saved', element: <SavedPosts /> },
               { path: '/profile', element: <Profile isMyProfile={true} /> },
-              { path: '/create', element: <Create /> },
+              { path: '/create-post', element: <CreatePost /> },
               { path: '/messages', element: <Messages /> }
             ]
           },
