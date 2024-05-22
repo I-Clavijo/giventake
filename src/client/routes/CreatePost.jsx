@@ -1,7 +1,10 @@
 import styles from './CreatePost.module.scss'
 import PostForm from '../components/Posts/PostForm.jsx'
+import { useCreatePost } from '../api/posts/useCreatePost.jsx'
 
 const CreatePost = () => {
+  const { mutate: createPost, isPending } = useCreatePost()
+
   return (
     <div className={styles.postCreator}>
       <h4>Let's Start!</h4>
@@ -15,7 +18,7 @@ const CreatePost = () => {
 
       <h3 className={styles.textBoldOut}>Together, we're unstoppable!</h3>
 
-      <PostForm />
+      <PostForm onSubmit={createPost} {...{ isPending }} />
     </div>
   )
 }

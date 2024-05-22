@@ -48,7 +48,8 @@ const Post = ({
   isLoading,
   noTitle,
   noActions,
-  isSelf
+  isSelf,
+  onEdit
 }) => {
   // const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
   // setWantToHelpCount((prevCount) => (!isUserInterested ? prevCount + 1 : prevCount - 1));
@@ -132,7 +133,7 @@ const Post = ({
                       <FaAngleDoubleUp />
                       <span>Bump post</span>
                     </span>
-                    <span>
+                    <span onClick={onEdit}>
                       <HiOutlinePencilSquare />
                       <span>Edit</span>
                     </span>
@@ -251,19 +252,30 @@ const PostWithModal = props => {
   const { postId, post } = props || {}
 
   const [openModal, setOpenModal] = useState(false)
-  const [showModalEdit, setShowModalEdit] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+
+  const onEditHandler = () => {
+    setIsEdit(true)
+    setOpenModal(true)
+  }
+
+  const onDismissEdit = () => {
+    setIsEdit(false)
+    setOpenModal(false)
+  }
 
   return (
     <>
-      <Modal size="md" show={showModalEdit} onClose={() => setShowModalEdit(false)} className={styles.modalWrap}>
-        <PostForm isEdit {...{ postId, post }} />
+      <Modal
+        size={isEdit ? 'xl' : 'md'}
+        dismissible
+        show={openModal}
+        onClose={() => setOpenModal(false)}
+        className={styles.modalWrap}>
+        {isEdit ? <PostForm isEdit {...{ postId, post }} onDismiss={onDismissEdit} /> : <Post {...props} postInModal />}
       </Modal>
 
-      <Modal size="md" dismissible show={openModal} onClose={() => setOpenModal(false)} className={styles.modalWrap}>
-        <Post {...props} postInModal />
-      </Modal>
-
-      <Post {...props} openModalHandler={() => setOpenModal(true)} />
+      <Post {...props} openModalHandler={() => setOpenModal(true)} onEdit={onEditHandler} />
     </>
   )
 }

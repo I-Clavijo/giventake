@@ -1,27 +1,15 @@
 import styles from './PostForm.module.scss'
-import {
-  Textarea,
-  Button,
-  Datepicker,
-  FileInput,
-  Label,
-  TextInput,
-  Checkbox,
-  Card,
-  Select,
-  Spinner
-} from 'flowbite-react'
+import { Textarea, Button, Datepicker, Label, TextInput, Checkbox, Card, Select, Spinner } from 'flowbite-react'
 import { useForm } from 'react-hook-form'
-import { optional, z } from 'zod'
+import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCreatePost } from '../../api/posts/useCreatePost'
 import { useState } from 'react'
 import { CATEGORIES } from '../../utils/staticData'
 import DragNDrop from '../RHF/DragNDrop'
 import LocationSelector from '../RHF/Location/LocationSelector'
 
-const PostForm = ({ isEdit = false, post }) => {
-  const { mutate: createPost, isPending } = useCreatePost()
+const PostForm = ({ isEdit = false, post, onSubmit, onDismiss, isPending }) => {
+  console.log(post)
 
   // Define a schema for the location object
   const locationSchema = z.object({
@@ -31,7 +19,7 @@ const PostForm = ({ isEdit = false, post }) => {
     long: z.string().optional()
   })
 
-  const createPostSchema = z
+  const postFormSchema = z
     .object({
       category: z.string().refine(category => category !== '', {
         message: 'Please choose a category'
@@ -72,16 +60,31 @@ const PostForm = ({ isEdit = false, post }) => {
       }
     )
 
-  // NOTE:: for testing purpoeses only.
-  // const formTestValues = {
-  //   category: 'TRAVEL',
-  //   startTime: '12:00',
-  //   endTime: '16:00',
-  //   address: 'Even Gvirol, 22',
-  //   city: 'Herzliya',
-  //   description:
-  //     'Hello everybody, I need your help with traveling with me to Italy to hike in the mountains, and help me with my wheelchair.'
-  // };
+  const formValues = {
+    ...post,
+    location: {
+      ...post.location,
+      lat: post.location.geometry?.coordinates[0].toString(),
+      long: post.location.geometry?.coordinates[1].toString()
+    },
+
+    isRemoteHelp: Boolean(post.helpDate.isRemoteHelp),
+    startDate: new Date(post.helpDate.startDate),
+    endDate: new Date(post.helpDate.endDate),
+    isAllDay: Boolean(post.helpDate.isAllDay),
+    isEndDate: Boolean(post.helpDate.isEndDate)
+
+    // NOTE:: for testing purpoeses only.
+
+    //   category: 'TRAVEL',
+    //   startTime: '12:00',
+    //   endTime: '16:00',
+    //   address: 'Even Gvirol, 22',
+    //   city: 'Herzliya',
+    //   description:
+    //     'Hello everybody, I need your help with traveling with me to Italy to hike in the mountains, and help me with my wheelchair.'
+  }
+
   const {
     register,
     handleSubmit,
@@ -96,16 +99,17 @@ const PostForm = ({ isEdit = false, post }) => {
       isRemoteHelp: false,
       startDate: new Date(new Date().setHours(0, 0, 0, 0)),
       endDate: new Date(new Date().setHours(0, 0, 0, 0)),
-      isAllDay: true
-      // ...formTestValues
+      isAllDay: true,
+
+      ...formValues
     },
-    resolver: zodResolver(createPostSchema)
+    resolver: zodResolver(postFormSchema)
   })
 
   return (
     <Card>
-      <h4 style={{ marginBottom: 0 }}>Create new post</h4>
-      <form onSubmit={handleSubmit(createPost)}>
+      <h4 style={{ marginBottom: 0 }}>{isEdit ? 'Edit post' : 'Create new post'}</h4>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-2 mt-4">
           <Label className={styles.label} htmlFor="category">
             Choose an appropriate category *
@@ -265,7 +269,10 @@ const PostForm = ({ isEdit = false, post }) => {
 
         <div className={styles.submitButton}>
           <Button type="submit" disabled={isPending} className="button">
-            {isPending ? <Spinner /> : <>Create post</>}
+            {isPending ? <Spinner /> : <>{isEdit ? 'Save changes' : 'Create post'}</>}
+          </Button>
+          <Button onClick={onDismiss} disabled={isPending} color="light">
+            Later
           </Button>
         </div>
       </form>
