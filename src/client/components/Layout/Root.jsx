@@ -66,8 +66,8 @@ export default function Root({ children }) {
           {
             icon: TbSquareRoundedPlus,
             iconActive: TbSquareRoundedPlusFilled,
-            title: 'Create',
-            link: '/create',
+            title: 'Create Post',
+            link: '/create-post',
             showOnTop: true
           },
           {

@@ -21,8 +21,13 @@ import { FaAngleDoubleUp } from 'react-icons/fa'
 import { IoMdMore } from 'react-icons/io'
 import { calculateTimeAgo } from '../../utils/lib'
 import useBumpPost from '../../api/posts/useBumpPost'
+import PostForm from './PostForm'
+import { useUpdatePost } from '../../api/posts/useUpdatePost'
+import useDeletePost from '../../api/posts/useDeletePost'
+import ConfirmationModal from '../ConfirmationModal'
 
 const Post = ({
+  post,
   userId,
   isLoggedIn,
   onPostAction: onPostActionHandler,
@@ -46,17 +51,20 @@ const Post = ({
   isLoading,
   noTitle,
   noActions,
-  isSelf
+  isSelf,
+  onEdit
 }) => {
   // const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
   // setWantToHelpCount((prevCount) => (!isUserInterested ? prevCount + 1 : prevCount - 1));
 
   const navigate = useNavigate()
   // const [showMoreActive, setShowMoreActive] = useState(postInModal);
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showReportModal, setShowReportModal] = useState(false)
   const [showInterestedModal, setShowInterestedModal] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const { mutate: bumpPost } = useBumpPost()
+  const { mutate: deletePost } = useDeletePost()
 
   const onPostAction = data => {
     if (isLoggedIn) onPostActionHandler(data)
@@ -130,12 +138,12 @@ const Post = ({
                       <FaAngleDoubleUp />
                       <span>Bump post</span>
                     </span>
-                    <span>
+                    <span onClick={onEdit}>
                       <HiOutlinePencilSquare />
                       <span>Edit</span>
                     </span>
                     <hr />
-                    <span>
+                    <span onClick={() => setShowDeleteModal(true)}>
                       <MdDeleteOutline />
                       <span>Delete</span>
                     </span>
@@ -229,6 +237,12 @@ const Post = ({
 
   return (
     <>
+      <ConfirmationModal
+        message="Are you sure you want to delete this product?"
+        show={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={() => deletePost({ postId })}
+      />
       <ReportModal
         show={showReportModal}
         onClose={() => setShowReportModal(false)}
@@ -246,14 +260,49 @@ const Post = ({
 }
 
 const PostWithModal = props => {
+  const { postId, post } = props || {}
+
+  const { mutate: updatePost, isSuccess: isSuccessUpdatePost } = useUpdatePost()
+
   const [openModal, setOpenModal] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+
+  const onEditHandler = () => {
+    setIsEdit(true)
+    setOpenModal(true)
+  }
+
+  const onDismissEdit = () => {
+    setIsEdit(false)
+    setOpenModal(false)
+  }
+
+  const onUpdateHandler = formData => {
+    updatePost({ data: formData })
+  }
+
+  useEffect(() => {
+    if (isSuccessUpdatePost) {
+      onDismissEdit()
+    }
+  }, [isSuccessUpdatePost])
 
   return (
     <>
-      <Modal size="md" dismissible show={openModal} onClose={() => setOpenModal(false)} className={styles.modalWrap}>
-        <Post {...props} postInModal />
+      <Modal
+        size={isEdit ? 'xl' : 'md'}
+        dismissible
+        show={openModal}
+        onClose={onDismissEdit}
+        className={styles.modalWrap}>
+        {isEdit ? (
+          <PostForm isEdit {...{ postId, post }} onSubmit={onUpdateHandler} onDismiss={onDismissEdit} />
+        ) : (
+          <Post {...props} postInModal onEdit={onEditHandler} />
+        )}
       </Modal>
-      <Post {...props} openModalHandler={() => setOpenModal(true)} />
+
+      <Post {...props} openModalHandler={() => setOpenModal(true)} onEdit={onEditHandler} />
     </>
   )
 }

@@ -8,6 +8,8 @@ import { getAllPostsQuery } from '../db/queries/posts.js'
 import { convertToUpperCase } from '../db/utils/lib.js'
 import { addHours, isAfter } from 'date-fns'
 
+const ObjectId = mongoose.Types.ObjectId
+
 export const createPost = async (req, res) => {
   const file = req.file
   const {
@@ -70,6 +72,70 @@ export const createPost = async (req, res) => {
   res.status(201).send('Post Created Successfuly')
 }
 
+export const updatePost = async (req, res) => {
+  const file = req.file
+  const {
+    postId,
+    category,
+    startDate,
+    startTime,
+    endTime,
+    endDate,
+    isAllDay,
+    isEndDate,
+    location,
+    isRemoteHelp,
+    title,
+    description
+  } = req.body
+  console.log(postId)
+  //update image if requested to update
+  let imgName, imgUrl
+  if (file) {
+    file.buffer = await sharp(file.buffer).resize({ height: null, width: 600, fit: 'inside' }).toBuffer()
+
+    imgName = await putImage(file)
+    imgUrl = await getImageUrl(imgName)
+  }
+
+  const post = {
+    user: req.user._id,
+    category,
+    title,
+    helpDate: {
+      startDate,
+      startTime,
+      endTime,
+      endDate,
+      isAllDay,
+      isEndDate
+    },
+    ...(imgName && { imgName }),
+    description,
+    isRemoteHelp,
+    ...(location?.lat &&
+      location?.long &&
+      !isRemoteHelp && {
+        location: {
+          geometry: {
+            type: 'Point',
+            coordinates: [+location.lat, +location.long]
+          },
+          country: location.country,
+          city: location.city,
+          address: location.address
+        }
+      })
+  }
+  console.log(postId, post)
+
+  const updatedPost = await Post.updateOne({ _id: postId }, post, { new: true })
+
+  if (imgUrl) updatedPost.imgUrl = imgUrl
+
+  res.status(201).json(updatedPost)
+}
+
 export const getPosts = async (req, res) => {
   const { filters } = req.query || {}
   if (filters) filters.category = filters?.category ? convertToUpperCase(filters?.category) : '' //convert the category to key
@@ -95,19 +161,31 @@ export const getPosts = async (req, res) => {
 }
 
 export const deletePost = async (req, res) => {
-  const { _id: postId } = req.body || {}
-
+  const { postId } = req.query || {}
+  console.log(postId)
   const post = await Post.findOne({ _id: postId }).exec()
-  if (!post) throw AppError('Post not found', 404)
+  if (!post) throw new AppError('Post not found', 404)
 
   // delete post image from S3 bucket
-  const imgName = post.img
-  await deleteImage(imgName)
+  const imgName = post.imgName
+  if (imgName) await deleteImage(imgName)
 
   // delete post from DB
+  const userId_OI = new ObjectId(post.user._id)
+
+  await User.updateOne(
+    { _id: userId_OI },
+    {
+      $pull: {
+        savedPosts: userId_OI,
+        interestedPosts: userId_OI,
+        reportedPosts: userId_OI
+      }
+    }
+  )
   await Post.deleteOne({ _id: postId })
 
-  res.status(201).send()
+  res.sendStatus(201)
 }
 
 export const postAction = async (req, res) => {

@@ -52,6 +52,7 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
         category: 1,
         location: 1,
         helpDate: 1,
+        isRemoteHelp: 1,
         imgName: 1,
         title: 1,
         description: 1,
