@@ -32,7 +32,7 @@
   }
 
   .postHeader {
-    // justify-content: space-between;
+    justify-content: space-between;
     padding-right: 20px;
     .btnOpenModal {
       cursor: pointer;
@@ -43,10 +43,10 @@
         border-radius: 50%;
       }
     }
-    > div {
-      display: inline-block;
-      vertical-align: top;
-    }
+    // > div {
+    //   display: inline-block;
+    //   vertical-align: top;
+    // }
 
     h6 {
       margin: 0;

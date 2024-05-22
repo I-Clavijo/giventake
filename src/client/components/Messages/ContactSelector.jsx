@@ -30,19 +30,21 @@ export default function ContactSelector({ contacts, selectedContact, onContactSe
         let contactIdObj, title, message, date, contactImg, isSelfRead
         if (contact?.user) {
           contactIdObj = { userId: contact.user._id }
-          title = contact.user.firstName + ' ' + contact.user.lastName
+          title = contact.user ? contact.user.firstName + ' ' + contact.user.lastName : 'Deleted user'
           message = ''
-          contactImg = contact.user.imgUrl
+          contactImg = contact.user?.imgUrl
           isSelfRead = true
         } else if (contact?.conversationId && contact?.post) {
           contactIdObj = { conversationId: contact.conversationId }
-          title = contact.otherUsers[0].firstName + ' • ' + (contact.post.title ?? '')
+          title = (contact.otherUsers[0]?.firstName || 'Deleted user') + ' • ' + (contact.post?.title ?? 'Deleted post')
           message = contact.lastMessage.body?.text
-          contactImg = contact.post.imgUrl || contact.otherUsers[0].imgUrl
+          contactImg = contact.post?.imgUrl || contact.otherUsers[0]?.imgUrl
           isSelfRead = contact.isSelfRead
         } else if (contact?.conversationId) {
           contactIdObj = { conversationId: contact.conversationId }
-          title = contact.otherUsers[0].firstName + ' ' + contact.otherUsers[0].lastName
+          title = contact.otherUsers[0]
+            ? contact.otherUsers[0].firstName + ' ' + contact.otherUsers[0].lastName
+            : 'Deleted user'
           message = contact.lastMessage.body?.text
           date = getRelativeTime(contact.lastMessage.createdAt)
           contactImg = contact.otherUsers[0]?.imgUrl

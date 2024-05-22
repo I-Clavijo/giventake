@@ -25,8 +25,10 @@ export function FeedFilters({ defaultValues, onChange }) {
     category: getCategoryNameFromHandle,
     location: {
       ...defaultValues.location,
-      lat: defaultValues.location.geometry?.coordinates[0].toString(),
-      long: defaultValues.location.geometry?.coordinates[1].toString()
+      country: defaultValues.location?.country || '',
+      city: defaultValues.location?.city || '',
+      lat: defaultValues.location?.geometry?.coordinates[0].toString(),
+      long: defaultValues.location?.geometry?.coordinates[1].toString()
     },
     radius: RADIUS_LIST[2]
   }

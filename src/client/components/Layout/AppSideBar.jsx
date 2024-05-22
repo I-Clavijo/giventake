@@ -33,7 +33,7 @@ export default function AppSideBar({ children, Icon, title, search, nav, current
         ) : (
           <></>
         )}
-        <span>{content}</span>
+        <span className="flex gap-2">{content}</span>
       </NavLink>
     )
 

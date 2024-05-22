@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Button, Tabs } from 'flowbite-react'
+import { Button, Kbd, Tabs } from 'flowbite-react'
 import Stars from '../components/Reviews/Stars'
 import { useUser } from '../api/users/useUser.jsx'
 import { HiChartSquareBar, HiUserCircle } from 'react-icons/hi'
@@ -67,7 +67,7 @@ const Profile = ({ isMyProfile }) => {
   const interestsSepByDots = user?.interests?.map((interest, index) => (
     <span key={index}>
       {' '}
-      {interest} {index < user.interests.length - 1 ? '•' : ''}
+      <Kbd>{interest}</Kbd> {index < user.interests.length - 1 ? '•' : ''}
     </span>
   ))
 
