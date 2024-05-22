@@ -1,11 +1,12 @@
 import { Post, ReportedPost, User } from '../db/model/index.js'
 import sharp from 'sharp'
-import AppError from '../utils/AppError.js'
+import AppError, { ERR_VARIANT } from '../utils/AppError.js'
 import { runInTransaction } from '../db/utils/runInTransaction.js'
 import mongoose from 'mongoose'
 import { deleteImage, getImageUrl, putImage } from '../utils/S3.js'
 import { getAllPostsQuery } from '../db/queries/posts.js'
 import { convertToUpperCase } from '../db/utils/lib.js'
+import { addHours, isAfter } from 'date-fns'
 
 export const createPost = async (req, res) => {
   const file = req.file
@@ -186,6 +187,34 @@ export const postAction = async (req, res) => {
       }
     })
   }
+
+  res.sendStatus(201)
+}
+
+export const bumpPost = async (req, res) => {
+  const BUMP_TIME_HOURS = 24
+
+  const { postId } = req.body || {}
+  if (!postId) throw new AppError('post id is required', 400)
+
+  const post = await Post.findOne({ _id: postId })
+  if (!post) throw new AppError('post not found', 400)
+
+  const now = new Date()
+
+  if (post.bumpDate) {
+    const bumpDateThreshold = addHours(post.bumpDate, BUMP_TIME_HOURS)
+    if (isAfter(now, bumpDateThreshold)) {
+      // Modify the bumpDate to the current date
+      post.bumpDate = now
+    } else {
+      throw new AppError(`Post can't be bumped before ${bumpDateThreshold}`, 400, ERR_VARIANT.warning)
+    }
+  } else {
+    post.bumpDate = now
+  }
+
+  const savedDocument = await post.save()
 
   res.sendStatus(201)
 }

@@ -65,7 +65,8 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
           isSavedByUser: { $in: [userIdObjectId, '$usersSaved'] },
           isUserInterested: { $in: [userIdObjectId, '$usersInterested'] },
           isUserReported: { $in: [userIdObjectId, '$usersReported'] }
-        })
+        }),
+        bumpDate: 1
       }
     },
     {
@@ -105,6 +106,24 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
     }
   ]
 
+  const sortByBumpDateFirst = [
+    {
+      $addFields: {
+        sortField: { $ifNull: ['$bumpDate', '$createdAt'] }
+      }
+    },
+    {
+      $sort: {
+        sortField: -1 // Sort by the conditional sortField in descending order
+      }
+    },
+    {
+      $project: {
+        sortField: 0 // Optionally remove sortDate from the output
+      }
+    }
+  ]
+
   if (userIdObjectId && filters?.onlyPeopleIFollow) {
     //  get ONLY posts from people that the auth user is following
     return await Friends.aggregate([
@@ -137,7 +156,8 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
           newRoot: '$posts'
         }
       },
-      ...populate
+      ...populate,
+      ...sortByBumpDateFirst
     ])
   } else if (userIdObjectId && filters?.onlySavedPosts) {
     return await getSavedPostsQuery(auth_userId, populate)
@@ -181,6 +201,7 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
           }
         ]
       : []),
-    ...populate
+    ...populate,
+    ...sortByBumpDateFirst
   ])
 }

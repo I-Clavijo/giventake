@@ -7,7 +7,7 @@ import FilledHandWaving from '../../assets/images/hand_waving_icon_filled.svg'
 import HandWaving from '../../assets/images/hand_waving_icon.svg'
 import FlagIcon from '../../assets/images/flag-icon-v2.svg'
 import FilledFlagIcon from '../../assets/images/flag-filled-icon.svg'
-import { Modal, Tooltip } from 'flowbite-react'
+import { Modal, Popover, Tooltip } from 'flowbite-react'
 import { usePostAction } from '../../api/posts/usePostAction'
 import { FaExpandAlt, FaEyeSlash } from 'react-icons/fa'
 import ReportModal from './ReportModal'
@@ -15,6 +15,12 @@ import PostSkeleton from './PostSkeleton'
 import { Link, useNavigate } from 'react-router-dom'
 import InterestedModal from './InterestedModal'
 import { useSnackbar } from 'notistack'
+import { MdDeleteOutline } from 'react-icons/md'
+import { HiOutlinePencilSquare } from 'react-icons/hi2'
+import { FaAngleDoubleUp } from 'react-icons/fa'
+import { IoMdMore } from 'react-icons/io'
+import { calculateTimeAgo } from '../../utils/lib'
+import useBumpPost from '../../api/posts/useBumpPost'
 
 const Post = ({
   userId,
@@ -50,6 +56,7 @@ const Post = ({
   const [showReportModal, setShowReportModal] = useState(false)
   const [showInterestedModal, setShowInterestedModal] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
+  const { mutate: bumpPost } = useBumpPost()
 
   const onPostAction = data => {
     if (isLoggedIn) onPostActionHandler(data)
@@ -71,44 +78,16 @@ const Post = ({
     }
   }
 
-  // // Show more button
-  // const toggleShowMore = () => {
-  //   setShowMoreActive(prevShowMore => !prevShowMore);
-  // };
-
   // sets how long ago the post was posted
   const [timeAgo, setTimeAgo] = useState('')
 
   useEffect(() => {
-    const calculateTimeAgo = () => {
-      const currentDate = new Date()
-      const postDateTime = new Date(createdAt)
-
-      const timeDifference = currentDate.getTime() - postDateTime.getTime()
-      const seconds = Math.floor(timeDifference / 1000)
-      const minutes = Math.floor(seconds / 60)
-      const hours = Math.floor(minutes / 60)
-      const days = Math.floor(hours / 24)
-
-      let timeAgoString = ''
-      if (days > 0) {
-        timeAgoString = `${days} day${days > 1 ? 's' : ''} ago`
-      } else if (hours > 0) {
-        timeAgoString = `${hours} hour${hours > 1 ? 's' : ''} ago`
-      } else if (minutes > 0) {
-        timeAgoString = `${minutes} minute${minutes > 1 ? 's' : ''} ago`
-      } else {
-        timeAgoString = `${seconds} second${seconds > 1 ? 's' : ''} ago`
-      }
-
-      setTimeAgo(timeAgoString)
-    }
-
-    calculateTimeAgo()
+    setTimeAgo(calculateTimeAgo(createdAt))
 
     // Update the time every minute
     const interval = setInterval(calculateTimeAgo, 60000)
 
+    //interval cleanup
     return () => clearInterval(interval)
   }, [createdAt])
 
@@ -141,7 +120,32 @@ const Post = ({
                 </p>
               </div>
             </div>
-            <div></div>
+            {isLoggedIn && isSelf && (
+              <Popover
+                trigger="click"
+                aria-labelledby="profile-popover"
+                content={
+                  <div className={styles.popover}>
+                    <span onClick={() => bumpPost({ postId })}>
+                      <FaAngleDoubleUp />
+                      <span>Bump post</span>
+                    </span>
+                    <span>
+                      <HiOutlinePencilSquare />
+                      <span>Edit</span>
+                    </span>
+                    <hr />
+                    <span>
+                      <MdDeleteOutline />
+                      <span>Delete</span>
+                    </span>
+                  </div>
+                }>
+                <div className={styles.actions}>
+                  <IoMdMore />
+                </div>
+              </Popover>
+            )}
           </div>
         )}
 
