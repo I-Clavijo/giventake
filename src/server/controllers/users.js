@@ -22,6 +22,15 @@ export const getUserById = async (req, res) => {
   res.status(200).json(user)
 }
 
+export const getUserRating = async (req, res) => {
+  const userId = req.query.userId;
+
+  let rating = 3;
+  res.json({ rating })
+
+}
+
+
 export const getUsersBySearch = async (req, res) => {
   const {
     filters: { searchQuery }

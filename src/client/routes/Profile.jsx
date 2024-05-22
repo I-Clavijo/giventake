@@ -18,6 +18,7 @@ import { FriendsListModal, modes } from '../components/Profile/FriendsListModal.
 import { useFriendAction } from '../api/friends/useFriendAction.jsx'
 import { useFriends } from '../api/friends/useFriends.jsx'
 import { usePostAction } from '../api/posts/usePostAction.jsx'
+import { useUserRating } from '../hooks/useUserRating.jsx'
 
 const Profile = ({ isMyProfile }) => {
   let { id: userId } = useParams()
@@ -32,6 +33,10 @@ const Profile = ({ isMyProfile }) => {
   } = useUser({ userId, enabled: isMyProfile ? true : !!userId })
   if (!isMyProfile && isErrorUser && !user)
     throw new PageError('Profile page not found.', 'Are you sure you are in the right page?')
+
+  useUserRating(userId);
+
+  //console.log("rating: ", te);
 
   // navigate the user to his own profile page if he visit it as a guest.
   useEffect(() => {
