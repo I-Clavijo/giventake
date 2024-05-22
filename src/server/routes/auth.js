@@ -14,7 +14,7 @@ router.post(
   ],
   signUp
 )
-router.post('/send-verification-code', sendVerificationEmail)
+router.post('/send-verification-code', [check('email').normalizeEmail().isEmail()], sendVerificationEmail)
 router.post('/login', [check('email').normalizeEmail().isEmail()], login)
 router.post('/logout', logout)
 router.get('/refresh', handleRefreshToken)
