@@ -56,11 +56,14 @@ export const signUp = async (req, res, next) => {
 
   //  verify code
   const verificationCode = await VerificationCode.findOne({ email })
-  console.log(verificationCode.code, code)
+
   if (verificationCode.code !== code) {
     console.log('User entered the wrong code')
     throw new AppError('Invalid verification code', 401)
   }
+
+  //verification code is valid
+  await VerificationCode.deleteOne({ email })
 
   // check for duplicate usernames in the db
   const duplicate = await User.findOne({ email }).exec()

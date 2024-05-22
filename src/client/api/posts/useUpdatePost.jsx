@@ -1,11 +1,13 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import useAxiosPrivate from '../useAxiosPrivate'
 import { getFormData } from '../../utils/lib'
+import { QUERY_KEY } from '../constants'
 
 export const useUpdatePost = () => {
   const axiosPrivate = useAxiosPrivate()
   const { enqueueSnackbar } = useSnackbar()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async ({ data }) => {
@@ -15,9 +17,9 @@ export const useUpdatePost = () => {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
     },
-    onSuccess: ({ onSuccess }) => {
+    onSuccess: () => {
       enqueueSnackbar('Post updated successfully', { variant: 'success' })
-      onSuccess?.()
+      queryClient.invalidateQueries(QUERY_KEY.posts)
     },
     onError: error => {
       error = error.response.data

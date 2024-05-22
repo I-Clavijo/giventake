@@ -8,6 +8,8 @@ import { getAllPostsQuery } from '../db/queries/posts.js'
 import { convertToUpperCase } from '../db/utils/lib.js'
 import { addHours, isAfter } from 'date-fns'
 
+const ObjectId = mongoose.Types.ObjectId
+
 export const createPost = async (req, res) => {
   const file = req.file
   const {
@@ -86,18 +88,17 @@ export const updatePost = async (req, res) => {
     title,
     description
   } = req.body
-
-  // only if file uploaded
-  let fileName = ''
+  console.log(postId)
+  //update image if requested to update
+  let imgName, imgUrl
   if (file) {
-    // transform image
     file.buffer = await sharp(file.buffer).resize({ height: null, width: 600, fit: 'inside' }).toBuffer()
 
-    // upload image to S3
-    fileName = await putImage(file)
+    imgName = await putImage(file)
+    imgUrl = await getImageUrl(imgName)
   }
 
-  const updatedPost = {
+  const post = {
     user: req.user._id,
     category,
     title,
@@ -109,7 +110,7 @@ export const updatePost = async (req, res) => {
       isAllDay,
       isEndDate
     },
-    imgName: fileName,
+    ...(imgName && { imgName }),
     description,
     isRemoteHelp,
     ...(location?.lat &&
@@ -126,11 +127,13 @@ export const updatePost = async (req, res) => {
         }
       })
   }
-  console.log(postId, updatedPost)
+  console.log(postId, post)
 
-  await Post.updateOne({ _id: postId }, updatedPost)
+  const updatedPost = await Post.updateOne({ _id: postId }, post, { new: true })
 
-  res.status(201).send('Post Updated Successfuly')
+  if (imgUrl) updatedPost.imgUrl = imgUrl
+
+  res.status(201).json(updatedPost)
 }
 
 export const getPosts = async (req, res) => {
@@ -158,19 +161,31 @@ export const getPosts = async (req, res) => {
 }
 
 export const deletePost = async (req, res) => {
-  const { _id: postId } = req.body || {}
-
+  const { postId } = req.query || {}
+  console.log(postId)
   const post = await Post.findOne({ _id: postId }).exec()
-  if (!post) throw AppError('Post not found', 404)
+  if (!post) throw new AppError('Post not found', 404)
 
   // delete post image from S3 bucket
-  const imgName = post.img
-  await deleteImage(imgName)
+  const imgName = post.imgName
+  if (imgName) await deleteImage(imgName)
 
   // delete post from DB
+  const userId_OI = new ObjectId(post.user._id)
+
+  await User.updateOne(
+    { _id: userId_OI },
+    {
+      $pull: {
+        savedPosts: userId_OI,
+        interestedPosts: userId_OI,
+        reportedPosts: userId_OI
+      }
+    }
+  )
   await Post.deleteOne({ _id: postId })
 
-  res.status(201).send()
+  res.sendStatus(201)
 }
 
 export const postAction = async (req, res) => {

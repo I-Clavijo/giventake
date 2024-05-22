@@ -62,19 +62,22 @@ const PostForm = ({ isEdit = false, post, onSubmit, onDismiss, isPending }) => {
     )
 
   const formValues = {
-    ...post,
-    postId: post._id,
-    location: {
-      ...post.location,
-      lat: post.location.geometry?.coordinates[0].toString(),
-      long: post.location.geometry?.coordinates[1].toString()
-    },
+    ...(isEdit &&
+      post && {
+        ...post,
+        postId: post._id,
+        location: {
+          ...post.location,
+          lat: post.location.geometry?.coordinates[0].toString(),
+          long: post.location.geometry?.coordinates[1].toString()
+        },
 
-    isRemoteHelp: Boolean(post.helpDate.isRemoteHelp),
-    startDate: new Date(post.helpDate.startDate),
-    endDate: new Date(post.helpDate.endDate),
-    isAllDay: Boolean(post.helpDate.isAllDay),
-    isEndDate: Boolean(post.helpDate.isEndDate)
+        isRemoteHelp: Boolean(post.isRemoteHelp),
+        startDate: new Date(post.helpDate.startDate),
+        endDate: new Date(post.helpDate.endDate),
+        isAllDay: Boolean(post.helpDate.isAllDay),
+        isEndDate: Boolean(post.helpDate.isEndDate)
+      })
 
     // NOTE:: for testing purpoeses only.
 
