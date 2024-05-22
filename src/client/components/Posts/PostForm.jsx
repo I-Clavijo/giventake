@@ -21,6 +21,7 @@ const PostForm = ({ isEdit = false, post, onSubmit, onDismiss, isPending }) => {
 
   const postFormSchema = z
     .object({
+      postId: z.string().optional(),
       category: z.string().refine(category => category !== '', {
         message: 'Please choose a category'
       }),
@@ -62,6 +63,7 @@ const PostForm = ({ isEdit = false, post, onSubmit, onDismiss, isPending }) => {
 
   const formValues = {
     ...post,
+    postId: post._id,
     location: {
       ...post.location,
       lat: post.location.geometry?.coordinates[0].toString(),

@@ -22,6 +22,7 @@ import { IoMdMore } from 'react-icons/io'
 import { calculateTimeAgo } from '../../utils/lib'
 import useBumpPost from '../../api/posts/useBumpPost'
 import PostForm from './PostForm'
+import { useUpdatePost } from '../../api/posts/useUpdatePost'
 
 const Post = ({
   post,
@@ -250,7 +251,7 @@ const Post = ({
 
 const PostWithModal = props => {
   const { postId, post } = props || {}
-
+  const { mutate: updatePost } = useUpdatePost()
   const [openModal, setOpenModal] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
 
@@ -264,6 +265,10 @@ const PostWithModal = props => {
     setOpenModal(false)
   }
 
+  const onUpdateHandler = formData => {
+    updatePost({ formData, onSuccess: onDismissEdit })
+  }
+
   return (
     <>
       <Modal
@@ -272,7 +277,11 @@ const PostWithModal = props => {
         show={openModal}
         onClose={() => setOpenModal(false)}
         className={styles.modalWrap}>
-        {isEdit ? <PostForm isEdit {...{ postId, post }} onDismiss={onDismissEdit} /> : <Post {...props} postInModal />}
+        {isEdit ? (
+          <PostForm isEdit {...{ postId, post }} onSubmit={onUpdateHandler} onDismiss={onDismissEdit} />
+        ) : (
+          <Post {...props} postInModal onEdit={onEditHandler} />
+        )}
       </Modal>
 
       <Post {...props} openModalHandler={() => setOpenModal(true)} onEdit={onEditHandler} />

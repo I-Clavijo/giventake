@@ -70,6 +70,69 @@ export const createPost = async (req, res) => {
   res.status(201).send('Post Created Successfuly')
 }
 
+export const updatePost = async (req, res) => {
+  const file = req.file
+  const {
+    postId,
+    category,
+    startDate,
+    startTime,
+    endTime,
+    endDate,
+    isAllDay,
+    isEndDate,
+    location,
+    isRemoteHelp,
+    title,
+    description
+  } = req.body
+
+  // only if file uploaded
+  let fileName = ''
+  if (file) {
+    // transform image
+    file.buffer = await sharp(file.buffer).resize({ height: null, width: 600, fit: 'inside' }).toBuffer()
+
+    // upload image to S3
+    fileName = await putImage(file)
+  }
+
+  const updatedPost = {
+    user: req.user._id,
+    category,
+    title,
+    helpDate: {
+      startDate,
+      startTime,
+      endTime,
+      endDate,
+      isAllDay,
+      isEndDate
+    },
+    imgName: fileName,
+    description,
+    isRemoteHelp,
+    ...(location?.lat &&
+      location?.long &&
+      !isRemoteHelp && {
+        location: {
+          geometry: {
+            type: 'Point',
+            coordinates: [+location.lat, +location.long]
+          },
+          country: location.country,
+          city: location.city,
+          address: location.address
+        }
+      })
+  }
+  console.log(postId, updatedPost)
+
+  await Post.updateOne({ _id: postId }, updatedPost)
+
+  res.status(201).send('Post Updated Successfuly')
+}
+
 export const getPosts = async (req, res) => {
   const { filters } = req.query || {}
   if (filters) filters.category = filters?.category ? convertToUpperCase(filters?.category) : '' //convert the category to key
