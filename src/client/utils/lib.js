@@ -80,7 +80,9 @@ export const calculateTimeAgo = createdAt => {
   const currentDate = new Date()
   const postDateTime = new Date(createdAt)
 
-  const timeDifference = currentDate.getTime() - postDateTime.getTime()
+  let timeDifference = currentDate.getTime() - postDateTime.getTime()
+  if (timeDifference < 0) timeDifference = 0
+
   const seconds = Math.floor(timeDifference / 1000)
   const minutes = Math.floor(seconds / 60)
   const hours = Math.floor(minutes / 60)
@@ -93,8 +95,10 @@ export const calculateTimeAgo = createdAt => {
     timeAgoString = `${hours} hour${hours > 1 ? 's' : ''} ago`
   } else if (minutes > 0) {
     timeAgoString = `${minutes} minute${minutes > 1 ? 's' : ''} ago`
-  } else {
+  } else if (seconds > 0) {
     timeAgoString = `${seconds} second${seconds > 1 ? 's' : ''} ago`
+  } else {
+    timeAgoString = 'Now'
   }
 
   return timeAgoString

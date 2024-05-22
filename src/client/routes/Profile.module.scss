@@ -4,12 +4,11 @@
   align-items: flex-start;
 }
 
-
 .actions {
   display: flex;
   gap: 0.5rem;
 
-  button{
+  button {
     display: flex;
     align-items: center;
     width: fit-content;
@@ -19,17 +18,17 @@
 .stats .stat {
   align-items: center;
   text-align: center;
-  &:hover{
+  &:hover {
     color: var(--secondary-font-color);
   }
 }
-.statNumber{
+.statNumber {
   font-weight: bold;
 }
 
 @media (max-width: 768px) {
   .profileInfo {
-    display: grid; 
+    display: grid;
     grid-template-rows: auto auto;
   }
 
@@ -74,15 +73,14 @@
     display: inline-block;
     margin-left: 1rem;
   }
-  
-  .actions{
+
+  .actions {
     margin-left: 6rem;
   }
   .stats {
     display: flex;
-    
-    gap:1rem;
+
+    gap: 1rem;
     margin-left: 7rem;
   }
-
 }
