@@ -34,9 +34,9 @@ const Profile = ({ isMyProfile }) => {
   if (!isMyProfile && isErrorUser && !user)
     throw new PageError('Profile page not found.', 'Are you sure you are in the right page?')
 
-  useUserRating(userId);
+  const { data: rating } = useUserRating(userId);
 
-  //console.log("rating: ", te);
+  console.log("rating: ", rating);
 
   // navigate the user to his own profile page if he visit it as a guest.
   useEffect(() => {

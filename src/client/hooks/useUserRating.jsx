@@ -1,21 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { API_URL } from '../api/axios.js';
 
-export async function useUserRating(userId) {
+export function useUserRating(userId) {
 
-  const response = await axios.get('/api/v1/users/rating', { userId });
-  console.log(response.data.rating);
-  /*
   const fetchRating = async () => {
-    const response = await axios.get('/users/rating', { userId });
+    const response = await axios.get(`${API_URL}/users/rating`, { params: { userId } });
     return response.data.rating;
   };
 
   return useQuery({
-    queryKey: ['userRating', userId], // Unique key for caching
+    queryKey: ['userRating', userId],
     queryFn: fetchRating,
+    enabled: !!userId,
+    retry: 2,
   });
-  */
 }
-
-export default useUserRating;

@@ -23,10 +23,17 @@ export const getUserById = async (req, res) => {
 }
 
 export const getUserRating = async (req, res) => {
-  const userId = req.query.userId;
+  const { userId } = req.query || {}
+  console.log('User ID ', userId)
 
-  let rating = 3;
-  res.json({ rating })
+  //if (!userId) throw new AppError('User ID is required.', 400)
+
+  //const user = await User.findOne({ _id: userId }).lean()
+
+
+
+  let rating = 4
+  res.json(userId)
 
 }
 
