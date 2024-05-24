@@ -6,7 +6,7 @@ export function useUserRating(userId) {
 
   const fetchRating = async () => {
     const response = await axios.get(`${API_URL}/users/rating`, { params: { userId } });
-    return response.data.rating;
+    return response.data.userRating;
   };
 
   return useQuery({

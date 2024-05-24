@@ -34,9 +34,7 @@ const Profile = ({ isMyProfile }) => {
   if (!isMyProfile && isErrorUser && !user)
     throw new PageError('Profile page not found.', 'Are you sure you are in the right page?')
 
-  const { data: rating } = useUserRating(userId);
-
-  console.log("rating: ", rating);
+  const { data: userRating } = useUserRating(userId);
 
   // navigate the user to his own profile page if he visit it as a guest.
   useEffect(() => {
@@ -125,7 +123,7 @@ const Profile = ({ isMyProfile }) => {
               </h5>
               <span className="text-sm ml-2 text-gray-500 dark:text-gray-400">{txtLocation}</span>
               <div className="pb-1 ml-2 extra">
-                <Stars grade={user.rating || 0} />
+                <Stars grade={userRating || 0} />
                 <p className={styles.interests}>{interestsSepByDots}</p>
                 <p className={styles.info}>{user.bio}</p>
               </div>
