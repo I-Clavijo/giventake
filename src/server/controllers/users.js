@@ -31,10 +31,10 @@ export const getUserRating = async (req, res) => {
   const user = await User.findOne({ _id: userId }).lean();
   const ratingSum = user.reviews.reduce((acc, curr) => acc + curr.rating, 0);
   const numberOfReviews = user.reviews.reduce((acc, curr) => acc + 1, 0);
-  const ranting = ratingSum / numberOfReviews;
+  const rating = ratingSum / numberOfReviews;
 
   let response = {
-    userRating: ranting,
+    userRating: rating,
   }
 
   res.status(200).json(response)
