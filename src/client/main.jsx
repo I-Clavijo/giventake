@@ -21,6 +21,7 @@ import Admin from './routes/Admin'
 import Unauthorized from './components/Auth/Unauthorized'
 import SavedPosts from './routes/SavedPosts'
 import CreatePost from './routes/CreatePost'
+import Home from './routes/Home'
 
 const ROLES = {
   User: 2001,
@@ -47,7 +48,8 @@ const router = createBrowserRouter([
       {
         element: <PersistLogin />,
         children: [
-          { path: '/', element: <Explore /> },
+          { path: '/', element: <Home /> },
+          { path: '/explore', element: <Explore /> },
           { path: '/profile/:id', element: <Profile /> },
           {
             element: <RequireAuth allowedRoles={[ROLES.User]} />,

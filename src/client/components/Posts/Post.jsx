@@ -50,9 +50,11 @@ const Post = ({
   openModalHandler,
   isLoading,
   noTitle,
+  noDescription,
   noActions,
   isSelf,
-  onEdit
+  onEdit,
+  featuredPost
 }) => {
   // const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
   // setWantToHelpCount((prevCount) => (!isUserInterested ? prevCount + 1 : prevCount - 1));
@@ -113,7 +115,10 @@ const Post = ({
     )
 
   const postTag = (
-    <div className={`${styles.post} ${isUserReported ? styles.reportedPost : ''}`}>
+    <div
+      className={`${styles.post} ${isUserReported ? styles.reportedPost : ''} ${
+        featuredPost && !postInModal ? styles.featuredPost : ''
+      }`}>
       <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
         {(!noTitle || postInModal) && (
           <div className={styles.postHeader}>
@@ -157,73 +162,69 @@ const Post = ({
           </div>
         )}
 
-        <div className={styles.postBody}>
+        <div className={`${styles.postBody} ${featuredPost && !postInModal ? styles.featuredPost : ''}`}>
           <div
             {...(!postInModal && {
               onClick: openModalHandler,
               style: { cursor: 'pointer' }
             })}>
             {postPic && (
-              <div className={styles.imgCrop}>
+              <div className={`${styles.imgCrop} ${featuredPost && !postInModal ? styles.featuredPost : ''}`}>
                 <img src={postPic} alt="Post" />
               </div>
             )}
             <h6 className={styles.title}>{title}</h6>
-            <p>
-              {postInModal ? postDescription : cutDescription}
-              {/* DO we need the read more button? now that we have modal */}
-              {/* {!showMoreActive && !postInModal && description.length > MAX_DESCRIPTION_LENGTH && ( */}
-              {/* <button className={styles.readMore} onClick={toggleShowMore}> */}
-              {/* <u> Read More</u> */}
-              {/* </button> */}
-              {/* )} */}
-            </p>
+            {((featuredPost && postInModal) || !featuredPost) && (
+              <p>{postInModal ? postDescription : cutDescription}</p>
+            )}
           </div>
         </div>
-        {!noActions && !isSelf && (
-          <div className={styles.postFooter}>
-            <div
-              style={{
-                width: 'fit-content',
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-              <div className={styles.likes}>
+        {isSelf ||
+          !noActions ||
+          (featuredPost && postInModal && (
+            <div className={styles.postFooter}>
+              <div
+                style={{
+                  width: 'fit-content',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}>
+                <div className={styles.likes}>
+                  <img
+                    className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''} ${
+                      !isLoggedIn ? styles.disabled : ''
+                    }`} // Add CSS class for styling
+                    src={isSavedByUser ? BookmarkIconFilled : BookmarkIcon}
+                    {...(isLoggedIn && { onClick: toggleSaveForLater })}
+                    alt="Save for Later"
+                  />
+                </div>
+
+                <div className={styles.hand}>
+                  <Tooltip content={isUserInterested ? 'Press to cancel help' : 'Press to help'}>
+                    <div style={{ display: 'flex' }}>
+                      <img
+                        className={`${styles.wavingHand}  ${!isLoggedIn ? styles.disabled : ''}`}
+                        src={isUserInterested ? FilledHandWaving : HandWaving}
+                        {...(isLoggedIn && { onClick: toggleHelp })}
+                        alt="Help"
+                      />
+                      {/* <span className={styles.likeCount}>{wantToHelpCount}</span> */}
+                    </div>
+                  </Tooltip>
+                </div>
+              </div>
+
+              <div className={styles.report}>
                 <img
-                  className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''} ${
-                    !isLoggedIn ? styles.disabled : ''
-                  }`} // Add CSS class for styling
-                  src={isSavedByUser ? BookmarkIconFilled : BookmarkIcon}
-                  {...(isLoggedIn && { onClick: toggleSaveForLater })}
-                  alt="Save for Later"
+                  src={isUserReported ? FilledFlagIcon : FlagIcon}
+                  {...(isLoggedIn && { onClick: () => setShowReportModal(true) })}
+                  alt="Report"
+                  className={!isLoggedIn ? styles.disabled : ''}
                 />
               </div>
-
-              <div className={styles.hand}>
-                <Tooltip content={isUserInterested ? 'Press to cancel help' : 'Press to help'}>
-                  <div style={{ display: 'flex' }}>
-                    <img
-                      className={`${styles.wavingHand}  ${!isLoggedIn ? styles.disabled : ''}`}
-                      src={isUserInterested ? FilledHandWaving : HandWaving}
-                      {...(isLoggedIn && { onClick: toggleHelp })}
-                      alt="Help"
-                    />
-                    {/* <span className={styles.likeCount}>{wantToHelpCount}</span> */}
-                  </div>
-                </Tooltip>
-              </div>
             </div>
-
-            <div className={styles.report}>
-              <img
-                src={isUserReported ? FilledFlagIcon : FlagIcon}
-                {...(isLoggedIn && { onClick: () => setShowReportModal(true) })}
-                alt="Report"
-                className={!isLoggedIn ? styles.disabled : ''}
-              />
-            </div>
-          </div>
-        )}
+          ))}
       </div>
 
       {isUserReported && (

@@ -167,7 +167,7 @@
   }
 
   .pageWrap {
-    background: #fff;
+    // background: #fff;
     // min-height: 100vh;
     height: fit-content;
     width: 100%;
@@ -190,7 +190,8 @@
 
       div.searchWrap {
         width: fit-content;
-
+        display: flex;
+        justify-content: center;
         input {
           width: 20em;
         }

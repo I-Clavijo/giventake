@@ -1,11 +1,14 @@
 import Post from './Post'
 import styles from './Feed.module.scss'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+import { LeftArrow, RightArrow } from './Arrows'
+import { ScrollMenu } from 'react-horizontal-scrolling-menu'
 
 export const showAs = {
   LIST: 'list', // default
   GRID: 'grid',
-  MASONRY: 'masonry'
+  MASONRY: 'masonry',
+  ROW: 'row'
 }
 
 const Feed = ({
@@ -14,14 +17,17 @@ const Feed = ({
   isLoading,
   noTitle = false,
   noActions = false,
+  noDescription = false,
   onPostAction,
-  isLoggedIn
+  isLoggedIn,
+  featuredPosts
 }) => {
   let postsWrapperClass = styles.list
   if (styleOrder === showAs.GRID) postsWrapperClass = styles.grid
   else if (styleOrder === showAs.MASONRY) postsWrapperClass = styles.masonry
+  else if (styleOrder === showAs.ROW) postsWrapperClass = styles.row
 
-  let postsMapped = posts.map(post => {
+  let postsMapped = posts?.map(post => {
     let postTag = (
       <Post
         postId={post._id}
@@ -41,8 +47,8 @@ const Feed = ({
         isUserInterested={post.isUserInterested}
         isUserReported={post.isUserReported}
         isSelf={post.isSelf}
-        noActions={noActions && !!post.isSelf}
-        {...{ isLoading, noTitle, onPostAction, isLoggedIn, post }}
+        featuredPost={featuredPosts}
+        {...{ isLoading, noTitle, noActions, noDescription, onPostAction, isLoggedIn, post }}
       />
     )
 
@@ -54,6 +60,12 @@ const Feed = ({
       <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}>
         <Masonry gutter="10px">{postsMapped}</Masonry>
       </ResponsiveMasonry>
+    )
+  } else if (styleOrder === showAs.ROW) {
+    postsMapped = (
+      <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
+        {postsMapped}
+      </ScrollMenu>
     )
   }
 
