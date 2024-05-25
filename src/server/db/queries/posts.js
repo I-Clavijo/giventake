@@ -31,6 +31,56 @@ export const getSavedPostsQuery = async (auth_userId, populate) => {
   ])
 }
 
+export const getFeedPostsQuery = async (auth_userId, populate, sortByBumpDateFirst) => {
+  const userIdObjectId = auth_userId ? new ObjectId(auth_userId) : null
+
+  const friendsPosts = await Friends.aggregate([
+    {
+      $match: {
+        user: userIdObjectId
+      }
+    },
+    {
+      $group: {
+        _id: '$user',
+        following: {
+          $addToSet: '$toUser'
+        }
+      }
+    },
+    {
+      $lookup: {
+        from: Post.collection.name,
+        as: 'posts',
+        localField: 'following',
+        foreignField: 'user'
+      }
+    },
+    {
+      $unwind: '$posts'
+    },
+    {
+      $replaceRoot: {
+        newRoot: '$posts'
+      }
+    },
+    ...populate,
+    ...sortByBumpDateFirst
+  ])
+
+  const user = await User.findById(auth_userId)
+  const userInterests = user.interests
+  console.log(userInterests)
+  const postsByInterests = await Post.aggregate([
+    {
+      // get ONLY posts from a specific categories
+      $match: { category: { $in: userInterests } }
+    }
+  ])
+
+  console.log(postsByInterests)
+}
+
 export const getAllPostsQuery = async (auth_userId, filters) => {
   const userIdObjectId = auth_userId ? new ObjectId(auth_userId) : null
 
@@ -125,6 +175,7 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
   ]
 
   if (userIdObjectId && filters?.onlyPeopleIFollow) {
+    await getFeedPostsQuery(auth_userId, populate, sortByBumpDateFirst)
     //  get ONLY posts from people that the auth user is following
     return await Friends.aggregate([
       {

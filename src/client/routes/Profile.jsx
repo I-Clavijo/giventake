@@ -19,6 +19,7 @@ import { useFriendAction } from '../api/friends/useFriendAction.jsx'
 import { useFriends } from '../api/friends/useFriends.jsx'
 import { usePostAction } from '../api/posts/usePostAction.jsx'
 import { useUserRating } from '../hooks/useUserRating.jsx'
+import { CATEGORIES } from '../utils/staticData.js'
 
 const Profile = ({ isMyProfile }) => {
   let { id: userId } = useParams()
@@ -70,7 +71,7 @@ const Profile = ({ isMyProfile }) => {
   const interestsSepByDots = user?.interests?.map((interest, index) => (
     <span key={index} className={styles.interest}>
       {' '}
-      <Kbd>{interest}</Kbd> {index < user.interests.length - 1 ? '•' : ''}
+      <Kbd>{CATEGORIES[interest]?.name}</Kbd> {index < user.interests.length - 1 ? '•' : ''}
     </span>
   ))
 
