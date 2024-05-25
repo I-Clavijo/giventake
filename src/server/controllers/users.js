@@ -22,6 +22,26 @@ export const getUserById = async (req, res) => {
   res.status(200).json(user)
 }
 
+export const getUserRating = async (req, res) => {
+
+  const { userId } = req.query || {}
+
+  if (!userId) throw new AppError('User ID is required.', 400);
+
+  const user = await User.findOne({ _id: userId }).lean();
+  const ratingSum = user.reviews.reduce((acc, curr) => acc + curr.rating, 0);
+  const numberOfReviews = user.reviews.reduce((acc, curr) => acc + 1, 0);
+  const rating = ratingSum / numberOfReviews;
+
+  let response = {
+    userRating: rating,
+  }
+
+  res.status(200).json(response)
+
+}
+
+
 export const getUsersBySearch = async (req, res) => {
   const {
     filters: { searchQuery }
