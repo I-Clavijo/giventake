@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { API_URL } from '../api/axios.js';
+import { QUERY_KEY } from '../api/constants.js';
 
 export function useUserRating(userId) {
 
@@ -10,7 +11,7 @@ export function useUserRating(userId) {
   };
 
   return useQuery({
-    queryKey: ['userRating', userId],
+    queryKey: [QUERY_KEY.user, userId, 'rating'],
     queryFn: fetchRating,
     enabled: !!userId,
     retry: 2,
