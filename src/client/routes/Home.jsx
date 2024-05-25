@@ -91,9 +91,22 @@ const Home = () => {
           <Link className="mr-2" to="/explore">
             Explore
           </Link>
-          <Link className="mr-2" to="/auth?mode=login">
-            Sign in/up
-          </Link>
+          {isLoggedIn && (
+            <>
+              <Link className="mr-2" to="/feed">
+                For you
+              </Link>
+
+              <Link className="mr-2" to="/messages">
+                Messages
+              </Link>
+            </>
+          )}
+          {!isLoggedIn && (
+            <Link className="mr-2" to="/auth?mode=login">
+              Sign in/up
+            </Link>
+          )}
         </Footer.LinkGroup>
       </Footer>
     </div>
