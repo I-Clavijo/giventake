@@ -52,7 +52,7 @@ export default function Root({ children }) {
   }
   const navlinks = [
     ...(isLoggedIn ? [{ icon: HiOutlineNewspaper, iconActive: HiNewspaper, title: 'Feed', link: '/feed' }] : []),
-    { icon: FaRegCompass, iconActive: FaCompass, title: 'Explore', link: '/' },
+    { icon: FaRegCompass, iconActive: FaCompass, title: 'Explore', link: '/explore' },
     ...(isLoggedIn
       ? [
           {
@@ -84,7 +84,7 @@ export default function Root({ children }) {
   return (
     <>
       <ScrollToTop />
-      <AppSideBar Icon={TbHeartHandshake} title="given'take" nav={navlinks} currentPathName={pathname}>
+      <AppSideBar Icon={TbHeartHandshake} title="give & take" nav={navlinks} currentPathName={pathname}>
         {children}
         <SnackbarProvider autoHideDuration={5000} anchorOrigin={{ horizontal: 'center', vertical: 'top' }}>
           <Outlet />

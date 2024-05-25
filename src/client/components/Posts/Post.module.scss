@@ -15,6 +15,12 @@
   margin-bottom: 10px;
   width: 100%;
 
+  &.featuredPost {
+    width: 15em;
+    margin-right: 1em;
+    box-shadow: none;
+  }
+
   &.reportedPost {
     position: relative;
     display: inline-block;
@@ -102,9 +108,22 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
+    &.featuredPost {
+      height: 15.2em;
+    }
+
     .imgCrop {
       position: relative;
       width: 100%;
+
+      &.featuredPost {
+        img {
+          width: 100%;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          height: 10em;
+          object-fit: cover;
+        }
+      }
 
       &::after {
         content: '';

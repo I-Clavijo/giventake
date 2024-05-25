@@ -1,12 +1,16 @@
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Tooltip } from 'flowbite-react'
 import { useMediaQuery } from '@uidotdev/usehooks'
 import styles from './AppSideBar.module.scss'
+import { IoSearchSharp } from 'react-icons/io5'
 import SearchInput from '../Search/SearchInput'
+import { useState } from 'react'
 
 export default function AppSideBar({ children, Icon, title, search, nav, currentPathName }) {
   const isSmallDevice = useMediaQuery('only screen and (max-width: 767px)')
   const isWideDevice = useMediaQuery('only screen and (min-width: 1264px)')
+
+  const [isSearchActive, setIsSearchActive] = useState(false)
 
   //sidebar/ bottom buttons
   const navLinksMapped = nav.map((item, index) => {
@@ -71,9 +75,11 @@ export default function AppSideBar({ children, Icon, title, search, nav, current
     <>
       <div className={styles.baseCols}>
         <div className={styles.appSideBarWrap}>
-          <div className={styles.logo}>
-            <Icon size={70} color="#fff" />
-          </div>
+          <Link to="/">
+            <div className={styles.logo}>
+              <Icon size={70} color="#fff" />
+            </div>
+          </Link>
           <nav className={styles.navWrap}>{navLinksMapped}</nav>
         </div>
         <div className={styles.pageWrap}>
@@ -86,12 +92,24 @@ export default function AppSideBar({ children, Icon, title, search, nav, current
           <div className={styles.innerWrap}>{children}</div>
         </div>
         <div className={styles.topBar}>
-          <div className={styles.logo}>
-            <Icon size={70} />
-            <span>{title}</span>
+          <Link to="/">
+            <div className={styles.logo}>
+              <Icon size={70} />
+              <span>{title}</span>
+            </div>
+          </Link>
+
+          <div className={styles.searchWrap}>
+            {isSearchActive && <SearchInput active={isSearchActive} onBlur={() => setIsSearchActive(false)} />}
           </div>
-          <div className={styles.searchWrap}>{search}</div>
-          <div className={styles.topNavButtons}>{topNavLinksMapped}</div>
+
+          {!isSearchActive && (
+            <div className={styles.topNavButtons}>
+              {topNavLinksMapped}
+
+              <IoSearchSharp size="1.5em" style={{ cursor: 'pointer' }} onClick={() => setIsSearchActive(true)} />
+            </div>
+          )}
         </div>
       </div>
     </>

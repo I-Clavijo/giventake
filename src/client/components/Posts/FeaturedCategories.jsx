@@ -8,8 +8,8 @@ import { useMediaQuery } from '@uidotdev/usehooks'
 
 import 'react-horizontal-scrolling-menu/dist/styles.css'
 
-const FeaturedCategories = () => {
-  const isWideDevice = useMediaQuery('only screen and (min-width: 1100px)')
+const FeaturedCategories = ({ onlyText }) => {
+  const isWideDevice = useMediaQuery('only screen and (min-width: 900px)')
 
   return (
     <div className={s.categoriesWrap}>
@@ -17,23 +17,25 @@ const FeaturedCategories = () => {
         <h6 className='font-normal'>Featured categories</h6>
       </div> */}
 
-      {isWideDevice ? (
+      {!onlyText && isWideDevice ? (
         <div className={s.categoriesGrid}>
-          {Object.entries(CATEGORIES).map(([k, v]) => {
-            if (k === 'ALL_CATEGORIES') return
+          <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
+            {Object.entries(CATEGORIES).map(([k, v]) => {
+              if (k === 'ALL_CATEGORIES') return
 
-            const to = `?category=${k.toLowerCase()}`
-            return (
-              <Link key={k} to={to} className={s.categoryItem}>
-                <div className={s.categoryContent}>
+              const to = `/explore?category=${k.toLowerCase()}`
+              return (
+                <Link key={k} to={to} className={s.categoryItem}>
+                  {/* <div className={s.categoryContent}> */}
                   <img className="h-auto max-w-full rounded-lg" src={v.obj} alt={v.name} />
                   <div className={s.categoryOverlay}>
                     <h3 className={s.categoryName}>{v.name}</h3>
                   </div>
-                </div>
-              </Link>
-            )
-          })}
+                  {/* </div> */}
+                </Link>
+              )
+            })}
+          </ScrollMenu>
         </div>
       ) : (
         <div className={s.scrollWrap}>
@@ -41,13 +43,15 @@ const FeaturedCategories = () => {
             {Object.entries(CATEGORIES).map(([key, v]) => {
               if (key === 'ALL_CATEGORIES') return
 
-              const to = `?category=${key.toLowerCase()}`
+              const to = `/explore?category=${key.toLowerCase()}`
               return (
                 <Link key={key} {...{ to }}>
                   {v.name}
                 </Link>
               )
             })}
+            <Link style={{ cursor: 'default' }}>|</Link>
+            <Link to="/explore">Discover</Link>
           </ScrollMenu>
         </div>
       )}

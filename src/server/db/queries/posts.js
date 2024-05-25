@@ -164,6 +164,18 @@ export const getAllPostsQuery = async (auth_userId, filters) => {
   }
 
   return await Post.aggregate([
+    ...(filters?.featuredPosts
+      ? [
+          {
+            $match: {
+              imgName: { $ne: null, $ne: '' }
+            }
+          },
+          {
+            $limit: 20
+          }
+        ]
+      : []),
     ...(filters?.userId
       ? [
           {
