@@ -24,7 +24,7 @@ const SearchInput = ({ onBlur, active }) => {
     setIsSearchFocused(false)
     setSearchValue('')
     searchRef.current.blur()
-    onBlur()
+    onBlur?.()
   }
 
   useEffect(() => {
