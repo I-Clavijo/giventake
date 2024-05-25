@@ -26,6 +26,25 @@
   font-weight: bold;
 }
 
+.profileLeft {
+  img.profileImg {
+    max-height: 8em;
+    width: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 10em;
+  }
+
+  .interestsWrap {
+    display: flex;
+    flex-wrap: wrap;
+    .interest {
+      line-height: 2.2em;
+      margin-right: 0.2em;
+    }
+  }
+}
+
 @media (max-width: 768px) {
   .profileInfo {
     display: grid;
@@ -55,6 +74,13 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+
+    img {
+      max-height: 100%;
+      width: auto;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
   }
 
   .stats {
@@ -70,8 +96,10 @@
 
 @media (min-width: 768px) {
   .profileLeft {
-    display: inline-block;
-    margin-left: 1rem;
+    // max-height: 100%;
+    // width: auto;
+    // aspect-ratio: 1;
+    // object-fit: cover;
   }
 
   .actions {

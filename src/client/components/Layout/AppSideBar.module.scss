@@ -235,7 +235,8 @@
     width: 100vw;
     border-bottom: 1px solid var(--logo-color);
     box-shadow: 0 0 2px var(--logo-color);
-    z-index: 1390;
+    // z-index: 1390;
+    z-index: 50;
 
     .logo {
       font-size: 20px;

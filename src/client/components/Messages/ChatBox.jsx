@@ -200,8 +200,8 @@ const $Wrapper = styled.div`
     }
 
     img {
-      width: 5em;
-      height: 5em;
+      width: 3em;
+      height: 3em;
       border-radius: 10em;
       flex-shrink: 0;
     }

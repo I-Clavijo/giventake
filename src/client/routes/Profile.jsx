@@ -34,7 +34,7 @@ const Profile = ({ isMyProfile }) => {
   if (!isMyProfile && isErrorUser && !user)
     throw new PageError('Profile page not found.', 'Are you sure you are in the right page?')
 
-  const { data: userRating } = useUserRating(userId);
+  const { data: userRating } = useUserRating(userId)
 
   // navigate the user to his own profile page if he visit it as a guest.
   useEffect(() => {
@@ -68,7 +68,7 @@ const Profile = ({ isMyProfile }) => {
   const { mutate: postAction } = usePostAction({ filters })
 
   const interestsSepByDots = user?.interests?.map((interest, index) => (
-    <span key={index}>
+    <span key={index} className={styles.interest}>
       {' '}
       <Kbd>{interest}</Kbd> {index < user.interests.length - 1 ? '•' : ''}
     </span>
@@ -111,11 +111,7 @@ const Profile = ({ isMyProfile }) => {
         <>
           <div className={styles.profileInfo}>
             <div className={styles.profileLeft}>
-              <img
-                className="w-28 h-28 mb-2  rounded-full shadow-lg"
-                src={user.imgUrl ? user.imgUrl : ProfileImg}
-                alt="Profile image"
-              />
+              <img className={styles.profileImg} src={user.imgUrl ? user.imgUrl : ProfileImg} alt="Profile image" />
             </div>
             <div className={styles.profileLeft}>
               <h5 className="ml-2 text-xxl font-large text-gray-900 dark:text-white">
@@ -124,7 +120,7 @@ const Profile = ({ isMyProfile }) => {
               <span className="text-sm ml-2 text-gray-500 dark:text-gray-400">{txtLocation}</span>
               <div className="pb-1 ml-2 extra">
                 <Stars grade={userRating || 0} />
-                <p className={styles.interests}>{interestsSepByDots}</p>
+                <p className={styles.interestsWrap}>{interestsSepByDots}</p>
                 <p className={styles.info}>{user.bio}</p>
               </div>
             </div>

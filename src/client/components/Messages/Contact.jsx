@@ -32,7 +32,7 @@ const $ListItem = styled.li`
   position: relative;
   height: 5em;
   display: flex;
-  gap: 1em;
+  gap: 0.5em;
   overflow: hidden;
   padding: 0.4em;
   border-bottom: 1px solid #eee;
@@ -54,13 +54,14 @@ const $ListItem = styled.li`
   }
   .profile-img {
     padding: 0.3em;
-    /* width: fit-content; */
     flex-shrink: 0;
     position: relative;
 
     img {
-      height: 100%;
-      width: 100%;
+      max-height: 100%;
+      width: auto;
+      aspect-ratio: 1;
+      object-fit: cover;
     }
   }
   .details {
