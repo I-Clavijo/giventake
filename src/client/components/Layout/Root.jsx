@@ -51,7 +51,7 @@ export default function Root({ children }) {
     return <Popover trigger="click" aria-labelledby="profile-popover" {...{ content, children }} />
   }
   const navlinks = [
-    ...(isLoggedIn ? [{ icon: HiOutlineNewspaper, iconActive: HiNewspaper, title: 'Feed', link: '/feed' }] : []),
+    ...(isLoggedIn ? [{ icon: HiOutlineNewspaper, iconActive: HiNewspaper, title: 'For you', link: '/feed' }] : []),
     { icon: FaRegCompass, iconActive: FaCompass, title: 'Explore', link: '/explore' },
     ...(isLoggedIn
       ? [
