@@ -186,7 +186,7 @@ const Post = ({
             )}
           </div>
         </div>
-        {(isSelf || !noActions || (featuredPost && postInModal)) && (
+        {!isSelf && !featuredPost && (
           <div className={styles.postFooter}>
             <div
               style={{
