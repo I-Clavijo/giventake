@@ -25,6 +25,7 @@ import PostForm from './PostForm'
 import { useUpdatePost } from '../../api/posts/useUpdatePost'
 import useDeletePost from '../../api/posts/useDeletePost'
 import ConfirmationModal from '../ConfirmationModal'
+import { BsStars } from 'react-icons/bs'
 
 const Post = ({
   post,
@@ -133,32 +134,39 @@ const Post = ({
                 </p>
               </div>
             </div>
-            {isLoggedIn && isSelf && (
-              <Popover
-                trigger="click"
-                aria-labelledby="profile-popover"
-                content={
-                  <div className={styles.popover}>
-                    <span onClick={() => bumpPost({ postId })}>
-                      <FaAngleDoubleUp />
-                      <span>Bump post</span>
-                    </span>
-                    <span onClick={onEdit}>
-                      <HiOutlinePencilSquare />
-                      <span>Edit</span>
-                    </span>
-                    <hr />
-                    <span onClick={() => setShowDeleteModal(true)}>
-                      <MdDeleteOutline />
-                      <span>Delete</span>
-                    </span>
-                  </div>
-                }>
-                <div className={styles.actions}>
-                  <IoMdMore />
+            <div className={styles.actions}>
+              {post?.isInterestPost && (
+                <div style={{ textWrap: 'nowrap' }}>
+                  <Tooltip content="post from your interests">
+                    <BsStars color="var(--third-color)" style={{ cursor: 'help' }} />
+                  </Tooltip>
                 </div>
-              </Popover>
-            )}
+              )}
+              {isLoggedIn && isSelf && (
+                <Popover
+                  trigger="click"
+                  aria-labelledby="profile-popover"
+                  content={
+                    <div className={styles.popover}>
+                      <span onClick={() => bumpPost({ postId })}>
+                        <FaAngleDoubleUp />
+                        <span>Bump post</span>
+                      </span>
+                      <span onClick={onEdit}>
+                        <HiOutlinePencilSquare />
+                        <span>Edit</span>
+                      </span>
+                      <hr />
+                      <span onClick={() => setShowDeleteModal(true)}>
+                        <MdDeleteOutline />
+                        <span>Delete</span>
+                      </span>
+                    </div>
+                  }>
+                  <IoMdMore />
+                </Popover>
+              )}
+            </div>
           </div>
         )}
 
