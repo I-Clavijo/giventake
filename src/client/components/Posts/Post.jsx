@@ -117,9 +117,8 @@ const Post = ({
 
   const postTag = (
     <div
-      className={`${styles.post} ${isUserReported ? styles.reportedPost : ''} ${
-        featuredPost && !postInModal ? styles.featuredPost : ''
-      }`}>
+      className={`${styles.post} ${isUserReported ? styles.reportedPost : ''} ${featuredPost && !postInModal ? styles.featuredPost : ''
+        }`}>
       <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
         {(!noTitle || postInModal) && (
           <div className={styles.postHeader}>
@@ -130,7 +129,7 @@ const Post = ({
                   {fullName}
                 </h6>
                 <p>
-                  {timeAgo} {location?.city && location?.country && `• ${location.city}, ${location.country}`}
+                  {timeAgo} {location?.city && location?.country ? `• ${location.city}, ${location.country}` : '• Remote help'}
                 </p>
               </div>
             </div>
@@ -197,9 +196,8 @@ const Post = ({
               }}>
               <div className={styles.likes}>
                 <img
-                  className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''} ${
-                    !isLoggedIn ? styles.disabled : ''
-                  }`} // Add CSS class for styling
+                  className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''} ${!isLoggedIn ? styles.disabled : ''
+                    }`} // Add CSS class for styling
                   src={isSavedByUser ? BookmarkIconFilled : BookmarkIcon}
                   {...(isLoggedIn && { onClick: toggleSaveForLater })}
                   alt="Save for Later"
