@@ -5,7 +5,7 @@ import styles from '../components/Posts/Post.module.scss'
 import ReportModal from '../components/Posts/ReportModal'
 import { calculateTimeAgo } from '../utils/lib'
 
-import { setShowReportModal } from '../components/Posts/Post'
+// import { setShowReportModal } from '../components/Posts/Post'
 import { GiConfirmed } from 'react-icons/gi'
 import { FaRegTrashCan } from 'react-icons/fa6'
 import { LeftArrow } from '../components/Posts/Arrows'
@@ -154,7 +154,6 @@ export default function Moderator() {
                         style={{ width: 'fit-content', color: 'blue', display: 'flex', alignItems: 'center' }}
                         onClick={event => {
                           setShowReportModal(false)
-                          event.stopPropagation()
                         }}>
                         <GiConfirmed /> approve
                       </button>
