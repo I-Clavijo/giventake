@@ -220,7 +220,7 @@ export const getSavedPostsQuery = async (selfUserId_OI, options) => {
         newRoot: '$posts'
       }
     },
-    ...getPopulatePipeline()
+    ...getPopulatePipeline(selfUserId_OI)
   ])
   return await User.aggregatePaginate(posts, options)
 }
@@ -231,7 +231,7 @@ export const getPostsQuery = async (selfUserId_OI, filters, options) => {
       ? [
           {
             $match: {
-              imgName: { $ne: null, $ne: '' }
+              imgName: { $ne: null, $ne: '' } // imgName is required
             }
           },
           {

@@ -90,6 +90,9 @@ const Feed = ({
     postsMapped = (
       <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
         {postsMapped}
+        <InView as="div">
+          <div ref={refNote} style={{ width: '100px', height: '10px' }}></div>
+        </InView>
       </ScrollMenu>
     )
   } else if (styleOrder === showAs.LIST) {
@@ -105,7 +108,7 @@ const Feed = ({
 
   useEffect(() => {
     if (inViewPost) {
-      console.log('inViewPost: ', inViewPost)
+      // console.log('inViewPost: ', inViewPost)
       fetchNextPage()
     }
   }, [inViewPost])

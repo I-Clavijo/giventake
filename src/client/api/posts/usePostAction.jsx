@@ -54,7 +54,6 @@ export const usePostAction = ({ filters = {} } = {}) => {
       ]
     },
     onSuccess: (_, { actions }) => {
-      console.log('SAV ')
       if (actions.hasOwnProperty('isSavedByUser')) {
         queryClient.refetchQueries([QUERY_KEY.posts, { onlySavedPosts: 1 }])
       }
