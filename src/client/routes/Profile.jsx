@@ -19,6 +19,7 @@ import { useFriendAction } from '../api/friends/useFriendAction.jsx'
 import { useFriends } from '../api/friends/useFriends.jsx'
 import { usePostAction } from '../api/posts/usePostAction.jsx'
 import { useUserRating } from '../hooks/useUserRating.jsx'
+import { CATEGORIES } from '../utils/staticData.js'
 
 const Profile = ({ isMyProfile }) => {
   let { id: userId } = useParams()
@@ -65,12 +66,11 @@ const Profile = ({ isMyProfile }) => {
 
   const [showFriendsModal, setShowFriendsModal] = useState(false)
   const [friendsListMode, setFriendsListMode] = useState()
-  const { mutate: postAction } = usePostAction({ filters })
 
   const interestsSepByDots = user?.interests?.map((interest, index) => (
-    <span key={index}>
+    <span key={index} className={styles.interest}>
       {' '}
-      <Kbd>{interest}</Kbd> {index < user.interests.length - 1 ? '•' : ''}
+      <Kbd>{CATEGORIES[interest]?.name}</Kbd> {index < user.interests.length - 1 ? '•' : ''}
     </span>
   ))
 
@@ -111,11 +111,7 @@ const Profile = ({ isMyProfile }) => {
         <>
           <div className={styles.profileInfo}>
             <div className={styles.profileLeft}>
-              <img
-                className="w-28 h-28 mb-2  rounded-full shadow-lg"
-                src={user.imgUrl ? user.imgUrl : ProfileImg}
-                alt="Profile image"
-              />
+              <img className={styles.profileImg} src={user.imgUrl ? user.imgUrl : ProfileImg} alt="Profile image" />
             </div>
             <div className={styles.profileLeft}>
               <h5 className="ml-2 text-xxl font-large text-gray-900 dark:text-white">
@@ -124,7 +120,7 @@ const Profile = ({ isMyProfile }) => {
               <span className="text-sm ml-2 text-gray-500 dark:text-gray-400">{txtLocation}</span>
               <div className="pb-1 ml-2 extra">
                 <Stars grade={userRating || 0} />
-                <p className={styles.interests}>{interestsSepByDots}</p>
+                <p className={styles.interestsWrap}>{interestsSepByDots}</p>
                 <p className={styles.info}>{user.bio}</p>
               </div>
             </div>
@@ -184,17 +180,13 @@ const Profile = ({ isMyProfile }) => {
 
           <Tabs aria-label="Default tabs" style="default" className="flex justify-center mt-2">
             <Tabs.Item active title="Posts" icon={HiUserCircle} className="tabItem">
-              {posts && (
-                <Feed
-                  posts={posts}
-                  styleOrder={showAs.MASONRY}
-                  isLoading={isLoadingPosts}
-                  noTitle
-                  {...(isMyProfile && { noActions: true })}
-                  onPostAction={postAction}
-                  {...{ isLoggedIn }}
-                />
-              )}
+              <Feed
+                styleOrder={showAs.MASONRY}
+                noTitle
+                enabled={isMyProfile ? true : !!userId && isSuccessUser}
+                {...(isMyProfile && { noActions: true })}
+                {...{ isLoggedIn, filters }}
+              />
             </Tabs.Item>
 
             <Tabs.Item title="Reviews" icon={HiChartSquareBar} className="tabItem">

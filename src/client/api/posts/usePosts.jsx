@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useSnackbar } from 'notistack'
 import { QUERY_KEY } from '../constants'
 import useAxiosPrivate from '../useAxiosPrivate'
@@ -19,6 +19,22 @@ export const usePosts = ({ filters = {}, enabled } = {}) => {
       let errMessage = err.message || 'Something went wrong. Please try again!'
       enqueueSnackbar(errMessage, { variant: 'error' })
     },
+    enabled: enabled ?? true
+  })
+}
+
+export const usePaginatedPosts = ({ filters = {}, enabled } = {}) => {
+  const axiosPrivate = useAxiosPrivate()
+  const filtersKeys = isObjectEmpty(filters) ? [] : [filters]
+
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEY.posts, ...filtersKeys],
+    queryFn: async ({ pageParam }) => {
+      const { data } = await axiosPrivate.get('/posts', { params: { filters, cursor: pageParam } })
+      return data
+    },
+    getNextPageParam: (lastPage, pages) => (lastPage.hasNextPage ? lastPage.nextPage : undefined),
+    initialPageParam: 1,
     enabled: enabled ?? true
   })
 }

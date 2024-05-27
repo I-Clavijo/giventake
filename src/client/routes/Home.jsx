@@ -4,9 +4,7 @@ import HeroImg from '../assets/images/pexels-ketut-subiyanto-4246061.jpg'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button, Footer } from 'flowbite-react'
 import Feed, { showAs } from '../components/Posts/Feed'
-import { usePosts } from '../api/posts/usePosts'
 import { useUser } from '../api/users/useUser'
-import { usePostAction } from '../api/posts/usePostAction'
 import HeroImg2 from '../assets/images/pexels-photo-5561310.jpeg'
 
 const Home = () => {
@@ -14,8 +12,6 @@ const Home = () => {
   const filters = {
     featuredPosts: 1 // need to take care
   }
-  const { data: posts } = usePosts({ filters })
-  const { mutate: postAction } = usePostAction({ filters })
 
   const navigate = useNavigate()
 
@@ -49,15 +45,7 @@ const Home = () => {
 
       {/* Featured posts */}
       <p className={s.featuredPostsTitle}>Featured posts {'>'}</p>
-      <Feed
-        {...{ posts, isLoggedIn }}
-        styleOrder={showAs.ROW}
-        noTitle
-        noActions
-        noDescription
-        featuredPosts
-        onPostAction={postAction}
-      />
+      <Feed {...{ filters, isLoggedIn }} styleOrder={showAs.ROW} noTitle noActions noDescription featuredPosts />
 
       {/* Hero Banner */}
       <div className={s.heroImgCrop}>
@@ -91,9 +79,22 @@ const Home = () => {
           <Link className="mr-2" to="/explore">
             Explore
           </Link>
-          <Link className="mr-2" to="/auth?mode=login">
-            Sign in/up
-          </Link>
+          {isLoggedIn && (
+            <>
+              <Link className="mr-2" to="/feed">
+                For you
+              </Link>
+
+              <Link className="mr-2" to="/messages">
+                Messages
+              </Link>
+            </>
+          )}
+          {!isLoggedIn && (
+            <Link className="mr-2" to="/auth?mode=login">
+              Sign in/up
+            </Link>
+          )}
         </Footer.LinkGroup>
       </Footer>
     </div>

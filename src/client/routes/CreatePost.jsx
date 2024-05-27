@@ -16,8 +16,6 @@ const CreatePost = () => {
         its wonders! <br />{' '}
       </p>
 
-      <h3 className={styles.textBoldOut}>Together, we're unstoppable!</h3>
-
       <PostForm onSubmit={createPost} {...{ isPending }} />
     </div>
   )
