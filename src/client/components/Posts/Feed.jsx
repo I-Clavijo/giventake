@@ -49,7 +49,7 @@ const Feed = ({
         profilePic: post.user?.imgUrl,
         helpDate: post.helpDate,
         createdAt: post.createdAt,
-        location: post.location,
+        location: post?.location,
         postPic: post.imgUrl,
         title: post?.title,
         description: post.description,

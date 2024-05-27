@@ -129,7 +129,8 @@ const Post = ({
                   {fullName}
                 </h6>
                 <p>
-                  {timeAgo} {location?.city && location?.country && `• ${location.city}, ${location.country}`}
+                  {timeAgo}{' '}
+                  {location?.city && location?.country ? `• ${location.city}, ${location.country}` : '• Remote help'}
                 </p>
               </div>
             </div>
@@ -186,7 +187,7 @@ const Post = ({
             )}
           </div>
         </div>
-        {((!noActions && !isSelf) || (featuredPost && postInModal)) && (
+        {!isSelf && !featuredPost && (
           <div className={styles.postFooter}>
             <div
               style={{
