@@ -215,7 +215,7 @@ export const postAction = async (req, res) => {
 
   if (actions.hasOwnProperty('isUserInterested')) {
     await runInTransaction(async session => {
-
+      
       // update 'User' collection
       filter = { _id: req.user._id }
       updateQuery = actions.isUserInterested
@@ -229,27 +229,37 @@ export const postAction = async (req, res) => {
         ? { $addToSet: { usersInterested: req.user._id } }
         : { $pull: { usersInterested: req.user._id } }
       await Post.updateOne(filter, updateQuery, { session })
-
+      
 
       // send email to the user who posted the post
       const post = await Post.findOne({ _id: postId })
       if (post) {
-        const user = await User.findOne({ _id: post.user })
-        if (user) {
-          const email = user.email
-          const firstName = user.firstName
-          const lastName = user.lastName
-          console.log('Sending email about user offering help to: ', email)
-          await resend.emails.send({
-            from: "given'take <noreply@giventake.org>",
-            to: email,
-            subject: emailsTemplates.helper.subject.replace('{{fullName}}', firstName + ' ' + lastName),
-            html: emailsTemplates.helper.html.replace('{{fullName}}', firstName + ' ' + lastName)
-          })
+        if (post.usersInterested.length == 1) { // if firs use to offer help
+          const userThatHelps = await User.findOne({ _id: post.usersInterested[0]._id })
+          const helperFirstName = userThatHelps.firstName
+          const helperProfilePicName = userThatHelps.imgName
+          const profilePicURL = helperProfilePicName ? await getImageUrl(helperProfilePicName) : ''
+          const user = await User.findOne({ _id: post.user })
+          if (user) {
+            const email = user.email
+            const firstName = user.firstName
+            const lastName = user.lastName
+            let emailHTML = emailsTemplates.newHelper.html.replace('{{helperName}}', helperFirstName) //replace name
+            emailHTML = emailHTML.replace('{{profilePicURL}}', profilePicURL) //replace profile pic url
+            emailHTML = emailHTML.replace('{{fullName}}', firstName + ' ' + lastName)
 
+            console.log('Sending email about user offering help to: ', email)
+
+            await resend.emails.send({
+              from: "given'take <noreply@giventake.org>",
+              to: email,
+              subject: emailsTemplates.newHelper.subject.replace('{{fullName}}', firstName + ' ' + lastName),
+              html: emailHTML,
+            })
+
+          }
         }
       }
-
     })
   }
 

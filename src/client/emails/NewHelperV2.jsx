@@ -95,7 +95,6 @@ const imgHeader = {
   margin: "auto",
   maxWidth: "100%",
   width: "300px",
-  float: "left",
 };
 
 const imgProfile = {
@@ -112,7 +111,7 @@ const header = {
   zIndex: "999",
   textAlign: "left",
   maxWidth: "550px",
-  marginBottom: "100px",
+
 };
 
 const container = {
