@@ -31,7 +31,8 @@ const postSchema = new mongoose.Schema(
     usersSaved: [{ type: ObjectId, ref: MODEL_KEY.User }],
     usersInterested: [{ type: ObjectId, ref: MODEL_KEY.User }],
     usersReported: [{ type: ObjectId, ref: MODEL_KEY.User }],
-    reviewToUser: { type: ObjectId, ref: MODEL_KEY.User }
+    reviewToUser: { type: ObjectId, ref: MODEL_KEY.User },
+    bumpDate: Date
   },
   { timestamps: true }
 )

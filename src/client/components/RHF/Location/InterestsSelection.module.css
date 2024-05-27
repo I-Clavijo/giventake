@@ -8,9 +8,11 @@
 .interestButton {
     background-color: lightgrey;
     color:black;
-    width: 130px ;
-    height: 40px;
+    width: 8em;
+    height: 2.3em;
     align-items: center;
+    justify-items: center;
+    box-sizing: content-box;
 }
 
 .selectedButton {
@@ -22,5 +24,8 @@
 .buttonIcon {
     font-size: 1.3rem;
     margin-right: 10px;
+    justify-items: start;
+    align-items: center;
+    display: flex;
 }
 

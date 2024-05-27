@@ -17,7 +17,6 @@
 
 .searchResults {
   position: absolute;
-  z-index: 1;
   background-color: #fff;
   margin-top: 2.8em;
   border-radius: 10px;
@@ -27,12 +26,9 @@
   list-style: none;
   padding: 0;
   width: 100%;
-
+  z-index: 9;
 }
 
-.searchResultsAfter {
-  display: none;
-}
 
 .searchResults:hover {
   cursor: pointer;

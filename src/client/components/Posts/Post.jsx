@@ -7,7 +7,7 @@ import FilledHandWaving from '../../assets/images/hand_waving_icon_filled.svg'
 import HandWaving from '../../assets/images/hand_waving_icon.svg'
 import FlagIcon from '../../assets/images/flag-icon-v2.svg'
 import FilledFlagIcon from '../../assets/images/flag-filled-icon.svg'
-import { Modal, Tooltip } from 'flowbite-react'
+import { Modal, Popover, Tooltip } from 'flowbite-react'
 import { usePostAction } from '../../api/posts/usePostAction'
 import { FaExpandAlt, FaEyeSlash } from 'react-icons/fa'
 import ReportModal from './ReportModal'
@@ -15,8 +15,20 @@ import PostSkeleton from './PostSkeleton'
 import { Link, useNavigate } from 'react-router-dom'
 import InterestedModal from './InterestedModal'
 import { useSnackbar } from 'notistack'
+import { MdDeleteOutline } from 'react-icons/md'
+import { HiOutlinePencilSquare } from 'react-icons/hi2'
+import { FaAngleDoubleUp } from 'react-icons/fa'
+import { IoMdMore } from 'react-icons/io'
+import { calculateTimeAgo } from '../../utils/lib'
+import useBumpPost from '../../api/posts/useBumpPost'
+import PostForm from './PostForm'
+import { useUpdatePost } from '../../api/posts/useUpdatePost'
+import useDeletePost from '../../api/posts/useDeletePost'
+import ConfirmationModal from '../ConfirmationModal'
+import { BsStars } from 'react-icons/bs'
 
 const Post = ({
+  post,
   userId,
   isLoggedIn,
   onPostAction: onPostActionHandler,
@@ -39,17 +51,23 @@ const Post = ({
   openModalHandler,
   isLoading,
   noTitle,
+  noDescription,
   noActions,
-  isSelf
+  isSelf,
+  onEdit,
+  featuredPost
 }) => {
   // const [wantToHelpCount, setWantToHelpCount] = useState(interested); // Manage like counter
   // setWantToHelpCount((prevCount) => (!isUserInterested ? prevCount + 1 : prevCount - 1));
 
   const navigate = useNavigate()
   // const [showMoreActive, setShowMoreActive] = useState(postInModal);
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showReportModal, setShowReportModal] = useState(false)
   const [showInterestedModal, setShowInterestedModal] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
+  const { mutate: bumpPost } = useBumpPost()
+  const { mutate: deletePost } = useDeletePost()
 
   const onPostAction = data => {
     if (isLoggedIn) onPostActionHandler(data)
@@ -71,44 +89,16 @@ const Post = ({
     }
   }
 
-  // // Show more button
-  // const toggleShowMore = () => {
-  //   setShowMoreActive(prevShowMore => !prevShowMore);
-  // };
-
   // sets how long ago the post was posted
   const [timeAgo, setTimeAgo] = useState('')
 
   useEffect(() => {
-    const calculateTimeAgo = () => {
-      const currentDate = new Date()
-      const postDateTime = new Date(createdAt)
-
-      const timeDifference = currentDate.getTime() - postDateTime.getTime()
-      const seconds = Math.floor(timeDifference / 1000)
-      const minutes = Math.floor(seconds / 60)
-      const hours = Math.floor(minutes / 60)
-      const days = Math.floor(hours / 24)
-
-      let timeAgoString = ''
-      if (days > 0) {
-        timeAgoString = `${days} day${days > 1 ? 's' : ''} ago`
-      } else if (hours > 0) {
-        timeAgoString = `${hours} hour${hours > 1 ? 's' : ''} ago`
-      } else if (minutes > 0) {
-        timeAgoString = `${minutes} minute${minutes > 1 ? 's' : ''} ago`
-      } else {
-        timeAgoString = `${seconds} second${seconds > 1 ? 's' : ''} ago`
-      }
-
-      setTimeAgo(timeAgoString)
-    }
-
-    calculateTimeAgo()
+    setTimeAgo(calculateTimeAgo(createdAt))
 
     // Update the time every minute
     const interval = setInterval(calculateTimeAgo, 60000)
 
+    //interval cleanup
     return () => clearInterval(interval)
   }, [createdAt])
 
@@ -126,48 +116,77 @@ const Post = ({
     )
 
   const postTag = (
-    <div className={`${styles.post} ${isUserReported ? styles.reportedPost : ''}`}>
+    <div
+      className={`${styles.post} ${isUserReported ? styles.reportedPost : ''} ${featuredPost && !postInModal ? styles.featuredPost : ''
+        }`}>
       <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
         {(!noTitle || postInModal) && (
           <div className={styles.postHeader}>
-            {/* <div className='flex'> */}
-            {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
-            <div>
-              <h6 onClick={() => navigate(`/profile/${userId}`)} style={{ cursor: 'pointer' }}>
-                {fullName}
-              </h6>
-              <p>
-                {timeAgo} {location?.city && location?.country && `• ${location.city}, ${location.country}`}
-              </p>
+            <div className="flex">
+              {profilePic && <img src={profilePic} alt="Profile" className={styles.profilePic} />}
+              <div>
+                <h6 onClick={() => navigate(`/profile/${userId}`)} style={{ cursor: 'pointer' }}>
+                  {fullName}
+                </h6>
+                <p>
+                  {timeAgo} {location?.city && location?.country ? `• ${location.city}, ${location.country}` : '• Remote help'}
+                </p>
+              </div>
             </div>
-            {/* </div> */}
+            <div className={styles.actions}>
+              {post?.isInterestPost && (
+                <div style={{ textWrap: 'nowrap' }}>
+                  <Tooltip content="post from your interests">
+                    <BsStars color="var(--third-color)" style={{ cursor: 'help' }} />
+                  </Tooltip>
+                </div>
+              )}
+              {isLoggedIn && isSelf && (
+                <Popover
+                  trigger="click"
+                  aria-labelledby="profile-popover"
+                  content={
+                    <div className={styles.popover}>
+                      <span onClick={() => bumpPost({ postId })}>
+                        <FaAngleDoubleUp />
+                        <span>Bump post</span>
+                      </span>
+                      <span onClick={onEdit}>
+                        <HiOutlinePencilSquare />
+                        <span>Edit</span>
+                      </span>
+                      <hr />
+                      <span onClick={() => setShowDeleteModal(true)}>
+                        <MdDeleteOutline />
+                        <span>Delete</span>
+                      </span>
+                    </div>
+                  }>
+                  <IoMdMore />
+                </Popover>
+              )}
+            </div>
           </div>
         )}
 
-        <div className={styles.postBody}>
+        <div className={`${styles.postBody} ${featuredPost && !postInModal ? styles.featuredPost : ''}`}>
           <div
             {...(!postInModal && {
               onClick: openModalHandler,
               style: { cursor: 'pointer' }
             })}>
             {postPic && (
-              <div className={styles.imgCrop}>
+              <div className={`${styles.imgCrop} ${featuredPost && !postInModal ? styles.featuredPost : ''}`}>
                 <img src={postPic} alt="Post" />
               </div>
             )}
             <h6 className={styles.title}>{title}</h6>
-            <p>
-              {postInModal ? postDescription : cutDescription}
-              {/* DO we need the read more button? now that we have modal */}
-              {/* {!showMoreActive && !postInModal && description.length > MAX_DESCRIPTION_LENGTH && ( */}
-              {/* <button className={styles.readMore} onClick={toggleShowMore}> */}
-              {/* <u> Read More</u> */}
-              {/* </button> */}
-              {/* )} */}
-            </p>
+            {((featuredPost && postInModal) || !featuredPost) && (
+              <p>{postInModal ? postDescription : cutDescription}</p>
+            )}
           </div>
         </div>
-        {!noActions && !isSelf && (
+        {!isSelf && !featuredPost && (
           <div className={styles.postFooter}>
             <div
               style={{
@@ -177,9 +196,8 @@ const Post = ({
               }}>
               <div className={styles.likes}>
                 <img
-                  className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''} ${
-                    !isLoggedIn ? styles.disabled : ''
-                  }`} // Add CSS class for styling
+                  className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''} ${!isLoggedIn ? styles.disabled : ''
+                    }`} // Add CSS class for styling
                   src={isSavedByUser ? BookmarkIconFilled : BookmarkIcon}
                   {...(isLoggedIn && { onClick: toggleSaveForLater })}
                   alt="Save for Later"
@@ -224,6 +242,12 @@ const Post = ({
 
   return (
     <>
+      <ConfirmationModal
+        message="Are you sure you want to delete this product?"
+        show={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={() => deletePost({ postId })}
+      />
       <ReportModal
         show={showReportModal}
         onClose={() => setShowReportModal(false)}
@@ -241,14 +265,49 @@ const Post = ({
 }
 
 const PostWithModal = props => {
+  const { postId, post } = props || {}
+
+  const { mutate: updatePost, isSuccess: isSuccessUpdatePost } = useUpdatePost()
+
   const [openModal, setOpenModal] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+
+  const onEditHandler = () => {
+    setIsEdit(true)
+    setOpenModal(true)
+  }
+
+  const onDismissEdit = () => {
+    setIsEdit(false)
+    setOpenModal(false)
+  }
+
+  const onUpdateHandler = formData => {
+    updatePost({ data: formData })
+  }
+
+  useEffect(() => {
+    if (isSuccessUpdatePost) {
+      onDismissEdit()
+    }
+  }, [isSuccessUpdatePost])
 
   return (
     <>
-      <Modal size="md" dismissible show={openModal} onClose={() => setOpenModal(false)} className={styles.modalWrap}>
-        <Post {...props} postInModal />
+      <Modal
+        size={isEdit ? 'xl' : 'md'}
+        dismissible
+        show={openModal}
+        onClose={onDismissEdit}
+        className={styles.modalWrap}>
+        {isEdit ? (
+          <PostForm isEdit {...{ postId, post }} onSubmit={onUpdateHandler} onDismiss={onDismissEdit} />
+        ) : (
+          <Post {...props} postInModal onEdit={onEditHandler} />
+        )}
       </Modal>
-      <Post {...props} openModalHandler={() => setOpenModal(true)} />
+
+      <Post {...props} openModalHandler={() => setOpenModal(true)} onEdit={onEditHandler} />
     </>
   )
 }

@@ -45,14 +45,16 @@ export default function ChatBox({ conversation, sendMessage, onClose, selfUserId
         <>
           <div className="chatHeader">
             <div className="imgCrop">
-              <img className="rounded-full" src={conversation?.otherUsers[0].imgUrl || ProfileImg} alt="Profile Pic" />
+              <img className="rounded-full" src={conversation?.otherUsers[0]?.imgUrl || ProfileImg} alt="Profile Pic" />
             </div>
             <div className="userInfo">
               <p
                 style={{ padding: '10px', cursor: 'pointer' }}
                 onClick={() => navigate(`/profile/${conversation?.otherUsers[0]._id}`)}>
                 <strong>
-                  {conversation?.otherUsers[0].firstName} {conversation?.otherUsers[0].lastName}
+                  {conversation?.otherUsers[0]
+                    ? conversation?.otherUsers[0].firstName + ' ' + conversation?.otherUsers[0].lastName
+                    : 'Deleted user'}
                 </strong>
               </p>
               {window.innerWidth < 768 && (
@@ -121,9 +123,16 @@ export default function ChatBox({ conversation, sendMessage, onClose, selfUserId
               placeholder="Enter message"
               required
               shadow
-              onKeyUp={onKeyDownHandler}
+              onKeyUp={conversation?.otherUsers[0] ? onKeyDownHandler : () => {}}
+              disabled={!conversation?.otherUsers[0]}
             />
-            <IoSendSharp size="1.3em" color="#fff" className="sendButton" onClick={onSendMessage} />
+            <IoSendSharp
+              size="1.3em"
+              color="#fff"
+              className="sendButton"
+              disabled={!conversation?.otherUsers[0]}
+              onClick={conversation?.otherUsers[0] ? onSendMessage : () => {}}
+            />
           </div>
         </>
       )}
@@ -191,8 +200,8 @@ const $Wrapper = styled.div`
     }
 
     img {
-      width: 5em;
-      height: 5em;
+      width: 3em;
+      height: 3em;
       border-radius: 10em;
       flex-shrink: 0;
     }

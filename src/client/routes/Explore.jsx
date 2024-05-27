@@ -10,6 +10,7 @@ import { usePostAction } from '../api/posts/usePostAction.jsx'
 import { useQueryClient } from '@tanstack/react-query'
 import { QUERY_KEY } from '../api/constants.js'
 import { useSnackbar } from 'notistack'
+import WelcomeModal from '../components/WelcomeModal.jsx'
 
 export default function Explore() {
   const queryClient = useQueryClient()
@@ -31,7 +32,6 @@ export default function Explore() {
       {user?.flags?.hideWelcomeModal === false && <WelcomeModal />}
 
       <div className={styles.feedWrap}>
-        <FeaturedCategories />
         <FeedFilters defaultValues={isLoggedIn ? { location: user.location } : {}} onChange={onFiltersChange} />
         <hr />
         <h4 className="mb-0 font-normal">Explore</h4>

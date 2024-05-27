@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Button, Tabs } from 'flowbite-react'
+import { Button, Kbd, Tabs } from 'flowbite-react'
 import Stars from '../components/Reviews/Stars'
 import { useUser } from '../api/users/useUser.jsx'
 import { HiChartSquareBar, HiUserCircle } from 'react-icons/hi'
@@ -18,6 +18,8 @@ import { FriendsListModal, modes } from '../components/Profile/FriendsListModal.
 import { useFriendAction } from '../api/friends/useFriendAction.jsx'
 import { useFriends } from '../api/friends/useFriends.jsx'
 import { usePostAction } from '../api/posts/usePostAction.jsx'
+import { useUserRating } from '../hooks/useUserRating.jsx'
+import { CATEGORIES } from '../utils/staticData.js'
 
 const Profile = ({ isMyProfile }) => {
   let { id: userId } = useParams()
@@ -32,6 +34,8 @@ const Profile = ({ isMyProfile }) => {
   } = useUser({ userId, enabled: isMyProfile ? true : !!userId })
   if (!isMyProfile && isErrorUser && !user)
     throw new PageError('Profile page not found.', 'Are you sure you are in the right page?')
+
+  const { data: userRating } = useUserRating(userId)
 
   // navigate the user to his own profile page if he visit it as a guest.
   useEffect(() => {
@@ -65,9 +69,9 @@ const Profile = ({ isMyProfile }) => {
   const { mutate: postAction } = usePostAction({ filters })
 
   const interestsSepByDots = user?.interests?.map((interest, index) => (
-    <span key={index}>
+    <span key={index} className={styles.interest}>
       {' '}
-      {interest} {index < user.interests.length - 1 ? '•' : ''}
+      <Kbd>{CATEGORIES[interest]?.name}</Kbd> {index < user.interests.length - 1 ? '•' : ''}
     </span>
   ))
 
@@ -108,11 +112,7 @@ const Profile = ({ isMyProfile }) => {
         <>
           <div className={styles.profileInfo}>
             <div className={styles.profileLeft}>
-              <img
-                className="w-28 h-28 mb-2  rounded-full shadow-lg"
-                src={user.imgUrl ? user.imgUrl : ProfileImg}
-                alt="Profile image"
-              />
+              <img className={styles.profileImg} src={user.imgUrl ? user.imgUrl : ProfileImg} alt="Profile image" />
             </div>
             <div className={styles.profileLeft}>
               <h5 className="ml-2 text-xxl font-large text-gray-900 dark:text-white">
@@ -120,8 +120,8 @@ const Profile = ({ isMyProfile }) => {
               </h5>
               <span className="text-sm ml-2 text-gray-500 dark:text-gray-400">{txtLocation}</span>
               <div className="pb-1 ml-2 extra">
-                <Stars grade={user.rating || 0} />
-                <p className={styles.interests}>{interestsSepByDots}</p>
+                <Stars grade={userRating || 0} />
+                <p className={styles.interestsWrap}>{interestsSepByDots}</p>
                 <p className={styles.info}>{user.bio}</p>
               </div>
             </div>
