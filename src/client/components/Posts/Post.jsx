@@ -107,7 +107,7 @@ const Post = ({
   let cutDescription =
     postDescription.length > descriptionMaxLength ? (
       <>
-        {postDescription.substring(0, descriptionMaxLength)}
+        {/* {postDescription.substring(0, descriptionMaxLength)} */}
         <u> Read More</u>
       </>
     ) : (

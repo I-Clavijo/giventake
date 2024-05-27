@@ -22,6 +22,7 @@ import Unauthorized from './components/Auth/Unauthorized'
 import SavedPosts from './routes/SavedPosts'
 import CreatePost from './routes/CreatePost'
 import Home from './routes/Home'
+import Moderator from './routes/Moderator'
 
 const ROLES = {
   User: 2001,
@@ -58,7 +59,8 @@ const router = createBrowserRouter([
               { path: '/saved', element: <SavedPosts /> },
               { path: '/profile', element: <Profile isMyProfile={true} /> },
               { path: '/create-post', element: <CreatePost /> },
-              { path: '/messages', element: <Messages /> }
+              { path: '/messages', element: <Messages /> },
+              { path: '/moderator', element: <Moderator /> }
             ]
           },
           {

@@ -14,7 +14,7 @@ import CreateIcon from '../../assets/images/create-icon.svg'
 import ProfileIcon from '../../assets/images/profile-icon.svg'
 import LockIcon from '../../assets/images/lock-icon.svg'
 import { Button, Popover } from 'flowbite-react'
-import { MdOutlinePerson, MdOutlineLogout, MdLockOutline } from 'react-icons/md'
+import { MdOutlinePerson, MdOutlineLogout, MdLockOutline, MdOutlineAddModerator } from 'react-icons/md'
 import { TbHeartHandshake } from 'react-icons/tb'
 import useLogout from '../../api/auth/useLogout'
 import { IoNewspaperOutline, IoNewspaper } from 'react-icons/io5'
@@ -41,6 +41,10 @@ export default function Root({ children }) {
         <NavLink to="/profile">
           <MdOutlinePerson size="1.2em" />
           Profile
+        </NavLink>
+        <NavLink to="/moderator">
+          <MdOutlineAddModerator size="1.2em" />
+          moderate
         </NavLink>
         <NavLink onClick={logout}>
           <MdOutlineLogout size="1.2em" />
