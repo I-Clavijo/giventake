@@ -4,7 +4,7 @@ import AppError, { ERR_VARIANT } from '../utils/AppError.js'
 import { runInTransaction } from '../db/utils/runInTransaction.js'
 import mongoose from 'mongoose'
 import { deleteImage, getImageUrl, putImage } from '../utils/S3.js'
-import { getAllPostsQuery } from '../db/queries/posts.js'
+import { getForYouPostsQuery, getPostsQuery, getSavedPostsQuery } from '../db/queries/posts.js'
 import { convertToUpperCase } from '../db/utils/lib.js'
 import { addHours, isAfter } from 'date-fns'
 
@@ -137,15 +137,30 @@ export const updatePost = async (req, res) => {
 }
 
 export const getPosts = async (req, res) => {
-  const { filters } = req.query || {}
+  const { filters, cursor = 1 } = req.query || {}
+  const DOC_LIMIT = 4
   if (filters) filters.category = filters?.category ? convertToUpperCase(filters?.category) : '' //convert the category to key
 
   //get all posts from DB
-  const auth_userId = req.user?._id
-  let posts = await getAllPostsQuery(auth_userId, filters)
+  const selfUserId_OI = req.user?._id ? new ObjectId(req.user._id) : null
 
+  let posts = []
+  const options = { page: cursor, limit: DOC_LIMIT }
+  if (selfUserId_OI && filters) {
+    if (filters.onlyPeopleIFollow) {
+      // posts "for you"
+      posts = await getForYouPostsQuery(selfUserId_OI, options)
+    } else if (filters.onlySavedPosts) {
+      // saved posts
+      posts = await getSavedPostsQuery(selfUserId_OI, options)
+    } else {
+      // explore/ discover
+      posts = await getPostsQuery(selfUserId_OI, filters, options)
+    }
+  }
+  // console.log('posts', posts)
   // get post image from S3 bucket
-  for (const post of posts) {
+  for (const post of posts.docs) {
     // For each post, generate a signed URL and save it to the post object
     const imgNamePost = post.imgName
     const urlPost = imgNamePost ? await getImageUrl(imgNamePost) : ''

@@ -28,10 +28,10 @@ import ConfirmationModal from '../ConfirmationModal'
 import { BsStars } from 'react-icons/bs'
 
 const Post = ({
+  postAction,
   post,
   userId,
   isLoggedIn,
-  onPostAction: onPostActionHandler,
   MAX_DESCRIPTION_LENGTH_W_PHOTO = 150,
   MAX_DESCRIPTION_LENGTH_NO_PHOTO = 450,
   postId,
@@ -51,7 +51,6 @@ const Post = ({
   openModalHandler,
   isLoading,
   noTitle,
-  noDescription,
   noActions,
   isSelf,
   onEdit,
@@ -70,7 +69,7 @@ const Post = ({
   const { mutate: deletePost } = useDeletePost()
 
   const onPostAction = data => {
-    if (isLoggedIn) onPostActionHandler(data)
+    if (isLoggedIn) postAction(data)
     else enqueueSnackbar('You need to login to perfom this action.', { variant: 'info' })
   }
 
@@ -187,7 +186,7 @@ const Post = ({
             )}
           </div>
         </div>
-        {(isSelf || !noActions || (featuredPost && postInModal)) && (
+        {((!noActions && !isSelf) || (featuredPost && postInModal)) && (
           <div className={styles.postFooter}>
             <div
               style={{

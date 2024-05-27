@@ -2,6 +2,8 @@ import mongoose from 'mongoose'
 import { MODEL_KEY } from './constants.js'
 import { pointSchema } from '../utils/lib.js'
 const ObjectId = mongoose.Schema.ObjectId
+import paginate from 'mongoose-paginate-v2'
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 /**
  * @type {mongoose.SchemaDefinitionProperty}
@@ -36,5 +38,8 @@ const postSchema = new mongoose.Schema(
   },
   { timestamps: true }
 )
+
+postSchema.plugin(paginate)
+postSchema.plugin(aggregatePaginate)
 
 export default mongoose.model(MODEL_KEY.Post, postSchema)
