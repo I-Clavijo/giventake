@@ -215,26 +215,26 @@ export const postAction = async (req, res) => {
 
   if (actions.hasOwnProperty('isUserInterested')) {
     await runInTransaction(async session => {
+      /*
+            // update 'User' collection
+            filter = { _id: req.user._id }
+            updateQuery = actions.isUserInterested
+              ? { $addToSet: { interestedPosts: postId } }
+              : { $pull: { interestedPosts: postId } }
+            await User.updateOne(filter, updateQuery, { session })
       
-      // update 'User' collection
-      filter = { _id: req.user._id }
-      updateQuery = actions.isUserInterested
-        ? { $addToSet: { interestedPosts: postId } }
-        : { $pull: { interestedPosts: postId } }
-      await User.updateOne(filter, updateQuery, { session })
-
-      // update 'Post' collection
-      filter = { _id: postId }
-      updateQuery = actions.isUserInterested
-        ? { $addToSet: { usersInterested: req.user._id } }
-        : { $pull: { usersInterested: req.user._id } }
-      await Post.updateOne(filter, updateQuery, { session })
-      
-
+            // update 'Post' collection
+            filter = { _id: postId }
+            updateQuery = actions.isUserInterested
+              ? { $addToSet: { usersInterested: req.user._id } }
+              : { $pull: { usersInterested: req.user._id } }
+            await Post.updateOne(filter, updateQuery, { session })
+      */
+        
       // send email to the user who posted the post
       const post = await Post.findOne({ _id: postId })
       if (post) {
-        if (post.usersInterested.length == 1) { // if firs use to offer help
+        if (post.usersInterested.length == 1) { // if first to offer help
           const userThatHelps = await User.findOne({ _id: post.usersInterested[0]._id })
           const helperFirstName = userThatHelps.firstName
           const helperProfilePicName = userThatHelps.imgName
@@ -260,6 +260,7 @@ export const postAction = async (req, res) => {
           }
         }
       }
+      
     })
   }
 
