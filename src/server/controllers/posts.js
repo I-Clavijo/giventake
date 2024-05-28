@@ -313,5 +313,11 @@ export const bumpPost = async (req, res) => {
 }
 
 export const getReportedPosts = (req, res) => {
-  console.log('getReportedPosts') // FIXME: problem it is npt printing
+  const { cursor = 1 } = req.query || {}
+  const DOC_LIMIT = 4
+
+  //get all posts from DB
+  const selfUserId_OI = req.user?._id ? new ObjectId(req.user._id) : null
+
+  res.sendStatus(201)
 }

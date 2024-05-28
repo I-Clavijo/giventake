@@ -6,9 +6,6 @@ import ROLES_LIST from '../config/roles_list.js'
 
 const router = express.Router()
 
-router.use(enforceAuth, verifyRoles(ROLES_LIST.Editor))
-router.use(() => console.log('passed test'))
-
-router.get('/reported-posts', getReportedPosts)
+router.get('/reported-posts', enforceAuth, verifyRoles(ROLES_LIST.Editor), getReportedPosts)
 
 export default router
