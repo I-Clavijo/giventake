@@ -146,30 +146,31 @@ export const getPosts = async (req, res) => {
 
   let posts = []
   const options = { page: cursor, limit: DOC_LIMIT }
-  if (selfUserId_OI && filters) {
-    if (filters.onlyPeopleIFollow) {
-      // posts "for you"
-      posts = await getForYouPostsQuery(selfUserId_OI, options)
-    } else if (filters.onlySavedPosts) {
-      // saved posts
-      posts = await getSavedPostsQuery(selfUserId_OI, options)
-    } else {
-      // explore/ discover
-      posts = await getPostsQuery(selfUserId_OI, filters, options)
-    }
+  if (selfUserId_OI && filters.onlyPeopleIFollow) {
+    // posts "for you"
+    posts = await getForYouPostsQuery(selfUserId_OI, options)
+  } else if (selfUserId_OI && filters.onlySavedPosts) {
+    // saved posts
+    posts = await getSavedPostsQuery(selfUserId_OI, options)
+  } else {
+    // explore/ discover
+    posts = await getPostsQuery(selfUserId_OI, filters, options)
   }
+  console.log(posts)
   // console.log('posts', posts)
   // get post image from S3 bucket
-  for (const post of posts.docs) {
-    // For each post, generate a signed URL and save it to the post object
-    const imgNamePost = post.imgName
-    const urlPost = imgNamePost ? await getImageUrl(imgNamePost) : ''
-    post.imgUrl = urlPost
+  if (posts?.docs) {
+    for (const post of posts.docs) {
+      // For each post, generate a signed URL and save it to the post object
+      const imgNamePost = post.imgName
+      const urlPost = imgNamePost ? await getImageUrl(imgNamePost) : ''
+      post.imgUrl = urlPost
 
-    // get profile image of the user
-    const imgNameProfile = post.user.imgName
-    const urlProfile = imgNameProfile ? await getImageUrl(imgNameProfile) : ''
-    post.user.imgUrl = urlProfile
+      // get profile image of the user
+      const imgNameProfile = post.user.imgName
+      const urlProfile = imgNameProfile ? await getImageUrl(imgNameProfile) : ''
+      post.user.imgUrl = urlProfile
+    }
   }
 
   res.status(200).json(posts)
