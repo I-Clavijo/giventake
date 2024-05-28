@@ -1,5 +1,5 @@
 import { Types } from 'mongoose'
-import { Friends, Post, User } from '../model/index.js'
+import { Friends, Post, ReportedPost, User } from '../model/index.js'
 const ObjectId = Types.ObjectId
 
 const getPopulatePipeline = selfUserId_OI => [
@@ -281,4 +281,52 @@ export const getPostsQuery = async (selfUserId_OI, filters, options) => {
   ])
 
   return await Post.aggregatePaginate(posts, options)
+}
+
+export const getReportedPostsQuery = async (selfUserId_OI, options) => {
+  const reportedPosts = ReportedPost.aggregate([
+    {
+      $lookup: {
+        localField: 'post',
+        foreignField: '_id',
+        as: 'post',
+        from: Post.collection.name
+      }
+    },
+    { $unwind: '$post' },
+    {
+      $lookup: {
+        from: User.collection.name,
+        localField: 'post.user',
+        foreignField: '_id',
+        as: 'post.user',
+        pipeline: [{ $project: { _id: 1, firstName: 1, lastName: 1, imgName: 1 } }]
+      }
+    },
+    { $unwind: '$post.user' },
+    {
+      $addFields: {
+        reportReasons: {
+          $setUnion: [[]].concat([
+            {
+              $map: {
+                input: '$reports',
+                as: 'report',
+                in: '$$report.reasonKey'
+              }
+            }
+          ])
+        },
+        totalReports: { $size: '$reports' }
+      }
+    },
+    {
+      $project: {
+        createdAt: 0,
+        updatedAt: 0,
+        reports: 0
+      }
+    }
+  ])
+  return await ReportedPost.aggregatePaginate(reportedPosts, options)
 }

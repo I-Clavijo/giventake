@@ -4,7 +4,7 @@ import AppError, { ERR_VARIANT } from '../utils/AppError.js'
 import { runInTransaction } from '../db/utils/runInTransaction.js'
 import mongoose from 'mongoose'
 import { deleteImage, getImageUrl, putImage } from '../utils/S3.js'
-import { getForYouPostsQuery, getPostsQuery, getSavedPostsQuery } from '../db/queries/posts.js'
+import { getForYouPostsQuery, getPostsQuery, getReportedPostsQuery, getSavedPostsQuery } from '../db/queries/posts.js'
 import { convertToUpperCase } from '../db/utils/lib.js'
 import { addHours, isAfter } from 'date-fns'
 
@@ -156,8 +156,7 @@ export const getPosts = async (req, res) => {
     // explore/ discover
     posts = await getPostsQuery(selfUserId_OI, filters, options)
   }
-  console.log(posts)
-  // console.log('posts', posts)
+
   // get post image from S3 bucket
   if (posts?.docs) {
     for (const post of posts.docs) {
@@ -313,12 +312,30 @@ export const bumpPost = async (req, res) => {
   res.sendStatus(201)
 }
 
-export const getReportedPosts = (req, res) => {
+//  Authorization: Editor
+export const getReportedPosts = async (req, res) => {
   const { cursor = 1 } = req.query || {}
-  const DOC_LIMIT = 4
 
-  //get all posts from DB
+  const DOC_LIMIT = 4
+  const options = { page: cursor, limit: DOC_LIMIT }
   const selfUserId_OI = req.user?._id ? new ObjectId(req.user._id) : null
 
-  res.sendStatus(201)
+  const reportedPosts = await getReportedPostsQuery(selfUserId_OI, options)
+  console.log(reportedPosts?.docs[0]?.reportReasons)
+  // get post image from S3 bucket
+  if (reportedPosts?.docs.post) {
+    for (const post of reportedPosts.docs.post) {
+      // For each post, generate a signed URL and save it to the post object
+      const imgNamePost = post.imgName
+      const urlPost = imgNamePost ? await getImageUrl(imgNamePost) : ''
+      post.imgUrl = urlPost
+
+      // get profile image of the user
+      const imgNameProfile = post.user.imgName
+      const urlProfile = imgNameProfile ? await getImageUrl(imgNameProfile) : ''
+      post.user.imgUrl = urlProfile
+    }
+  }
+
+  res.status(200).json(reportedPosts)
 }

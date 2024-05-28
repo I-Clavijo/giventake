@@ -7,6 +7,9 @@ export const $Wrapper = styled.div`
   }
   .tblPostsReports {
     background-color: #efefef;
+    .accordionOpenedBox {
+      background-color: #fff;
+    }
 
     .tblReports {
       background-color: #fff;

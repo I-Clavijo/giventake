@@ -7,7 +7,7 @@ import FilledHandWaving from '../../assets/images/hand_waving_icon_filled.svg'
 import HandWaving from '../../assets/images/hand_waving_icon.svg'
 import FlagIcon from '../../assets/images/flag-icon-v2.svg'
 import FilledFlagIcon from '../../assets/images/flag-filled-icon.svg'
-import { Modal, Popover, Tooltip } from 'flowbite-react'
+import { Button, Modal, Popover, Tooltip } from 'flowbite-react'
 import { usePostAction } from '../../api/posts/usePostAction'
 import { FaExpandAlt, FaEyeSlash } from 'react-icons/fa'
 import ReportModal from './ReportModal'
@@ -137,6 +137,7 @@ const Post = ({
             <div className={styles.actions}>
               {isLoggedIn && isSelf && (
                 <Popover
+                  placement="left"
                   trigger="click"
                   aria-labelledby="profile-popover"
                   content={
@@ -188,7 +189,7 @@ const Post = ({
             )}
           </div>
         </div>
-        {((!isSelf && !featuredPost) || (featuredPost && postInModal)) && (
+        {!noActions && ((!isSelf && !featuredPost) || (featuredPost && postInModal)) && (
           <div className={styles.postFooter}>
             <div
               style={{
@@ -268,7 +269,7 @@ const Post = ({
 }
 
 const PostWithModal = props => {
-  const { postId, post } = props || {}
+  const { postId, post, onlyModal } = props || {}
 
   const { mutate: updatePost, isSuccess: isSuccessUpdatePost } = useUpdatePost()
 
@@ -283,6 +284,7 @@ const PostWithModal = props => {
   const onDismissEdit = () => {
     setIsEdit(false)
     setOpenModal(false)
+    onlyModal?.onModalClose()
   }
 
   const onUpdateHandler = formData => {
@@ -300,7 +302,7 @@ const PostWithModal = props => {
       <Modal
         size={isEdit ? 'xl' : 'md'}
         dismissible
-        show={openModal}
+        show={onlyModal ? onlyModal.showModal : openModal}
         onClose={onDismissEdit}
         className={styles.modalWrap}>
         {isEdit ? (
@@ -309,8 +311,7 @@ const PostWithModal = props => {
           <Post {...props} postInModal onEdit={onEditHandler} />
         )}
       </Modal>
-
-      <Post {...props} openModalHandler={() => setOpenModal(true)} onEdit={onEditHandler} />
+      {!onlyModal && <Post {...props} openModalHandler={() => setOpenModal(true)} onEdit={onEditHandler} />}
     </>
   )
 }

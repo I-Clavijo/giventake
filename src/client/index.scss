@@ -4,7 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
   // that is because tailwind side effect
   outline: none;
 }
@@ -42,7 +42,6 @@
   --secondary-link-color: #1a1a1a;
   --inverse-link-color: #fff;
 
-
   //navbar
   --logo-color: var(--forth-color);
   --nav-bg-color: var(--primary-color);
@@ -56,8 +55,6 @@
   --btn-bg-hover-color: #229193;
   --btn-font-color: var(--inverse-font-color);
   --btn-border-color: #4eb1b2;
-
-
 }
 
 a {
@@ -79,15 +76,15 @@ body {
   background-color: var(--main-bg-color);
 }
 
-// General styles for all heading elements 
+// General styles for all heading elements
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  margin-top: 0; // Remove default margin 
-  margin-bottom: 0.5em; // Add some spacing between headings and other elements 
+  margin-top: 0; // Remove default margin
+  margin-bottom: 0.5em; // Add some spacing between headings and other elements
 }
 
 h1 {
@@ -144,7 +141,14 @@ i {
   }
 }
 
-// specific style for flowbite/tooltip 
+// specific style for flowbite/tooltip
 .w-fit {
   width: 100%;
+}
+
+// specific style for flowbite/modal
+@media (max-width: 768px) {
+  .md\:h-auto {
+    height: auto;
+  }
 }
