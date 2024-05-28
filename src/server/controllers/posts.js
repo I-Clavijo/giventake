@@ -311,3 +311,7 @@ export const bumpPost = async (req, res) => {
 
   res.sendStatus(201)
 }
+
+export const getReportedPosts = (req, res) => {
+  console.log('getReportedPosts') // FIXME: problem it is npt printing
+}

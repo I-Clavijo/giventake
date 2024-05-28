@@ -5,7 +5,7 @@ import { useUser } from '../../api/users/useUser'
 import styles from './Root.module.scss'
 import ScrollToTop from '../../hooks/ScrollToTop'
 import { Popover } from 'flowbite-react'
-import { MdOutlinePerson, MdOutlineLogout } from 'react-icons/md'
+import { MdOutlinePerson, MdOutlineLogout, MdOutlineAddModerator } from 'react-icons/md'
 import { TbHeartHandshake } from 'react-icons/tb'
 import useLogout from '../../api/auth/useLogout'
 import { HiNewspaper, HiOutlineNewspaper } from 'react-icons/hi2'
@@ -18,12 +18,15 @@ import { HiOutlineLockClosed, HiLockClosed } from 'react-icons/hi'
 import { FaBookmark, FaRegBookmark } from 'react-icons/fa'
 import { FaCircleUser, FaRegCircleUser } from 'react-icons/fa6'
 import useHasUnreadMessages from '../../api/messages/useHasUnreadMessages'
+import { ROLES } from '../../utils/staticData'
 
 export default function Root({ children }) {
-  const { isLoggedIn, data: user } = useUser()
+  const { isLoggedIn, data: user, isUserAuthorized } = useUser()
   const { mutate: logout } = useLogout()
   const { pathname } = useLocation()
   const numUnreadConversations = useHasUnreadMessages()
+
+  // extract user roles
 
   const profilePopover = children => {
     const content = (
@@ -32,10 +35,12 @@ export default function Root({ children }) {
           <MdOutlinePerson size="1.2em" />
           Profile
         </NavLink>
-        <NavLink to="/moderator">
-          <MdOutlineAddModerator size="1.2em" />
-          moderate
-        </NavLink>
+        {isUserAuthorized([ROLES.Editor]) && (
+          <NavLink to="/moderator">
+            <MdOutlineAddModerator size="1.2em" />
+            Moderator
+          </NavLink>
+        )}
         <NavLink onClick={logout}>
           <MdOutlineLogout size="1.2em" />
           Logout

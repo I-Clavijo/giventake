@@ -59,13 +59,15 @@ const router = createBrowserRouter([
               { path: '/saved', element: <SavedPosts /> },
               { path: '/profile', element: <Profile isMyProfile={true} /> },
               { path: '/create-post', element: <CreatePost /> },
-              { path: '/messages', element: <Messages /> },
-              { path: '/moderator', element: <Moderator /> }
+              { path: '/messages', element: <Messages /> }
             ]
           },
           {
             element: <RequireAuth allowedRoles={[ROLES.Editor]} />,
-            children: [{ path: '/editor', element: <Editor /> }]
+            children: [
+              { path: '/editor', element: <Editor /> },
+              { path: '/moderator', element: <Moderator /> }
+            ]
           },
           {
             element: <RequireAuth allowedRoles={[ROLES.Admin]} />,
