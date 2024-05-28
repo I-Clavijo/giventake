@@ -16,13 +16,14 @@ import Auth from './routes/Auth'
 import Profile from './routes/Profile'
 import Messages from './routes/Messages'
 import Missing from './routes/Missing'
-import Editor from './routes/Editor'
+import Dashboard from './routes/dashboard/Dashboard'
 import Admin from './routes/Admin'
 import Unauthorized from './components/Auth/Unauthorized'
 import SavedPosts from './routes/SavedPosts'
 import CreatePost from './routes/CreatePost'
 import Home from './routes/Home'
-import Moderator from './routes/Moderator'
+import ReportedPosts from './routes/dashboard/ReportedPosts/ReportedPosts'
+import Menu from './routes/dashboard/Menu'
 
 const ROLES = {
   User: 2001,
@@ -65,8 +66,14 @@ const router = createBrowserRouter([
           {
             element: <RequireAuth allowedRoles={[ROLES.Editor]} />,
             children: [
-              { path: '/editor', element: <Editor /> },
-              { path: '/moderator', element: <Moderator /> }
+              {
+                path: '/dashboard',
+                element: <Dashboard />,
+                children: [
+                  { path: '/dashboard', element: <Menu /> },
+                  { path: '/dashboard/reported-posts', element: <ReportedPosts /> }
+                ]
+              }
             ]
           },
           {

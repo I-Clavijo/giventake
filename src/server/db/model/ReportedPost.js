@@ -14,7 +14,8 @@ const reportedPostSchema = new mongoose.Schema(
         // _id: false,
         user: { type: mongoose.Schema.ObjectId, required: true, ref: MODEL_KEY.User },
         reasonKey: { type: String, enum: REPORTS_KEYS },
-        description: String
+        description: String,
+        date: Date
       }
     ]
   },

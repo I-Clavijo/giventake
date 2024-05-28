@@ -32,7 +32,7 @@ const Feed = ({
 }) => {
   const { data: posts, isLoading, refetch: refetchPosts, fetchNextPage } = usePaginatedPosts({ filters, enabled })
   const { mutate: postAction } = usePostAction({ filters })
-  const { ref: refNote, inView: inViewPost } = useInView() // infintie scrolling  // { threshold: 0.01 }
+  const { ref: refPost, inView: inViewPost } = useInView() // infintie scrolling  // { threshold: 0.01 }
 
   let postsWrapperClass = styles.list
   if (styleOrder === showAs.GRID) postsWrapperClass = styles.grid
@@ -79,7 +79,7 @@ const Feed = ({
         <Masonry gutter="10px">
           {postsMapped}
           <InView as="div">
-            <div ref={refNote} style={{ width: '100px', height: '10px' }}></div>
+            <div ref={refPost} style={{ width: '100px', height: '10px' }}></div>
           </InView>
         </Masonry>
       </ResponsiveMasonry>
@@ -91,7 +91,7 @@ const Feed = ({
       <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
         {postsMapped}
         <InView as="div">
-          <div ref={refNote} style={{ width: '100px', height: '10px' }}></div>
+          <div ref={refPost} style={{ width: '100px', height: '10px' }}></div>
         </InView>
       </ScrollMenu>
     )
@@ -100,7 +100,7 @@ const Feed = ({
       <>
         {postsMapped}
         <InView as="div">
-          <div ref={refNote} style={{ width: '100px', height: '10px' }}></div>
+          <div ref={refPost} style={{ width: '100px', height: '10px' }}></div>
         </InView>
       </>
     )

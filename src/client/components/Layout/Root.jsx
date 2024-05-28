@@ -36,9 +36,9 @@ export default function Root({ children }) {
           Profile
         </NavLink>
         {isUserAuthorized([ROLES.Editor]) && (
-          <NavLink to="/moderator">
+          <NavLink to="/dashboard">
             <MdOutlineAddModerator size="1.2em" />
-            Moderator
+            Moderator dashboard
           </NavLink>
         )}
         <NavLink onClick={logout}>

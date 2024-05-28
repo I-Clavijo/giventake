@@ -4,7 +4,13 @@ import AppError, { ERR_VARIANT } from '../utils/AppError.js'
 import { runInTransaction } from '../db/utils/runInTransaction.js'
 import mongoose from 'mongoose'
 import { deleteImage, getImageUrl, putImage } from '../utils/S3.js'
-import { getForYouPostsQuery, getPostsQuery, getReportedPostsQuery, getSavedPostsQuery } from '../db/queries/posts.js'
+import {
+  getForYouPostsQuery,
+  getPostReportsQuery,
+  getPostsQuery,
+  getReportedPostsQuery,
+  getSavedPostsQuery
+} from '../db/queries/posts.js'
 import { convertToUpperCase } from '../db/utils/lib.js'
 import { addHours, isAfter } from 'date-fns'
 
@@ -265,7 +271,12 @@ export const postAction = async (req, res) => {
       // update 'ReportedPost' collection
       // First, check if the document exists
       const existingDocument = await ReportedPost.findOne({ post: postId }, null, { session })
-      const reportObj = { user: req.user._id, reasonKey: errorKey, description: actions.report.description || '' }
+      const reportObj = {
+        user: req.user._id,
+        reasonKey: errorKey,
+        description: actions.report.description || '',
+        date: new Date()
+      }
 
       // BEHAVIOR: if a user has already reported a post, his old report will remain and the new one will NOT be inserted
       if (existingDocument) {
@@ -338,4 +349,16 @@ export const getReportedPosts = async (req, res) => {
   }
 
   res.status(200).json(reportedPosts)
+}
+
+//  Authorization: Editor
+export const getPostReports = async (req, res) => {
+  const { postId, cursor = 1 } = req.query || {}
+
+  const DOC_LIMIT = 4
+  const options = { page: cursor, limit: DOC_LIMIT }
+  console.log(postId)
+  const postReports = await getPostReportsQuery(postId, options)
+  console.log(postReports)
+  res.status(200).json(postReports)
 }

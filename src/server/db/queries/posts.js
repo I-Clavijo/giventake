@@ -330,3 +330,21 @@ export const getReportedPostsQuery = async (selfUserId_OI, options) => {
   ])
   return await ReportedPost.aggregatePaginate(reportedPosts, options)
 }
+
+export const getPostReportsQuery = async (postId, options) => {
+  const reportedPosts = ReportedPost.aggregate([
+    {
+      $match: {
+        post: new ObjectId(postId)
+      }
+    },
+    {
+      $project: {
+        reports: 1
+      }
+    }
+  ])
+  return await ReportedPost.aggregatePaginate(reportedPosts, options)
+}
+
+getPostReportsQuery
