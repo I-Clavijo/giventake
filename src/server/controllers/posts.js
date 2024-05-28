@@ -215,22 +215,21 @@ export const postAction = async (req, res) => {
 
   if (actions.hasOwnProperty('isUserInterested')) {
     await runInTransaction(async session => {
-      /*
-            // update 'User' collection
-            filter = { _id: req.user._id }
-            updateQuery = actions.isUserInterested
-              ? { $addToSet: { interestedPosts: postId } }
-              : { $pull: { interestedPosts: postId } }
-            await User.updateOne(filter, updateQuery, { session })
-      
-            // update 'Post' collection
-            filter = { _id: postId }
-            updateQuery = actions.isUserInterested
-              ? { $addToSet: { usersInterested: req.user._id } }
-              : { $pull: { usersInterested: req.user._id } }
-            await Post.updateOne(filter, updateQuery, { session })
-      */
-        
+
+      // update 'User' collection
+      filter = { _id: req.user._id }
+      updateQuery = actions.isUserInterested
+        ? { $addToSet: { interestedPosts: postId } }
+        : { $pull: { interestedPosts: postId } }
+      await User.updateOne(filter, updateQuery, { session })
+
+      // update 'Post' collection
+      filter = { _id: postId }
+      updateQuery = actions.isUserInterested
+        ? { $addToSet: { usersInterested: req.user._id } }
+        : { $pull: { usersInterested: req.user._id } }
+      await Post.updateOne(filter, updateQuery, { session })
+
       // send email to the user who posted the post
       const post = await Post.findOne({ _id: postId })
       if (post) {
@@ -260,7 +259,7 @@ export const postAction = async (req, res) => {
           }
         }
       }
-      
+
     })
   }
 

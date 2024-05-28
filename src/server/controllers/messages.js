@@ -68,7 +68,6 @@ export const getConversationMessages = async (req, res) => {
 }
 
 export const addMessage = async (req, res) => {
-/*
   let {
     contact: { conversationId, userId, postId },
     message
@@ -115,7 +114,6 @@ export const addMessage = async (req, res) => {
   }
   if (newMessage) return res.sendStatus(201)
   else throw new AppError('Failed to add message to the database', 500)
-*/
 }
 
 export const readConversation = async (req, res) => {
