@@ -1,14 +1,23 @@
 import { useState } from 'react'
 import { $Wrapper, $Tabs, $TabItem } from './PostReports.styled'
 import { Table } from 'flowbite-react'
+import { REPORTS_REASONS } from '../../../utils/staticData'
+import { usePostReports } from '../../../api/editor/usePostReports'
 
 const TABS = {
   Pending: 'Pending',
-  Valid: 'Valid'
+  Ok: 'Ok'
 }
 
-const PostReports = () => {
+const PostReports = ({ reportedPostId }) => {
   const [selectedTab, setSelectedTab] = useState(TABS.Pending)
+
+  const {
+    data: postReports,
+    fetchNextPage: fetchNextPagePostReports,
+    hasNextPage: hasNextPagePostReports
+  } = usePostReports({ postId: reportedPostId, enabled: !!reportedPostId })
+  console.log(postReports)
 
   return (
     <$Wrapper>
@@ -26,21 +35,30 @@ const PostReports = () => {
           <Table.HeadCell>Date</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y" style={{ cursor: 'pointer' }}>
-          <Table.Row>
-            <Table.Cell>Spam</Table.Cell>
-            <Table.Cell>Bad Bad Bad!</Table.Cell>
-            <Table.Cell>02/10/2024 10:31</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Spam</Table.Cell>
-            <Table.Cell>Bad Bad Bad!</Table.Cell>
-            <Table.Cell>02/10/2024 10:31</Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>Spam</Table.Cell>
-            <Table.Cell>Bad Bad Bad!</Table.Cell>
-            <Table.Cell>02/10/2024 10:31</Table.Cell>
-          </Table.Row>
+          {postReports?.pages.map(page =>
+            page?.docs.map(report => {
+              if ((report?.isSeen && selectedTab === TABS.Ok) || (!report?.isSeen && selectedTab === TABS.Pending)) {
+                return (
+                  <Table.Row>
+                    <Table.Cell>{REPORTS_REASONS[report.reasonKey]}</Table.Cell>
+                    <Table.Cell>{report.description}</Table.Cell>
+                    <Table.Cell>{report?.date}</Table.Cell>
+                  </Table.Row>
+                )
+              }
+            })
+          )}
+          {hasNextPagePostReports && (
+            <Table.Row>
+              <Table.Cell colSpan={3}>
+                <div className="flex justify-center">
+                  <Button size="xs" color="light" onClick={fetchNextPagePostReports}>
+                    Load more...
+                  </Button>
+                </div>
+              </Table.Cell>
+            </Table.Row>
+          )}
         </Table.Body>
       </Table>
     </$Wrapper>

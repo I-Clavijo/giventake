@@ -10,6 +10,9 @@ import Post from '../../../components/Posts/Post'
 import { useInView, InView } from 'react-intersection-observer'
 import { usePostReports } from '../../../api/editor/usePostReports'
 import PostReports from './PostReports'
+import useSetPostAsOk from '../../../api/editor/useSetPostAsOk'
+import useDeletePost from '../../../api/posts/useDeletePost'
+import ConfirmationModal from '../../../components/ConfirmationModal'
 
 export default function ReportedPosts() {
   const {
@@ -19,15 +22,12 @@ export default function ReportedPosts() {
   } = useReportedPosts()
   const { ref: refReportedPosts, inView: inViewReportedPosts } = useInView() // infintie scrolling
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [currPostModal, setCurrPostModal] = useState()
   const [currRowAccordion, setCurrRowAccordion] = useState()
 
-  const {
-    data: postReports,
-    fetchNextPage: fetchNextPagePostReports,
-    hasNextPage: hasNextPagePostReports
-  } = usePostReports({ postId: currRowAccordion?.post._id, enabled: !!currRowAccordion })
-  console.log(postReports)
+  const { mutate: setPostAsOk } = useSetPostAsOk({ postId: currRowAccordion?.post?._id })
+  const { mutate: deletePost } = useDeletePost()
 
   const openRowHandler = reportedPost => {
     setCurrRowAccordion(prev => (prev !== reportedPost ? reportedPost : -1))
@@ -75,6 +75,12 @@ export default function ReportedPosts() {
       <div className="overflow-x-auto">
         <h2 className="pageTitle">Reported posts</h2>
 
+        <ConfirmationModal
+          message="Are you sure you want to delete this product?"
+          show={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={() => deletePost({ postId: currRowAccordion?.post?._id })}
+        />
         <Post
           {...postParams}
           noActions
@@ -121,13 +127,13 @@ export default function ReportedPosts() {
                   {currRowAccordion?._id === reportedPost._id && (
                     <Table.Row className="accordionOpenedBox">
                       <Table.Cell colSpan={3}>
-                        <PostReports {...{ postReports }} />
+                        <PostReports reportedPostId={currRowAccordion?.post?._id} />
 
                         <div className="flex gap-1 mt-4 justify-center">
-                          <Button color="failure" size="xs">
+                          <Button color="failure" size="xs" onClick={() => setShowDeleteModal(true)}>
                             <FaRegTrashCan size="1.2em" className="mr-2" /> Delete post
                           </Button>
-                          <Button color="blue" size="xs">
+                          <Button color="blue" size="xs" onClick={setPostAsOk}>
                             <GiConfirmed size="1.2em" className="mr-2" />
                             Set all reports as OK
                           </Button>

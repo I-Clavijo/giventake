@@ -10,4 +10,13 @@ const verifyRoles = (...allowedRoles) => {
   }
 }
 
+export const isUserAuthorized = (allowedRoles, userRoles) => {
+  if (!userRoles) return false
+
+  const rolesArray = [...allowedRoles]
+  const result = userRoles.map(role => rolesArray.includes(role)).find(val => val === true)
+  if (!result) return false
+  return true
+}
+
 export default verifyRoles

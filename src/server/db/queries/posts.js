@@ -339,8 +339,13 @@ export const getPostReportsQuery = async (postId, options) => {
       }
     },
     {
-      $project: {
-        reports: 1
+      $unwind: '$reports'
+    },
+    {
+      $replaceRoot: {
+        newRoot: {
+          $mergeObjects: [{ _id: '$_id', name: '$name' }, '$reports']
+        }
       }
     }
   ])

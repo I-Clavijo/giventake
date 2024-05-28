@@ -9,6 +9,7 @@ export const $Wrapper = styled.div`
     background-color: #efefef;
     .accordionOpenedBox {
       background-color: #fff;
+      border: 1px #eee solid;
     }
   }
 `

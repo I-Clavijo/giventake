@@ -15,7 +15,8 @@ const reportedPostSchema = new mongoose.Schema(
         user: { type: mongoose.Schema.ObjectId, required: true, ref: MODEL_KEY.User },
         reasonKey: { type: String, enum: REPORTS_KEYS },
         description: String,
-        date: Date
+        date: Date,
+        isSeen: Boolean
       }
     ]
   },

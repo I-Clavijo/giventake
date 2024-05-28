@@ -13,6 +13,8 @@ import {
 } from '../db/queries/posts.js'
 import { convertToUpperCase } from '../db/utils/lib.js'
 import { addHours, isAfter } from 'date-fns'
+import ROLES_LIST from '../config/roles_list.js'
+import { isUserAuthorized } from '../middleware/verifyRoles.js'
 
 const ObjectId = mongoose.Types.ObjectId
 
@@ -94,7 +96,13 @@ export const updatePost = async (req, res) => {
     title,
     description
   } = req.body
-  console.log(postId)
+
+  const foundPost = await Post.findOne({ _id: postId }).exec()
+  if (!foundPost) throw new AppError('Post not found', 404)
+
+  // AUTH: is authorized to delete this post
+  if (foundPost.user._id !== req.user._id) throw new AppError('Unauthorized to access this resource', 401)
+
   //update image if requested to update
   let imgName, imgUrl
   if (file) {
@@ -186,6 +194,11 @@ export const deletePost = async (req, res) => {
   console.log(postId)
   const post = await Post.findOne({ _id: postId }).exec()
   if (!post) throw new AppError('Post not found', 404)
+
+  // AUTH: is authorized to delete this post
+  console.log(req.user.roles)
+  if (post.user._id !== req.user._id && !isUserAuthorized([ROLES_LIST.Editor], req.user.roles))
+    throw new AppError('Unauthorized to access this resource', 401)
 
   // delete post image from S3 bucket
   const imgName = post.imgName
@@ -332,7 +345,7 @@ export const getReportedPosts = async (req, res) => {
   const selfUserId_OI = req.user?._id ? new ObjectId(req.user._id) : null
 
   const reportedPosts = await getReportedPostsQuery(selfUserId_OI, options)
-  console.log(reportedPosts?.docs[0]?.reportReasons)
+
   // get post image from S3 bucket
   if (reportedPosts?.docs.post) {
     for (const post of reportedPosts.docs.post) {
@@ -357,8 +370,21 @@ export const getPostReports = async (req, res) => {
 
   const DOC_LIMIT = 4
   const options = { page: cursor, limit: DOC_LIMIT }
-  console.log(postId)
+
   const postReports = await getPostReportsQuery(postId, options)
-  console.log(postReports)
+
   res.status(200).json(postReports)
+}
+
+export const setPostAsOk = async (req, res) => {
+  const { postId } = req.body || {}
+
+  await ReportedPost.updateOne(
+    { post: postId },
+    {
+      $set: { 'reports.$[].isSeen': true }
+    }
+  )
+
+  res.sendStatus(201)
 }

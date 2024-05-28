@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const $Wrapper = styled.div`
   .tblReports {
     background-color: #fff;
+    border: 1px #eee solid;
   }
 `
 
