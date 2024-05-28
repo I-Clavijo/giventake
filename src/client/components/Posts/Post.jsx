@@ -135,13 +135,6 @@ const Post = ({
               </div>
             </div>
             <div className={styles.actions}>
-              {post?.isInterestPost && (
-                <div style={{ textWrap: 'nowrap' }}>
-                  <Tooltip content="post from your interests">
-                    <BsStars color="var(--third-color)" style={{ cursor: 'help' }} />
-                  </Tooltip>
-                </div>
-              )}
               {isLoggedIn && isSelf && (
                 <Popover
                   trigger="click"
@@ -163,8 +156,16 @@ const Post = ({
                       </span>
                     </div>
                   }>
-                  <IoMdMore />
+                  <IoMdMore className={styles.btnMore} />
                 </Popover>
+              )}
+
+              {post?.isInterestPost && (
+                <div className={styles.postFromInterests} style={{ textWrap: 'nowrap' }}>
+                  <Tooltip content="post from your interests">
+                    <BsStars color="var(--third-color)" style={{ cursor: 'help' }} />
+                  </Tooltip>
+                </div>
               )}
             </div>
           </div>
