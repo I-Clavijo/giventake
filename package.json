@@ -74,6 +74,8 @@
     "vite": "^5.0.2"
   },
   "optionalDependencies": {
+    "@img/sharp-linux-arm": "^0.33.4",
+    "@img/sharp-win32-x64": "^0.33.4",
     "@rollup/rollup-linux-x64-gnu": "^4.18.0"
   }
 }
