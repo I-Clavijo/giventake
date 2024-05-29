@@ -6,6 +6,7 @@ import aggregatePaginate from 'mongoose-aggregate-paginate-v2'
 /**
  * @type {mongoose.SchemaDefinitionProperty}
  */
+
 const reportedPostSchema = new mongoose.Schema(
   {
     post: { type: mongoose.Schema.ObjectId, required: true, ref: MODEL_KEY.Post, unique: true },
