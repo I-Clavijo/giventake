@@ -4,5 +4,6 @@ export const QUERY_KEY = {
   reviews: 'reviews',
   friends: 'friends',
   search: 'search',
-  conversations: 'conversations'
+  conversations: 'conversations',
+  reports: 'reports'
 }

@@ -7,7 +7,7 @@ import FilledHandWaving from '../../assets/images/hand_waving_icon_filled.svg'
 import HandWaving from '../../assets/images/hand_waving_icon.svg'
 import FlagIcon from '../../assets/images/flag-icon-v2.svg'
 import FilledFlagIcon from '../../assets/images/flag-filled-icon.svg'
-import { Modal, Popover, Tooltip } from 'flowbite-react'
+import { Button, Modal, Popover, Tooltip } from 'flowbite-react'
 import { usePostAction } from '../../api/posts/usePostAction'
 import { FaExpandAlt, FaEyeSlash } from 'react-icons/fa'
 import ReportModal from './ReportModal'
@@ -28,10 +28,10 @@ import ConfirmationModal from '../ConfirmationModal'
 import { BsStars } from 'react-icons/bs'
 
 const Post = ({
+  postAction,
   post,
   userId,
   isLoggedIn,
-  onPostAction: onPostActionHandler,
   MAX_DESCRIPTION_LENGTH_W_PHOTO = 150,
   MAX_DESCRIPTION_LENGTH_NO_PHOTO = 450,
   postId,
@@ -51,7 +51,6 @@ const Post = ({
   openModalHandler,
   isLoading,
   noTitle,
-  noDescription,
   noActions,
   isSelf,
   onEdit,
@@ -70,7 +69,7 @@ const Post = ({
   const { mutate: deletePost } = useDeletePost()
 
   const onPostAction = data => {
-    if (isLoggedIn) onPostActionHandler(data)
+    if (isLoggedIn) postAction(data)
     else enqueueSnackbar('You need to login to perfom this action.', { variant: 'info' })
   }
 
@@ -108,7 +107,7 @@ const Post = ({
   let cutDescription =
     postDescription.length > descriptionMaxLength ? (
       <>
-        {postDescription.substring(0, descriptionMaxLength)}
+        {/* {postDescription.substring(0, descriptionMaxLength)} */}
         <u> Read More</u>
       </>
     ) : (
@@ -117,8 +116,9 @@ const Post = ({
 
   const postTag = (
     <div
-      className={`${styles.post} ${isUserReported ? styles.reportedPost : ''} ${featuredPost && !postInModal ? styles.featuredPost : ''
-        }`}>
+      className={`${styles.post} ${isUserReported ? styles.reportedPost : ''} ${
+        featuredPost && !postInModal ? styles.featuredPost : ''
+      }`}>
       <div className={isUserReported ? styles.reportedPostInnerWrap : ''}>
         {(!noTitle || postInModal) && (
           <div className={styles.postHeader}>
@@ -129,20 +129,15 @@ const Post = ({
                   {fullName}
                 </h6>
                 <p>
-                  {timeAgo} {location?.city && location?.country ? `• ${location.city}, ${location.country}` : '• Remote help'}
+                  {timeAgo}{' '}
+                  {location?.city && location?.country ? `• ${location.city}, ${location.country}` : '• Remote help'}
                 </p>
               </div>
             </div>
             <div className={styles.actions}>
-              {post?.isInterestPost && (
-                <div style={{ textWrap: 'nowrap' }}>
-                  <Tooltip content="post from your interests">
-                    <BsStars color="var(--third-color)" style={{ cursor: 'help' }} />
-                  </Tooltip>
-                </div>
-              )}
               {isLoggedIn && isSelf && (
                 <Popover
+                  placement="left"
                   trigger="click"
                   aria-labelledby="profile-popover"
                   content={
@@ -162,8 +157,16 @@ const Post = ({
                       </span>
                     </div>
                   }>
-                  <IoMdMore />
+                  <IoMdMore className={styles.btnMore} />
                 </Popover>
+              )}
+
+              {post?.isInterestPost && (
+                <div className={styles.postFromInterests} style={{ textWrap: 'nowrap' }}>
+                  <Tooltip content="post from your interests">
+                    <BsStars color="var(--third-color)" style={{ cursor: 'help' }} />
+                  </Tooltip>
+                </div>
               )}
             </div>
           </div>
@@ -186,7 +189,7 @@ const Post = ({
             )}
           </div>
         </div>
-        {!isSelf && !featuredPost && (
+        {!noActions && ((!isSelf && !featuredPost) || (featuredPost && postInModal)) && (
           <div className={styles.postFooter}>
             <div
               style={{
@@ -196,8 +199,9 @@ const Post = ({
               }}>
               <div className={styles.likes}>
                 <img
-                  className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''} ${!isLoggedIn ? styles.disabled : ''
-                    }`} // Add CSS class for styling
+                  className={`${styles.likeButton} ${isSavedByUser ? styles.liked : ''} ${
+                    !isLoggedIn ? styles.disabled : ''
+                  }`} // Add CSS class for styling
                   src={isSavedByUser ? BookmarkIconFilled : BookmarkIcon}
                   {...(isLoggedIn && { onClick: toggleSaveForLater })}
                   alt="Save for Later"
@@ -265,7 +269,7 @@ const Post = ({
 }
 
 const PostWithModal = props => {
-  const { postId, post } = props || {}
+  const { postId, post, onlyModal } = props || {}
 
   const { mutate: updatePost, isSuccess: isSuccessUpdatePost } = useUpdatePost()
 
@@ -280,6 +284,7 @@ const PostWithModal = props => {
   const onDismissEdit = () => {
     setIsEdit(false)
     setOpenModal(false)
+    onlyModal?.onModalClose()
   }
 
   const onUpdateHandler = formData => {
@@ -297,7 +302,7 @@ const PostWithModal = props => {
       <Modal
         size={isEdit ? 'xl' : 'md'}
         dismissible
-        show={openModal}
+        show={onlyModal ? onlyModal.showModal : openModal}
         onClose={onDismissEdit}
         className={styles.modalWrap}>
         {isEdit ? (
@@ -306,8 +311,7 @@ const PostWithModal = props => {
           <Post {...props} postInModal onEdit={onEditHandler} />
         )}
       </Modal>
-
-      <Post {...props} openModalHandler={() => setOpenModal(true)} onEdit={onEditHandler} />
+      {!onlyModal && <Post {...props} openModalHandler={() => setOpenModal(true)} onEdit={onEditHandler} />}
     </>
   )
 }
