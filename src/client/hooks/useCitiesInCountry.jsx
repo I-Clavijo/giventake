@@ -7,9 +7,9 @@ const useCitiesInCountry = (countryName) => {
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchCountryCode = async (country) => {
-    const response = await axios.get(`https://restcountries.com/v3.1/name/${encodeURIComponent(country)}`);
-    const countryCode = response.data[0]?.cca2;
+  const fetchCountryCode = async (country, username) => {
+    const response = await axios.get(`https://secure.geonames.org/searchJSON?q=${encodeURIComponent(country)}&maxRows=1&username=${USERNAME}`);
+    const countryCode = response.data.geonames[0]?.countryCode;
     if (countryCode) {
       return countryCode;
     } else {
@@ -25,7 +25,7 @@ const useCitiesInCountry = (countryName) => {
       lat: city.lat,
       long: city.lng
     }));
-    
+
     return cityData;
   };
 
@@ -33,12 +33,12 @@ const useCitiesInCountry = (countryName) => {
 
     (async () => {
       try {
-        if(countryName){
-          const countryCode = await fetchCountryCode(countryName);
+        if (countryName) {
+          const countryCode = await fetchCountryCode(countryName, USERNAME);
           const fetchedCities = await fetchCities(countryCode, USERNAME);
           setCities(fetchedCities);
         }
-        
+
       } catch (error) {
         console.error('Error fetching cities:', error);
         setCities([]);
