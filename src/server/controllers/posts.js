@@ -13,10 +13,14 @@ import {
 } from '../db/queries/posts.js'
 import { convertToUpperCase } from '../db/utils/lib.js'
 import { addHours, isAfter } from 'date-fns'
+import { Resend } from 'resend'
+import { emailsTemplates } from '../db/emails.js'
 import ROLES_LIST from '../config/roles_list.js'
 import { isUserAuthorized } from '../middleware/verifyRoles.js'
 
-const ObjectId = mongoose.Types.ObjectId
+
+const ObjectId = mongoose.Types.ObjectId;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const createPost = async (req, res) => {
   const file = req.file
@@ -62,16 +66,16 @@ export const createPost = async (req, res) => {
     ...(location?.lat &&
       location?.long &&
       !isRemoteHelp && {
-        location: {
-          geometry: {
-            type: 'Point',
-            coordinates: [+location.lat, +location.long]
-          },
-          country: location.country,
-          city: location.city,
-          address: location.address
-        }
-      })
+      location: {
+        geometry: {
+          type: 'Point',
+          coordinates: [+location.lat, +location.long]
+        },
+        country: location.country,
+        city: location.city,
+        address: location.address
+      }
+    })
   }
   console.log(newPost)
 
@@ -130,16 +134,16 @@ export const updatePost = async (req, res) => {
     ...(location?.lat &&
       location?.long &&
       !isRemoteHelp && {
-        location: {
-          geometry: {
-            type: 'Point',
-            coordinates: [+location.lat, +location.long]
-          },
-          country: location.country,
-          city: location.city,
-          address: location.address
-        }
-      })
+      location: {
+        geometry: {
+          type: 'Point',
+          coordinates: [+location.lat, +location.long]
+        },
+        country: location.country,
+        city: location.city,
+        address: location.address
+      }
+    })
   }
   console.log(postId, post)
 
@@ -246,6 +250,7 @@ export const postAction = async (req, res) => {
 
   if (actions.hasOwnProperty('isUserInterested')) {
     await runInTransaction(async session => {
+
       // update 'User' collection
       filter = { _id: req.user._id }
       updateQuery = actions.isUserInterested
@@ -259,6 +264,37 @@ export const postAction = async (req, res) => {
         ? { $addToSet: { usersInterested: req.user._id } }
         : { $pull: { usersInterested: req.user._id } }
       await Post.updateOne(filter, updateQuery, { session })
+
+      // send email to the user who posted the post
+      const post = await Post.findOne({ _id: postId })
+      if (post) {
+        if (post.usersInterested.length == 1) { // if first to offer help
+          const userThatHelps = await User.findOne({ _id: post.usersInterested[0]._id })
+          const helperFirstName = userThatHelps.firstName
+          const helperProfilePicName = userThatHelps.imgName
+          const profilePicURL = helperProfilePicName ? await getImageUrl(helperProfilePicName) : ''
+          const user = await User.findOne({ _id: post.user })
+          if (user) {
+            const email = user.email
+            const firstName = user.firstName
+            const lastName = user.lastName
+            let emailHTML = emailsTemplates.newHelper.html.replace('{{helperName}}', helperFirstName) //replace name
+            emailHTML = emailHTML.replace('{{profilePicURL}}', profilePicURL) //replace profile pic url
+            emailHTML = emailHTML.replace('{{fullName}}', firstName + ' ' + lastName)
+
+            console.log('Sending email about user offering help to: ', email)
+
+            await resend.emails.send({
+              from: "given'take <noreply@giventake.org>",
+              to: email,
+              subject: emailsTemplates.newHelper.subject.replace('{{fullName}}', firstName + ' ' + lastName),
+              html: emailHTML,
+            })
+
+          }
+        }
+      }
+
     })
   }
 
