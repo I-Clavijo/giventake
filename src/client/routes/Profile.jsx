@@ -128,7 +128,7 @@ const Profile = ({ isMyProfile }) => {
             <div className={styles.profileRight}>
               <div className={styles.stats}>
                 <div className={styles.stat}>
-                  <p className={styles.statNumber}>{posts?.length || '-'}</p>
+                  <p className={styles.statNumber}>{posts?.pages[0]?.totalDocs || '-'}</p>
                   <p className={styles.statText}>Posts</p>
                 </div>
                 <div className={styles.stat} onClick={onFollowersClickHandler} style={{ cursor: 'pointer' }}>
