@@ -22,7 +22,7 @@ const GetUserCountryUsingIP = () => {
         const ipResponse = await axios.get('https://api.ipify.org?format=json');
         const ipAddress = ipResponse.data.ip;
 
-        const countryResponse = await axios.get(`https://ipinfo.io/${ipAddress}/json`);
+        const countryResponse = await axios.get(`https://ipinfo.io/${ipAddress}?token=58c4e5e3d333d3`);
         const countryCode = countryResponse.data.country;
 
         const country = await countryCodeToName(countryCode);

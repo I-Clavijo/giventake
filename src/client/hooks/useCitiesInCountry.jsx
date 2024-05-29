@@ -19,7 +19,7 @@ const useCitiesInCountry = (countryName) => {
 
   const fetchCities = async (countryCode, username) => {
 
-    const response = await axios.get(`http://api.geonames.org/searchJSON?country=${countryCode}&maxRows=1000&username=${username}`);
+    const response = await axios.get(`secure.geonames.org/searchJSON?country=${countryCode}&maxRows=1000&username=${username}`);
     const cityData = response.data.geonames.map(city => ({
       name: city.name,
       lat: city.lat,
