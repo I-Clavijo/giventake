@@ -317,14 +317,33 @@ export const getReportedPostsQuery = async (selfUserId_OI, options) => {
             }
           ])
         },
+        totalSeenReports: {
+          $sum: {
+            $map: {
+              input: '$reports',
+              as: 'report',
+              in: { $cond: [{ $eq: ['$$report.isSeen', true] }, 1, 0] }
+            }
+          }
+        },
         totalReports: { $size: '$reports' }
       }
     },
     {
-      $project: {
-        createdAt: 0,
-        updatedAt: 0,
-        reports: 0
+      $addFields: {
+        totalUnseenReports: {
+          $subtract: ['$totalReports', '$totalSeenReports']
+        }
+      }
+    },
+    {
+      $sort: {
+        totalUnseenReports: -1
+      }
+    },
+    {
+      $match: {
+        totalUnseenReports: { $gt: 0 }
       }
     }
   ])

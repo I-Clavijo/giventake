@@ -39,7 +39,7 @@ const PostReports = ({ reportedPostId }) => {
             page?.docs.map(report => {
               if ((report?.isSeen && selectedTab === TABS.Ok) || (!report?.isSeen && selectedTab === TABS.Pending)) {
                 return (
-                  <Table.Row>
+                  <Table.Row key={report._id}>
                     <Table.Cell>{REPORTS_REASONS[report.reasonKey]}</Table.Cell>
                     <Table.Cell>{report.description}</Table.Cell>
                     <Table.Cell>{report?.date}</Table.Cell>

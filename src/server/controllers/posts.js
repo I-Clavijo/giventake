@@ -345,7 +345,7 @@ export const getReportedPosts = async (req, res) => {
   const selfUserId_OI = req.user?._id ? new ObjectId(req.user._id) : null
 
   const reportedPosts = await getReportedPostsQuery(selfUserId_OI, options)
-
+  console.log(reportedPosts)
   // get post image from S3 bucket
   if (reportedPosts?.docs.post) {
     for (const post of reportedPosts.docs.post) {

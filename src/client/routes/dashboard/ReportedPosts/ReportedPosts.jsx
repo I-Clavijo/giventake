@@ -95,6 +95,8 @@ export default function ReportedPosts() {
           <Table.Head>
             <Table.HeadCell>Post title</Table.HeadCell>
             <Table.HeadCell>Report Reasons</Table.HeadCell>
+            <Table.HeadCell>Pending</Table.HeadCell>
+            <Table.HeadCell>Ok</Table.HeadCell>
             <Table.HeadCell>Total Reports</Table.HeadCell>
           </Table.Head>
           <Table.Body>
@@ -120,13 +122,15 @@ export default function ReportedPosts() {
                     <Table.Cell>
                       {reportedPost.reportReasons.map(reportReason => REPORTS_REASONS[reportReason]).join(', ')}
                     </Table.Cell>
+                    <Table.Cell>{reportedPost.totalUnseenReports}</Table.Cell>
+                    <Table.Cell>{reportedPost.totalSeenReports}</Table.Cell>
                     <Table.Cell>{reportedPost.totalReports}</Table.Cell>
                   </Table.Row>
 
                   {/* opened accordion */}
                   {currRowAccordion?._id === reportedPost._id && (
                     <Table.Row className="accordionOpenedBox">
-                      <Table.Cell colSpan={3}>
+                      <Table.Cell colSpan={5}>
                         <PostReports reportedPostId={currRowAccordion?.post?._id} />
 
                         <div className="flex gap-1 mt-4 justify-center">
@@ -145,7 +149,7 @@ export default function ReportedPosts() {
               ))
             })}
             <Table.Row>
-              <Table.Cell colSpan={3}>
+              <Table.Cell colSpan={5}>
                 <InView as="div" className="flex justify-center">
                   {hasNextPageReportedPosts ? (
                     <Button ref={refReportedPosts} size="xs" color="light" onClick={fetchNextPageReportedPosts}>
