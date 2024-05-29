@@ -10,7 +10,6 @@
 
 .post {
   // border: 1px solid #eee;
-  overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
   width: 100%;
@@ -53,34 +52,60 @@
     .actions {
       position: relative;
       display: flex;
+      align-items: center;
       gap: 1em;
-      svg {
-        padding: 0.5em;
-        width: 2.5em;
-        height: 2.5em;
+
+      .btnMore {
+        width: 1.5em;
+        height: 1.5em;
         cursor: pointer;
+        padding: 0.3em;
+        box-sizing: content-box;
         border-radius: 10em;
+
         &:hover {
           background-color: #eee;
         }
       }
-    }
-    .popover {
-      span {
-        padding: 0.2em;
-        padding-left: 0.6em;
-        display: flex;
-        gap: 0.2em;
-        align-items: center;
-        cursor: pointer;
-        &:hover {
-          background-color: #eee;
-        }
+
+      .postFromInterests {
         svg {
-          width: 1.3em;
-          height: 1.3em;
-          cursor: pointer;
+          padding: 0.3em;
+          box-sizing: content-box;
+
           border-radius: 10em;
+          &:hover {
+            background-color: #eee;
+          }
+        }
+      }
+
+      .popover {
+        position: absolute;
+        right: -3em;
+        background-color: #fff;
+        width: 9em;
+        border: 1px solid #eee;
+        border-radius: 0.2em;
+
+        span {
+          padding: 0.2em;
+          padding-left: 0.6em;
+          display: flex;
+          gap: 0.2em;
+          align-items: center;
+          cursor: pointer;
+          font-size: 0.95em;
+
+          &:hover {
+            background-color: #eee;
+          }
+          svg {
+            width: 1.1em;
+            height: 1.1em;
+            cursor: pointer;
+            border-radius: 10em;
+          }
         }
       }
     }
