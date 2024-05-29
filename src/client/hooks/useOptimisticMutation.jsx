@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-const useOptimisticMutation = ({ mutationFn, optimistic, onSuccess }) => {
+const useOptimisticMutation = ({ mutationFn, optimistic, onSuccess, onError }) => {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -68,6 +68,8 @@ const useOptimisticMutation = ({ mutationFn, optimistic, onSuccess }) => {
           rollback()
         })
       }
+
+      onError?.(error, variables, context)
     },
     // also if there is more data that should be returned and updated after success update it also in cache.
     onSuccess: (data, variables, context) => {

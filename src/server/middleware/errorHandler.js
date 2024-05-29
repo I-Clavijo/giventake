@@ -30,7 +30,7 @@ const developmentError = (err, res) => {
   if (err?.isOperational) console.error('[Fail] ', err.message)
   else console.error(err.stack)
 
-  res.status(err.statusCode).json({
+  res.status(err?.statusCode || 500).json({
     statusCode: err.statusCode,
     variant: err.variant,
     message: err.message,

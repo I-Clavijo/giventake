@@ -66,7 +66,6 @@ const Profile = ({ isMyProfile }) => {
 
   const [showFriendsModal, setShowFriendsModal] = useState(false)
   const [friendsListMode, setFriendsListMode] = useState()
-  const { mutate: postAction } = usePostAction({ filters })
 
   const interestsSepByDots = user?.interests?.map((interest, index) => (
     <span key={index} className={styles.interest}>
@@ -181,17 +180,13 @@ const Profile = ({ isMyProfile }) => {
 
           <Tabs aria-label="Default tabs" style="default" className="flex justify-center mt-2">
             <Tabs.Item active title="Posts" icon={HiUserCircle} className="tabItem">
-              {posts && (
-                <Feed
-                  posts={posts}
-                  styleOrder={showAs.MASONRY}
-                  isLoading={isLoadingPosts}
-                  noTitle
-                  {...(isMyProfile && { noActions: true })}
-                  onPostAction={postAction}
-                  {...{ isLoggedIn }}
-                />
-              )}
+              <Feed
+                styleOrder={showAs.MASONRY}
+                noTitle
+                enabled={isMyProfile ? true : !!userId && isSuccessUser}
+                {...(isMyProfile && { noActions: true })}
+                {...{ isLoggedIn, filters }}
+              />
             </Tabs.Item>
 
             <Tabs.Item title="Reviews" icon={HiChartSquareBar} className="tabItem">
