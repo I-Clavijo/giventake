@@ -1,5 +1,6 @@
 .featuredCategoriesWrap {
   margin-top: 0em;
+
   .title {
     color: #888;
     font-weight: 400;
@@ -14,6 +15,7 @@
 .statsWrap {
   position: relative;
   margin: 0 -1.25em;
+
   &:before,
   &:after {
     background-size: contain;
@@ -33,6 +35,7 @@
     //   left: 2em;
     // }
   }
+
   &:after {
     content: '';
     width: 173px;
@@ -65,7 +68,7 @@
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.17);
     padding: 0 1rem;
 
-    & > :not(:last-child) {
+    &> :not(:last-child) {
       border-right: 1px #eee solid;
     }
 
@@ -95,7 +98,8 @@
       // Mobile
       flex-direction: column;
       padding: 0;
-      & > :not(:last-child) {
+
+      &> :not(:last-child) {
         border: none;
       }
 
@@ -104,6 +108,13 @@
       }
     }
   }
+}
+
+h1 {
+  color: #fff;
+  font-size: 4em;
+  width: 100%;
+  font-weight: 400;
 }
 
 .heroImgCrop {
@@ -135,12 +146,6 @@
     background-color: #0000004a;
     margin: -1em; // fix margin
 
-    h1 {
-      color: #fff;
-      font-size: 4em;
-      width: 100%;
-      font-weight: 400;
-    }
     button {
       width: fit-content;
     }
@@ -167,10 +172,12 @@
     overflow: hidden;
     align-items: center;
     display: flex;
+
     img {
       object-fit: cover;
     }
   }
+
   @media screen and (max-width: 767px) {
     flex-direction: column;
 
@@ -184,12 +191,21 @@
     border-left: var(--third-color) 0.4em solid;
     padding-left: 1em;
     height: fit-content;
+
     h1 {
       font-weight: 400;
       font-size: 2.3em;
     }
+
     p {
       color: #444;
     }
+  }
+}
+
+@media screen and (max-width: 767px) {
+
+  h1 {
+    font-size: 2.5em;
   }
 }
