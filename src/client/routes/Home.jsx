@@ -50,7 +50,7 @@ const Home = () => {
       {/* Hero Banner */}
       <div className={s.heroImgCrop}>
         <div className={s.overPhoto}>
-          <h1>Meet new friends</h1>
+          <h1 className={s.highfiveTitle}>Meet new friends</h1>
           <Button size="xl" onClick={() => navigate('/explore')} color="light" pill>
             Start now
           </Button>
