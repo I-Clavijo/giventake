@@ -66,7 +66,7 @@ const Feed = ({
       )
 
       return (
-        <InView as="div" key={post._id}>
+        <InView as="div" key={post._id} style={{ width: '100%' }}>
           {postTag}
         </InView>
       )
