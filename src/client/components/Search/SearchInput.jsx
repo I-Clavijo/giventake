@@ -6,8 +6,11 @@ import profileImg from '../../assets/images/profile-img.jpeg'
 import List from './List'
 import useUsers from '../../api/users/useUsers'
 import { useDebounce } from '@uidotdev/usehooks'
+import { useLocation } from 'react-router-dom'
 
 const SearchInput = ({ onBlur, active }) => {
+  const location = useLocation()
+
   const [searchValue, setSearchValue] = useState('')
   const [isSearchFocused, setIsSearchFocused] = useState(false)
 
@@ -24,7 +27,10 @@ const SearchInput = ({ onBlur, active }) => {
     setIsSearchFocused(false)
     setSearchValue('')
     searchRef.current.blur()
-    onBlur?.()
+
+    setTimeout(() => {
+      onBlur?.()
+    }, 100)
   }
 
   useEffect(() => {

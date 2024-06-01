@@ -92,12 +92,14 @@ export default function AppSideBar({ children, Icon, title, search, nav, current
           <div className={styles.innerWrap}>{children}</div>
         </div>
         <div className={styles.topBar}>
-          <Link to="/">
-            <div className={styles.logo}>
-              <Icon size={70} />
-              <span>{title}</span>
-            </div>
-          </Link>
+          {!isSearchActive && (
+            <Link to="/">
+              <div className={styles.logo}>
+                <Icon size={70} />
+                <span>{title}</span>
+              </div>
+            </Link>
+          )}
 
           <div className={styles.searchWrap}>
             {isSearchActive && <SearchInput active={isSearchActive} onBlur={() => setIsSearchActive(false)} />}
