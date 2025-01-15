@@ -1,12 +1,12 @@
-# give & take
+# given'take
 
-**Give & Take** is an app designed to foster a supportive community where individuals can ask for help and offer assistance to others. By connecting people who need help with those willing to provide it, Give & Take aims to build stronger, more connected communities through acts of kindness and mutual support.
+**Given'Take** is an app designed to foster a supportive community where individuals can ask for help and offer assistance to others. By connecting people who need help with those willing to provide it, Give & Take aims to build stronger, more connected communities through acts of kindness and mutual support.
 
 This app was made as a project in the Seminar course in Open University of Israel, "Cloud and Network: applications developing". 
 The application is being developed as part of an internship program at Microsoft.
 
 ## Team Memebers
-- Yahav, Ivan, Yohay, Ori
+Ivan, Ori
 
 
 <img width="621" alt="image" src="https://github.com/oribenez/giventake/assets/15029502/edfe0821-3ab7-4673-a2db-7eecd975f027">
