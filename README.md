@@ -1,4 +1,4 @@
-# given'take
+# Given'take
 
 **Given'Take** is an app designed to foster a supportive community where individuals can ask for help and offer assistance to others. By connecting people who need help with those willing to provide it, Give & Take aims to build stronger, more connected communities through acts of kindness and mutual support.
 
